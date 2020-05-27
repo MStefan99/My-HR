@@ -8,9 +8,6 @@ create table sessions (
 	created_at real    not null
 );
 
-create unique index sessions_email_uindex
-	on sessions (email);
-
 create unique index sessions_id_uindex
 	on sessions (id);
 
