@@ -1,9 +1,7 @@
 doctype html
 
 head
-	title tets
-	link(rel="stylesheet", type="text/css", href="/style/style.css")
-	meta(name="viewport", content="width=device-width, initial-scale=1.0")
+	include head
 
 body
 	main
@@ -11,13 +9,13 @@ body
 		//iframe(width="560" height="315" src="https://www.youtube.com/embed/NqrKGvQT0eU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen)
 		p Video will be here
 		h2#form-label Join us today by filling the form below!
-		form(action="/record" method="post")
+		form(action="/join/" method="post")
 			label(for="firstname") First name
 			input#firstname(type="text" name="firstName" required)
 			label(for="lastname") Last name
 			input#lastname(type="text" name="lastName" required)
 			label(for="email") Your Metropolia email
-			input#email(type="email" name="email" value="Will be filled in automatically" disabled required)
+			input#email(type="email" name="email" value=email disabled required)
 			label(for="backup-email") Backup email
 			input#backup-email(type="email" name="backupEmail" required)
 			label(for="phone") Phone number
@@ -37,3 +35,4 @@ body
 			input#submit(type="submit" value="Join!")
 
 	footer
+		include footer

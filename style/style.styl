@@ -11,9 +11,14 @@ html
 		header
 
 		main
+			margin 0 10vw
+
 			h1
 				margin 2vh 4vw
 				font-size 3rem
+
+			h2
+				text-align center
 
 			#form-label
 				width 30vw
@@ -21,12 +26,19 @@ html
 
 			form
 				margin 1vh auto
-				width 20vw
+				width 80vw
+
+				@media screen and (min-width 768px)
+					width 40vw
+
+				@media screen and (min-width 1024px)
+					width 22vw
 
 				input, label
 					width 100%
 					margin .5rem auto
 					display block
+					box-sizing border-box
 
 					&[for^="team"]
 						display inline
@@ -35,3 +47,7 @@ html
 						display inline
 						width fit-content
 						margin .5rem .5rem .5rem 0
+
+				#username, #metropolia-domain
+					width 50%
+					display inline
