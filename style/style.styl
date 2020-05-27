@@ -1,6 +1,6 @@
 html
 	color #fff
-	font-size 16pt
+	font-size 12pt
 	font-family sans-serif
 
 	body
@@ -13,10 +13,25 @@ html
 		main
 			h1
 				margin 2vh 4vw
-				font-size 2rem
+				font-size 3rem
+
+			#form-label
+				width 30vw
+				margin 7vh auto 3vh
 
 			form
-					margin 1vh 3vw
+				margin 1vh auto
+				width 20vw
 
-				input
+				input, label
+					width 100%
+					margin .5rem auto
 					display block
+
+					&[for^="team"]
+						display inline
+
+					&[type="radio"]
+						display inline
+						width fit-content
+						margin .5rem .5rem .5rem 0
