@@ -9,15 +9,16 @@ body
 
 	main
 		h1 Hi, we're happy to see you!
-			h2#form-label Just a few steps first...
-			p.
-				We need to make sure you are a Metropolia student.
-				For this, please fill in this very simple form below and we'll get back to you in a moment!
-			form(action="/register/" method="post")
-				label(for="username") Enter your Metropolia email:
-				input#username(type="text" name="username")
-				label#metropolia-domain(for="username") @metropolia.fi
-				input(type="submit")
+			h2 But just a few steps first...
+			div#content-container
+				p.
+					We need to make sure you are a Metropolia student.
+					For this, please fill in this very simple form below and we'll get back to you in a moment!
+				form(action="/register/" method="post")
+					label(for="username") Enter your Metropolia email:
+					input#username(type="text" name="username")
+					label#metropolia-domain(for="username") @metropolia.fi
+					input(type="submit")
 
 	footer
 		include footer

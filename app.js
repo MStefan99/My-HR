@@ -10,6 +10,7 @@ const uuid = require('uuid');
 const multer = require('multer')
 const nodemailer = require('nodemailer');
 const util = require('util');
+const {consoleRouter} = require('./console');
 
 
 const app = express();
@@ -22,6 +23,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/style', express.static(path.join(__dirname, 'style')));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use('/console', consoleRouter);
 
 
 async function openDB() {
@@ -121,7 +123,7 @@ app.use(redirectIfNotAuthorized);
 app.get('/join', async (req, res) => {
 	const db = await openDB();
 	const count = (await db.get(`select count(id) as count from applications`)).count;
-	res.render('join', {email: req.session.email, mobile_disabled: (count < 2)});
+	res.render('join', {email: req.session.email, mobile_disabled: (count < 10)});
 });
 
 
