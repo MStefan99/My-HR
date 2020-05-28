@@ -16,6 +16,7 @@ const {consoleRouter} = require('./console');
 const app = express();
 const upload = multer({dest: 'uploads/'});
 const readFile = util.promisify(fs.readFile);
+const cookieOptions = {httpOnly: true, sameSite: 'strict'};
 
 
 app.set('view engine', 'pug');
@@ -59,12 +60,15 @@ async function sendMail(email, params) {
 async function redirectIfNotAuthorized(req, res, next) {
 	const id = req.query.sessionId || req.cookies.SID;
 	if (req.query.sessionId) {
-		res.cookie('SID', req.query.sessionId, {httpOnly: true, sameSite: 'strict'});
+		res.cookie('SID', req.query.sessionId, cookieOptions);
 	}
 	const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
 	const db = await openDB();
-	const session = await db.get(`select *
+	const session = await db.get(`select uuid,
+                                         email,
+                                         ip,
+                                         created_at as createdAt
                                   from sessions
                                   where uuid = $uuid`, {$uuid: id});
 	if (!session) {
@@ -79,6 +83,12 @@ async function redirectIfNotAuthorized(req, res, next) {
 					'As a result, you can only view it from the same IP as when registering on the website. ' +
 					'Open the link from that IP or create a new link by returning to the home page. ' +
 					'We apologize for the inconvenience.'
+			});
+		} else if (Date.now() - session.createdAt > 1800000) {
+			res.render('status', {
+				title: 'Session expired', info: 'To ensure our data stays safe we\'ve limited the session time. ' +
+					'Your session is now expired, meaning you need to return to the home page and get the new link ' +
+					'to continue using the website. We apologize for the inconvenience.'
 			});
 		} else {
 			req.session = session;
@@ -122,7 +132,8 @@ app.use(redirectIfNotAuthorized);
 
 app.get('/join', async (req, res) => {
 	const db = await openDB();
-	const count = (await db.get(`select count(id) as count from applications`)).count;
+	const count = (await db.get(`select count(id) as count
+                                 from applications`)).count;
 	res.render('join', {email: req.session.email, mobile_disabled: (count < 10)});
 });
 
@@ -167,4 +178,4 @@ app.get('/success', async (req, res) => {
 
 http.createServer(app.listen(3001, () => {
 	console.log('Listening on http://localhost:3001');
-}));
+}));  // TODO: replace with https
