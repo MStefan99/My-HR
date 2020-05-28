@@ -8,7 +8,20 @@ html
 		background #3B3940
 		height 100vh
 
+		a
+			font-weight bold
+			color #fff
+
+			&:hover
+				color #888
+
 		header
+			height 10vh
+			padding 0 5vw
+			display flex
+			flex-flow row wrap
+			align-items center
+			justify-content space-between
 
 		main
 			margin 0 10vw
@@ -17,22 +30,29 @@ html
 				margin 2vh 4vw
 				font-size 3rem
 
+			p
+				margin-top 3vh
+				margin-bottom 3vh
+
 			h2
 				text-align center
+				margin-top 7vh
+				margin-bottom 4vh
 
-			#form-label
-				width 30vw
-				margin 7vh auto 3vh
+			#status
+				width 50vw
+				margin 10vh auto 0
 
-			form
-				margin 1vh auto
+			form, p, h2
+				margin-left auto
+				margin-right auto
 				width 80vw
 
 				@media screen and (min-width 768px)
-					width 40vw
+					width 60vw
 
 				@media screen and (min-width 1024px)
-					width 22vw
+					width 30vw
 
 				input, label
 					width 100%
