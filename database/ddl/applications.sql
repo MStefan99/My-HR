@@ -7,19 +7,17 @@ create table applications (
 	email        text    not null,
 	backup_email text    not null,
 	phone        integer,
+	backup_phone integer,
 	team         text    not null,
-	file         text    not null
+	links        text,
+	free_form    text,
+	file_name    text    not null,
+	file_path    text    not null
 );
 
-create unique index applications_email_uindex
-	on applications (email, backup_email);
-
-create unique index applications_file_uindex
-	on applications (file);
+create unique index applications_file_path_uindex
+	on applications (file_path);
 
 create unique index applications_id_uindex
 	on applications (id);
-
-create unique index applications_phone_uindex
-	on applications (phone);
 

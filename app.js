@@ -8,10 +8,14 @@ const sqlite = require('sqlite');
 const sqlite3 = require('sqlite3');
 const uuid = require('uuid');
 const multer = require('multer')
+const nodemailer = require('nodemailer');
+const util = require('util');
 
 
 const app = express();
-const upload = multer({dest: 'files/'});
+const upload = multer({dest: 'uploads/'});
+const readFile = util.promisify(fs.readFile);
+
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
@@ -31,8 +35,22 @@ async function openDB() {
 }
 
 
-async function sendMail() {
+async function sendMail(email, params) {
+	const template = await readFile('mail_template.html', 'utf8');
 
+	const html = template.replace(/%{(.*?)}/g, (match, g1) => params[g1]);
+	const transporter = nodemailer.createTransport({
+		host: "mail.inet.fi",
+		port: 25,
+		secure: false,
+	});
+
+	await transporter.sendMail({
+		from: 'noreply@mstefan99.com',
+		to: email,
+		subject: 'Complete your application for [company name]',
+		html: html
+	});
 }
 
 
@@ -78,12 +96,13 @@ app.get('/', (req, res) => {
 app.post('/register', async (req, res) => {
 	const email = req.body.username + '@metropolia.fi';
 	const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	const id = uuid.v4();
 
 	const db = await openDB();
 	await db.run(`insert into sessions(uuid, email, ip, created_at)
                   values ($uuid, $email, $ip, $time)`,
-		{$uuid: uuid.v4(), $email: email, $ip: ip, $time: Date.now()});
-	await sendMail();
+		{$uuid: id, $email: email, $ip: ip, $time: Date.now()});
+	await sendMail(email, {sid: id});
 	res.redirect(303, '/registered/');
 });
 
@@ -100,21 +119,37 @@ app.use(redirectIfNotAuthorized);
 
 
 app.get('/join', async (req, res) => {
-	res.render('join', {email: req.session.email});
+	const db = await openDB();
+	const count = (await db.get(`select count(id) as count from applications`)).count;
+	res.render('join', {email: req.session.email, mobile_disabled: (count < 2)});
 });
 
 
-app.post('/join', async (req, res) => {
+app.post('/join', upload.single('cv'), async (req, res) => {
 	const db = await openDB();
-	await db.run(`insert into applications(first_name, last_name, email, backup_email, phone, team, file)
-                  values ($fn, $ln, $email, $be, $phone, $team, $file)`, {
+	await db.run(`insert into applications(first_name,
+                                           last_name,
+                                           email,
+                                           backup_email,
+                                           phone,
+                                           backup_phone,
+                                           team,
+                                           links,
+                                           free_form,
+                                           file_name,
+                                           file_path)
+                  values ($fn, $ln, $email, $be, $phone, $bp, $team, $links, $ff, $fln, $flp)`, {
 		$fn: req.body.firstName,
 		$ln: req.body.lastName,
 		$email: req.session.email,
 		$be: req.body.backupEmail,
 		$phone: req.body.phone,
+		$bp: req.body.backupPhone,
 		$team: req.body.team,
-		$file: 'test'
+		$links: req.body.links,
+		$ff: req.body.freeForm,
+		$fln: req.file.originalname,
+		$flp: req.file.filename
 	});  // TODO: handle exceptions
 	res.redirect(303, '/success/');
 });

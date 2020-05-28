@@ -46,7 +46,7 @@ build/Release
 node_modules/
 jspm_packages/
 
-# TypeScript v1 declaration files
+# TypeScript v1 declaration uploads
 typings/
 
 # TypeScript cache
@@ -101,7 +101,7 @@ dist/
 # FuseBox cache
 .fusebox/
 
-# DynamoDB Local files
+# DynamoDB Local uploads
 .dynamodb/
 
 # Temporary folders
@@ -119,10 +119,10 @@ temp/
 .idea/**/dictionaries
 .idea/**/shelf
 
-# Generated files
+# Generated uploads
 .idea/**/contentModel.xml
 
-# Sensitive or high-churn files
+# Sensitive or high-churn uploads
 .idea/**/dataSources/
 .idea/**/dataSources.ids
 .idea/**/dataSources.local.xml
@@ -136,7 +136,7 @@ temp/
 .idea/**/libraries
 
 # Gradle and Maven with auto-import
-# When using Gradle or Maven with auto-import, you should exclude module files,
+# When using Gradle or Maven with auto-import, you should exclude module uploads,
 # since they will be recreated, and may cause churn.  Uncomment if using
 # auto-import.
 # .idea/modules.xml
@@ -202,3 +202,4 @@ database/*.sqlite
 style/*.css
 setup/ssl
 ssl
+uploads
