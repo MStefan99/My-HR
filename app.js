@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const path = require('path');
-const {applicationRouter} = require('./bin/applications');
+const {applicationRouter} = require('./bin/user');
 const {consoleRouter} = require('./bin/console');
 
 

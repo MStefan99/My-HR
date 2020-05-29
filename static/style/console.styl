@@ -4,6 +4,15 @@ secondary-color = #21dea9
 just-gray = #ddd
 
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button
+	-webkit-appearance none
+	margin 0
+
+input[type=number]
+	-moz-appearance textfield
+
+
 html
 	font-family sans-serif
 
@@ -29,10 +38,12 @@ html
 				display flex
 				flex-flow row wrap
 
-			.button
+			a
 				color #fff
-				background #555
 				text-decoration none
+
+			.button
+				background #555
 				text-align center
 				cursor pointer
 				margin .5vh .5vw
@@ -55,11 +66,14 @@ html
 			margin 5vh 5vw
 			padding 1vh 1vw
 			background #fff
-			height 100vh
+			min-height 100vh
+
+			div#info
+				margin 5vh 5vw
 
 			div#login-form
 				width 80vw
-				margin 20vh auto
+				margin 10vh auto
 
 				@media screen and (min-width 768px)
 					width 50vw
@@ -79,6 +93,11 @@ html
 						text-align center
 						margin 1vh 0
 
+					label.required:after
+						content "*"
+						color #f00
+						font-size 1.5em
+
 					input
 						border none
 						border-bottom 4px solid
@@ -92,17 +111,43 @@ html
 							border-bottom-color secondary-color
 							outline none
 
+					.status-bad
+						color #a00
+						border-bottom-color #a00
+
+					.status-good
+						color #0a0
+						border-bottom-color #0a0
+
 					input[type="submit"], input[type="button"]
+						cursor pointer
 						color white
 						background primary-color
 						border-bottom-color primary-color
 						transition background .2s linear,
 						color .2s linear
+						padding .5em 0
+
+						&[disabled]
+							background just-gray
+							border-bottom-color just-gray
+							color #000
+							cursor not-allowed
 
 						&:hover
 							background just-gray
 							color #000
 
+					#qr
+						display block
+						width 50%
+						margin 0 auto
+
+					.label-info
+						font-weight normal
+						font-size 1em
+						word-break break-word
+						margin-bottom 4vh
 
 			div#main-container
 				width fit-content
@@ -125,4 +170,6 @@ html
 					background just-gray
 
 		footer
-			margin 2vh 0
+			background #555
+			color white
+			padding 1vh 5vw

@@ -8,18 +8,19 @@ body
 	main
 		div#login-form
 			h2 Register at My HR console
-			form(action="login" method="post")
-				label(for="id") Your setup code
-				input.text#id(type="text" name="uuid")
-				label(for="password") Password
-				input.text#password(type="password" name="password")
-				label(for="password-repeat") Password
-				input.text#password-repeat(type="password" name="passwordRepeat")
-				label Your authenticator QR code
-				image
-				label(for="otp") Authenticator code
-				input.text#otp(type="text" name="otp")
-				input#submit(type="button" value="Register")
+			form#register-form(action="/console/register/" method="post")
+				label.required(for="id") Your setup code
+				input.text#id(type="text" name="setupCode" required)
+				label(for="password") Your password
+				input.text.required#password(type="password" name="password"
+					pattern=".{8,128}" title="8 or more characters" required)
+				label.label-status#pwd-label(for="password-repeat")
+				label(for="password") Repeat your password
+				input.text.required#password-repeat(type="password" name="passwordRepeat"
+					pattern=".{8,128}" title="8 or more characters" required)
+				label.label-status#pwdr-label(for="password-repeat")
+				input#submit(type="submit" value="Register")
+			script(type="text/javascript" src="/js/register.js")
 
 	footer
 		include footer

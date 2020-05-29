@@ -22,22 +22,28 @@ async function getUser(req, res, next) {
 	if (req.cookies.CSID) {
 		const db = await openDB();
 		req.user = await db.get(`select username,
-                                        password_hash as passwordHash,
                                         cu.uuid,
+                                        password_hash as passwordHash,
+                                        setup_code,
+                                        admin,
                                         secret
                                  from console_sessions cs
-                                          left join console_users cu on cs.user_id = cu.id
-                                 where uuid = $sid`, {$sid: req.cookies.CSID})
+                                          left join console_users cu on cs.user_id=cu.id
+                                 where cs.uuid=$sid`, {$sid: req.cookies.CSID})
 	}
 	next();
 }
 
 
 async function redirectIfNotAdmin(req, res, next) {
-	if (req.user) {
-		next();
+	if (!req.user) {
+		res.redirect(303, '/console/login/');
+	} else if (!req.user.passwordHash) {
+		res.redirect(303, '/console/register/');
+	} else if (!req.user.secret) {
+		res.redirect(303, '/console/setup-otp/');
 	} else {
-		res.redirect(303, '/console/login');
+		next();
 	}
 }
 
@@ -54,7 +60,32 @@ router.get('/register', (req, res) => {
 
 router.get('/get-otp', (req, res) => {
 	const secret = twoFactor.generateSecret({name: 'My HR'});
-	res.json({qr: secret.qr, secret: secret.secret});
+	res.json(secret);
+});
+
+
+router.get('/setup-otp', (req, res) => {
+	res.render('console/setup_otp');
+});
+
+
+router.post('/setup-otp', async (req, res) => {
+	const db = await openDB();
+
+	if (!req.cookies.CUID) {
+		res.redirect(303, '/console/login/');
+	} else if (twoFactor.verifyToken(req.body.secret, req.body.token)) {
+		res.render('console/status', {
+			title: 'Wrong authenticator password', info: 'Your one-time password ' +
+				'is wrong or expired, please try again.'
+		});
+	} else {
+		await db.run(`update console_users
+                      set secret=$secret
+                      where uuid=$id`, {$secret: req.body.secret, $id: req.cookies.CUID});
+		res.clearCookie('CUID', cookieOptions);
+		res.redirect(303, '/console/');
+	}
 });
 
 
@@ -62,24 +93,36 @@ router.post('/login', async (req, res) => {
 	const db = await openDB();
 	const user = await db.get(`select username,
                                       password_hash as passwordHash,
+                                      uuid,
                                       secret
                                from console_users
-                               where username = $username`, {$username: req.body.username});
+                               where username=$username`, {$username: req.body.username});
 	const hash = crypto.createHmac('sha512', hashSecret);
 	hash.update(req.body.password);
 
-	if (!user.passwordHash || !user.secret) {
+	if (!user) {
+		res.render('console/status', {
+			title: 'No such user', info: 'Please check if the username you entered is correct ' +
+				'and try again.'
+		});
+	} else if (!user.passwordHash) {
 		res.redirect(303, '/console/register/');
 	} else if (user.passwordHash !== hash.digest('hex')) {
-		res.render('console/status', {title: 'Wrong password', info: ''});
-	} else if (!twoFactor.verifyToken(user.secret, req.body.token)) {
+		res.render('console/status', {
+			title: 'Wrong password', info: 'You have entered the wrong password. ' +
+				'Please try again.'
+		});
+	} else if (!user.secret) {
+		res.cookie('CUID', user.uuid, cookieOptions);
+		res.redirect(303, '/console/setup-otp/');
+	} else if (twoFactor.verifyToken(user.secret, req.body.token)) {
 		res.render('console/status', {
 			title: 'Wrong authenticator password', info: 'Your one-time password ' +
-				'may have expired, please try again.'
+				'is wrong or expired, please try again.'
 		});
 	} else {
 		const id = uuid.v4();
-		req.cookie('CSID', id, cookieOptions);
+		res.cookie('CSID', id, cookieOptions);
 		await db.run(`insert into console_sessions(uuid, user_id, ip, ua, time)
                       values ($id, $uid, $ip, $ua, $time)`, {
 			$uuid: id, $uid: user.id, $ip: req.connection.remoteAddress,
@@ -92,44 +135,42 @@ router.post('/login', async (req, res) => {
 
 router.post('/register', async (req, res) => {
 	const db = await openDB();
-	if (req.body.password !== req.body.passwordRepeat) {
+	const user = await db.get(`select 1
+                               from console_users
+                               where setup_code=$code`, {$code: req.body.setupCode});
+
+	if (!user) {
+		res.render('console/status', {
+			title: 'Wrong setup code', info: 'You have entered a wrong setup code. ' +
+				'These codes are used as an additional protection against unauthorized users. ' +
+				'Please check your setup code and try again. '
+		});
+	} else if (req.body.password !== req.body.passwordRepeat) {
 		res.render('console/status', {
 			title: 'Passwords do not match', info: 'Please return to ' +
 				'registration and retype your password.'
 		});
 	} else if (req.body.password.length < 8) {
 		res.render('console/status', {
-			title: 'Your password is too short', info: 'On this site you will get access to ' +
-				'sensitive user data so please ensure your password is at least 8 characters long.'
-		});
-	} else if (!twoFactor.verifyToken(req.body.secret, req.body.token)) {
-		res.render('console/status', {
-			title: 'Wrong authenticator password', info: 'Your one-time password ' +
-				'may have expired, please try again.'
+			title: 'Your password is too short', info: 'For security of user info ' +
+				'please ensure your password is at least 8 characters long.'
 		});
 	} else {
 		const hash = crypto.createHmac('sha512', hashSecret);
 		hash.update(req.body.password);
-		db.run(`update console_users
-                set password_hash=$hash,
-                    secret=$secret,
-                    uuid=null
-                where uuid = $id`, {
-			$id: req.body.id,
+		await db.run(`update console_users
+                      set password_hash=$hash,
+                          setup_code=null
+                      where setup_code=$code`, {
+			$code: req.body.setupCode,
 			$hash: hash.digest('hex'),
-			$secret: req.body.secret
 		});
-		res.redirect(303, '/console/login/');
+		res.redirect(303, '/console/setup-otp/');
 	}
 });
 
 
 router.use(redirectIfNotAdmin);
-
-
-router.get('verify', (req, res) => {
-	res.render('console/message');
-})
 
 
 router.get('/', (req, res) => {

@@ -4,6 +4,8 @@ create table console_users (
 			primary key autoincrement,
 	username      text    not null,
 	uuid          text    not null,
+	admin         integer not null default 0,
+	setup_code    text,
 	password_hash text,
 	secret        text
 );

@@ -8,14 +8,16 @@ body
 	main
 		div#login-form
 			h2 Log in to My HR console
-			form(action="login" method="post")
-				label(for="username") Username
-				input.text#username(type="text" name="username")
+			form(action="/console/login/" method="post")
+				label.required(for="username") Username
+				input.text#username(type="text" name="username" required)
 				label(for="password") Password
 				input.text#password(type="password" name="password")
 				label(for="otp") Authenticator code
-				input.text#otp(type="text" name="otp")
+				input.text#otp(type="text" name="otp"
+					title="Your 6-digit authenticator code" pattern="\\d{6}")
 				input#submit(type="submit" value="Log in")
+				label.label-info You can register by only filling in your username
 
 	footer
 		include footer

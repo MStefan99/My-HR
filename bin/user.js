@@ -53,20 +53,20 @@ async function redirectIfNotAuthorized(req, res, next) {
                                   from sessions
                                   where uuid = $uuid`, {$uuid: id});
 	if (!session) {
-		res.render('status', {
+		res.render('user/status', {
 			title: 'Broken link',
 			info: 'The link you\'ve followed isn\'t correct. Please check if you are using the correct link and try again.'
 		});
 	} else if (session) {
 		if (session.ip !== ip) {
-			res.render('status', {
+			res.render('user/status', {
 				title: 'Wrong IP', info: 'To ensure our data stays safe we\'ve limited who can access this page. ' +
 					'As a result, you can only view it from the same IP as when registering on the website. ' +
 					'Open the link from that IP or create a new link by returning to the home page. ' +
 					'We apologize for the inconvenience.'
 			});
 		} else if (Date.now() - session.createdAt > 1800000) {
-			res.render('status', {
+			res.render('user/status', {
 				title: 'Session expired', info: 'To ensure our data stays safe we\'ve limited the session time. ' +
 					'Your session is now expired, meaning you need to return to the home page and get the new link ' +
 					'to continue using the website. We apologize for the inconvenience.'
@@ -82,7 +82,7 @@ async function redirectIfNotAuthorized(req, res, next) {
 
 
 router.get('/', (req, res) => {
-	res.render('register');
+	res.render('user/register');
 });
 
 
@@ -101,7 +101,7 @@ router.post('/register', async (req, res) => {
 
 
 router.get('/registered', (req, res) => {
-	res.render('status', {
+	res.render('user/status', {
 		title: 'Check your email!', info: 'We have sent you an email with your routerlication link. ' +
 			'Please follow it to complete your registration.'
 	});
@@ -115,7 +115,7 @@ router.get('/join', async (req, res) => {
 	const db = await openDB();
 	const count = (await db.get(`select count(id) as count
                                  from applications`)).count;
-	res.render('join', {email: req.session.email, mobile_disabled: (count < 10)});
+	res.render('user/join', {email: req.session.email, mobile_disabled: (count < 10)});
 });
 
 
@@ -150,7 +150,7 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 
 
 router.get('/success', async (req, res) => {
-	res.render('status', {
+	res.render('user/status', {
 		title: 'Thank you!',
 		info: 'We have received your routerlication and will contact you as soon as possible!'
 	});
