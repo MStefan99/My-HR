@@ -22,7 +22,6 @@ async function getUser(req, res, next) {
 	if (req.cookies.CSID) {
 		const db = await openDB();
 		req.user = await db.get(`select username,
-                                        cu.uuid,
                                         password_hash as passwordHash,
                                         setup_code,
                                         admin,
@@ -74,7 +73,9 @@ router.post('/setup-otp', async (req, res) => {
 
 	if (!req.cookies.CUID) {
 		res.redirect(303, '/console/login/');
-	} else if (twoFactor.verifyToken(req.body.secret, req.body.token)) {
+	} else if (twoFactor.verifyToken(req.body.secret, req.body.otp) ?
+		twoFactor.verifyToken(req.body.secret, req.body.otp).delta : true) {
+		console.log(twoFactor.verifyToken(req.body.secret, req.body.otp));
 		res.render('console/status', {
 			title: 'Wrong authenticator password', info: 'Your one-time password ' +
 				'is wrong or expired, please try again.'
@@ -92,6 +93,7 @@ router.post('/setup-otp', async (req, res) => {
 router.post('/login', async (req, res) => {
 	const db = await openDB();
 	const user = await db.get(`select username,
+                                      id,
                                       password_hash as passwordHash,
                                       uuid,
                                       secret
@@ -115,7 +117,8 @@ router.post('/login', async (req, res) => {
 	} else if (!user.secret) {
 		res.cookie('CUID', user.uuid, cookieOptions);
 		res.redirect(303, '/console/setup-otp/');
-	} else if (twoFactor.verifyToken(user.secret, req.body.token)) {
+	} else if (twoFactor.verifyToken(user.secret, req.body.otp) ?
+		twoFactor.verifyToken(user.secret, req.body.otp).delta : true) {
 		res.render('console/status', {
 			title: 'Wrong authenticator password', info: 'Your one-time password ' +
 				'is wrong or expired, please try again.'
@@ -123,12 +126,12 @@ router.post('/login', async (req, res) => {
 	} else {
 		const id = uuid.v4();
 		res.cookie('CSID', id, cookieOptions);
-		await db.run(`insert into console_sessions(uuid, user_id, ip, ua, time)
-                      values ($id, $uid, $ip, $ua, $time)`, {
-			$uuid: id, $uid: user.id, $ip: req.connection.remoteAddress,
+		await db.run(`insert into console_sessions(user_id, uuid, ip, ua, time)
+                      values ($uid, $uuid, $ip, $ua, $time)`, {
+			$uid: user.id, $uuid: id, $ip: req.connection.remoteAddress,
 			$ua: req.headers['user-agent'], $time: Date.now()
 		});
-		req.redirect(303, '/console/home/');
+		res.redirect(303, '/console/');
 	}
 });
 
@@ -178,6 +181,11 @@ router.get('/', (req, res) => {
 });
 
 
+router.get('/applications', async (req, res) => {
+
+});
+
+
 router.get('/settings', (req, res) => {
 	res.render('console/settings');
 });
@@ -189,7 +197,7 @@ router.get('/file/:name', (req, res) => {
 
 
 router.post('/logout', async (req, res) => {
-
+	res.redirect(303, '/console/');
 });
 
 
