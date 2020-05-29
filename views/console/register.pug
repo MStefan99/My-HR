@@ -1,0 +1,25 @@
+head
+	include head
+
+body
+	header
+		include header-min
+
+	main
+		div#login-form
+			h2 Register at My HR console
+			form(action="login" method="post")
+				label(for="id") Your setup code
+				input.text#id(type="text" name="uuid")
+				label(for="password") Password
+				input.text#password(type="password" name="password")
+				label(for="password-repeat") Password
+				input.text#password-repeat(type="password" name="passwordRepeat")
+				label Your authenticator QR code
+				image
+				label(for="otp") Authenticator code
+				input.text#otp(type="text" name="otp")
+				input#submit(type="button" value="Register")
+
+	footer
+		include footer

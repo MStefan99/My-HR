@@ -199,7 +199,9 @@ fabric.properties
 # End of https://www.gitignore.io/api/node,webstorm
 
 database/*.sqlite
-style/*.css
+static/style/*.css
+static/js/*.js
+static/js/*.map
 setup/ssl
 ssl
 uploads

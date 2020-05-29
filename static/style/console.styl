@@ -1,0 +1,128 @@
+primary-color = #3795e2
+primary-color-light = #98beff
+secondary-color = #21dea9
+just-gray = #ddd
+
+
+html
+	font-family sans-serif
+
+	body
+		margin 0
+		background #eaeaea
+
+		header
+			display flex
+			flex-flow row nowrap
+			align-items center
+			justify-content space-between
+			background linear-gradient(90deg, primary-color 0%, secondary-color 100%)
+			color #fff
+			vertical-align center
+
+			h1
+				font-size 3rem
+				margin 0 5vw
+
+			.menu-container
+				margin 1vh 2vw
+				display flex
+				flex-flow row wrap
+
+			.button
+				color #fff
+				background #555
+				text-decoration none
+				text-align center
+				cursor pointer
+				margin .5vh .5vw
+				padding .5em 1em
+				border-radius .5em
+				transition background .2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+				color .2s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+
+				&:hover
+					color primary-color-light
+					background #444
+
+				p
+					user-select none
+					text-align center
+					text-decoration underline
+					margin 0
+
+		main
+			margin 5vh 5vw
+			padding 1vh 1vw
+			background #fff
+			height 100vh
+
+			div#login-form
+				width 80vw
+				margin 20vh auto
+
+				@media screen and (min-width 768px)
+					width 50vw
+
+				@media screen and (min-width 1024px)
+					width 30vw
+
+				h2
+					font-weight bolder
+					text-align center
+
+				form
+					label, input
+						display block
+						width 100%
+						font-weight bold
+						text-align center
+						margin 1vh 0
+
+					input
+						border none
+						border-bottom 4px solid
+						border-bottom-color just-gray
+						transition border-bottom-color .2s linear
+
+						&:hover
+							border-bottom-color primary-color
+
+						&:focus
+							border-bottom-color secondary-color
+							outline none
+
+					input[type="submit"], input[type="button"]
+						color white
+						background primary-color
+						border-bottom-color primary-color
+						transition background .2s linear,
+						color .2s linear
+
+						&:hover
+							background just-gray
+							color #000
+
+
+			div#main-container
+				width fit-content
+
+				table, tr, th, td
+					border 1px solid #000
+					border-collapse collapse
+
+				th, td
+					padding 1vh 1vw
+					word-break break-word
+
+				th
+					font-weight bold
+					background #999
+					color #fff
+					border 1px solid #000
+
+				tr:nth-child(even)
+					background just-gray
+
+		footer
+			margin 2vh 0
