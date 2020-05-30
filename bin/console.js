@@ -88,6 +88,7 @@ router.post('/login', async (req, res) => {
 				'and try again.'
 		});
 	} else if (!user.passwordHash) {
+		res.cookie('CUID', user.uuid, cookieOptions);
 		res.redirect(303, '/console/register/');
 	} else if (user.passwordHash !== hash.digest('hex')) {
 		res.render('console/status', {
