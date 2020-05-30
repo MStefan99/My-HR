@@ -21,6 +21,7 @@ body
 				label.required(for="otp") Authenticator code
 				input.text#otp(type="text" name="otp" title="Your 6-digit authenticator code" pattern="\\d{6}" required)
 				input#submit(type="submit" value="Register")
+				label.label-info.required-info * Required fields
 			script(type="text/javascript" src="/js/setup_otp.js")
 
 	footer

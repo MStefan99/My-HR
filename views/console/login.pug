@@ -17,7 +17,7 @@ body
 				input.text#otp(type="text" name="otp"
 					title="Your 6-digit authenticator code" pattern="\\d{6}")
 				input#submit(type="submit" value="Log in")
-				label.label-info You can register by only filling in your username
+				label.label-info.required-info * Required fields
 
 	footer
 		include footer

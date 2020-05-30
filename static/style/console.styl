@@ -64,7 +64,7 @@ html
 
 		main
 			margin 5vh 5vw
-			padding 1vh 1vw
+			padding 3vh 3vw
 			background #fff
 			min-height 100vh
 
@@ -93,10 +93,12 @@ html
 						text-align center
 						margin 1vh 0
 
+					label.label-info.required-info
+						color #c00
+
 					label.required:after
 						content "*"
-						color #f00
-						font-size 1.5em
+						color #c00
 
 					input
 						border none
@@ -150,7 +152,8 @@ html
 						margin-bottom 4vh
 
 			div#main-container
-				width fit-content
+				table
+					width 100%
 
 				table, tr, th, td
 					border 1px solid #000
@@ -168,6 +171,22 @@ html
 
 				tr:nth-child(even)
 					background just-gray
+
+				h2
+					margin 2vh 5vw
+
+				.section
+					margin 1vh 7vw
+
+					span
+						display inline-block
+
+					span.label
+						font-weight bold
+						margin .3em 1em
+
+					p
+						margin 1em 3em
 
 		footer
 			background #555

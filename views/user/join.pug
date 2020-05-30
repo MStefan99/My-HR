@@ -8,53 +8,55 @@ body
 		include header
 
 	main
-		h1 Welcome to [company name]!
+		h1 Welcome to Mine Eclipse!
 		//iframe(width="560" height="315" src="https://www.youtube.com/embed/NqrKGvQT0eU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen)
 		p Video will be here
 		h2 Join us today by filling the form below!
 		div#content-container
 			form(action="/join/" method="post" enctype="multipart/form-data")
-				label(for="firstname") First name*
+				label.required(for="firstname") First name*
 				input#firstname(type="text" name="firstName" required)
-				label(for="lastname") Last name*
+				label.required(for="lastname") Last name*
 				input#lastname(type="text" name="lastName" required)
-				label(for="email") Your Metropolia email*
+				label.required(for="email") Your Metropolia email*
 				input#email(type="email" name="email" value=email disabled required)
-				label(for="backup-email") Secondary email*
+				label.required(for="backup-email") Secondary email*
 				input#backup-email(type="email" name="backupEmail" required)
-				label(for="phone") Main phone number
-				input#phone(type="tel" name="phone")
+				label.required(for="phone") Main phone number
+				input#phone(type="tel" name="phone" required)
 				label(for="phone") Secondary phone number
 				input#backup-phone(type="tel" name="backupPhone")
-				label Select your team*:
-				input#team-e(type="radio" value="embedded" name="team" required)
+				label.required Select your team*:
+				input#team-e(type="radio" value="Embedded" name="team" required)
 				label(for="team-e") Embedded team
 				br
-				input#team-f(type="radio" value="frontend" name="team")
+				input#team-f(type="radio" value="Frontend" name="team")
 				label(for="team-f") Frontend team
 				br
-				input#team-b(type="radio" value="backend" name="team")
+				input#team-b(type="radio" value="Backend" name="team")
 				label(for="team-b") Backend team
 				br
-				input#team-a(type="radio" value="android" name="team" disabled=mobile_disabled)
+				input#team-a(type="radio" value="Android" name="team" disabled=mobile_disabled)
 				label(for="team-b") Android team
 				if mobile_disabled
-					span.disabled *
+					span.disabled **
 				br
-				input#team-i(type="radio" value="ios" name="team" disabled=mobile_disabled)
+				input#team-i(type="radio" value="iOS" name="team" disabled=mobile_disabled)
 				label(for="team-b") iOS team
 				if mobile_disabled
-					span.disabled *
+					span.disabled **
 					br
-					span.disabled Mobile teams are currently full, please check back later
+					span.disabled ** Mobile teams are currently full, please check back later
 				br
 				label(for="links") Add useful links (GitHub, LinkedIn, etc.):
-				textarea#links(name="links")
+				textarea#links(name="links" placeholder="Enter links starting with http:// or https://. " +
+				"Separate links by a space or newline. Feel free to also add any comments here.")
 				label(for="free-form") Feel free to tell anything else you want:
 				textarea#free-form(name="freeForm")
 				label(for="cv") Please attach your cv*:
 				input#cv(type="file" name="cv" required)
 				input#submit(type="submit" value="Join!")
+				label.label-info.required-info * Required fields
 
 	footer
 		include footer

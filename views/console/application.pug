@@ -1,0 +1,45 @@
+head
+	include head
+
+body
+	header
+		include header-full
+
+	main
+		div#main-container
+			h1 Application
+			h2 Basic info
+			div.section
+				span.label First name:
+				span= application.firstName
+				br
+				span.label Last name:
+				span= application.lastName
+				br
+				span.label Team selected:
+				span= application.team
+			h2 Contact info
+			div.section
+				span.label Metropolia email:
+				a(href="mailto:" + application.email)= application.email
+				br
+				span.label Other email:
+				a(href="mailto:" + application.backupEmail)= application.backupEmail
+				br
+				span.label Phone:
+				a(href="tel:" + application.phone)= application.phone
+				br
+				span.label Backup phone:
+				a(href="tel:" + application.backupPhone || "")= application.backupPhone || '[Not provided]'
+				br
+			h2 Other
+			div.section
+				span.label Links:
+				p= application.links || '[Empty]'
+				span.label Free form info:
+				p= application.freeForm || '[Empty]'
+				span.label Download CV:
+				a(href="/console/file/" + application.filePath)= application.fileName
+
+	footer
+		include footer

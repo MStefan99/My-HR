@@ -23,6 +23,8 @@ async function getUser(req, res, next) {
 		const db = await openDB();
 		req.user = await db.get(`select username,
                                         password_hash as passwordHash,
+                                        cu.uuid       as userId,
+                                        cs.uuid       as sessionId,
                                         setup_code,
                                         admin,
                                         secret
@@ -68,28 +70,6 @@ router.get('/setup-otp', (req, res) => {
 });
 
 
-router.post('/setup-otp', async (req, res) => {
-	const db = await openDB();
-
-	if (!req.cookies.CUID) {
-		res.redirect(303, '/console/login/');
-	} else if (twoFactor.verifyToken(req.body.secret, req.body.otp) ?
-		twoFactor.verifyToken(req.body.secret, req.body.otp).delta : true) {
-		console.log(twoFactor.verifyToken(req.body.secret, req.body.otp));
-		res.render('console/status', {
-			title: 'Wrong authenticator password', info: 'Your one-time password ' +
-				'is wrong or expired, please try again.'
-		});
-	} else {
-		await db.run(`update console_users
-                      set secret=$secret
-                      where uuid=$id`, {$secret: req.body.secret, $id: req.cookies.CUID});
-		res.clearCookie('CUID', cookieOptions);
-		res.redirect(303, '/console/');
-	}
-});
-
-
 router.post('/login', async (req, res) => {
 	const db = await openDB();
 	const user = await db.get(`select username,
@@ -116,11 +96,11 @@ router.post('/login', async (req, res) => {
 		});
 	} else if (!user.secret) {
 		res.cookie('CUID', user.uuid, cookieOptions);
-		res.redirect(303, '/console/setup-otp/');
+		res.redirect(303, '/console/setup-otp');
 	} else if (twoFactor.verifyToken(user.secret, req.body.otp) ?
 		twoFactor.verifyToken(user.secret, req.body.otp).delta : true) {
 		res.render('console/status', {
-			title: 'Wrong authenticator password', info: 'Your one-time password ' +
+			title: 'Wrong authenticator code', info: 'Your one-time password ' +
 				'is wrong or expired, please try again.'
 		});
 	} else {
@@ -136,13 +116,20 @@ router.post('/login', async (req, res) => {
 });
 
 
-router.post('/register', async (req, res) => {
+router.post('/register/', async (req, res) => {
 	const db = await openDB();
-	const user = await db.get(`select 1
+	const user = await db.get(`select uuid,
+                                      username,
+                                      setup_code as setupCode
                                from console_users
-                               where setup_code=$code`, {$code: req.body.setupCode});
+                               where username=$username`, {$username: req.body.username});
 
 	if (!user) {
+		res.render('console/status', {
+			title: 'No such user', info: 'Please check if the username you entered is correct ' +
+				'and try again.'
+		});
+	} else if (user.setupCode !== req.body.setupCode) {
 		res.render('console/status', {
 			title: 'Wrong setup code', info: 'You have entered a wrong setup code. ' +
 				'These codes are used as an additional protection against unauthorized users. ' +
@@ -155,7 +142,7 @@ router.post('/register', async (req, res) => {
 		});
 	} else if (req.body.password.length < 8) {
 		res.render('console/status', {
-			title: 'Your password is too short', info: 'For security of user info ' +
+			title: 'Your password is too short', info: 'For security of user info on this site ' +
 				'please ensure your password is at least 8 characters long.'
 		});
 	} else {
@@ -168,7 +155,30 @@ router.post('/register', async (req, res) => {
 			$code: req.body.setupCode,
 			$hash: hash.digest('hex'),
 		});
-		res.redirect(303, '/console/setup-otp/');
+		res.cookie('CUID', user.uuid, cookieOptions);
+		res.redirect(303, '/console/setup-otp');
+	}
+});
+
+
+router.post('/setup-otp/', async (req, res) => {
+	const db = await openDB();
+
+	if (!req.cookies.CUID) {
+		res.redirect(303, '/console/');
+	} else if (twoFactor.verifyToken(req.body.secret, req.body.otp) ?
+		twoFactor.verifyToken(req.body.secret, req.body.otp).delta : true) {
+		console.log(twoFactor.verifyToken(req.body.secret, req.body.otp));
+		res.render('console/status', {
+			title: 'Wrong authenticator code', info: 'Your one-time password ' +
+				'is wrong or expired, please try again.'
+		});
+	} else {
+		await db.run(`update console_users
+                      set secret=$secret
+                      where uuid=$id`, {$secret: req.body.secret, $id: req.cookies.CUID});
+		res.clearCookie('CUID', cookieOptions);
+		res.redirect(303, '/console/');
 	}
 });
 
@@ -182,7 +192,34 @@ router.get('/', (req, res) => {
 
 
 router.get('/applications', async (req, res) => {
+	const db = await openDB();
+	const applications = await db.all(`select id,
+                                              first_name as firstName,
+                                              last_name  as lastName,
+                                              team,
+                                              free_form  as freeForm
+                                       from applications`);
+	res.json(applications);
+});
 
+
+router.get('/application/:id', async (req, res) => {
+	const db = await openDB();
+	const application = await db.get(`select id,
+                                             first_name   as firstName,
+                                             last_name    as lastName,
+                                             email,
+                                             backup_email as backupEmail,
+                                             phone,
+                                             backup_phone as backupPhone,
+                                             team,
+                                             links,
+                                             free_form    as freeForm,
+                                             file_name    as fileName,
+                                             file_path    as filePath
+                                      from applications
+                                      where id=$id`, {$id: req.params.id});
+	res.render('console/application', {application: application});
 });
 
 
@@ -192,11 +229,16 @@ router.get('/settings', (req, res) => {
 
 
 router.get('/file/:name', (req, res) => {
-	res.sendFile(path.join(__dirname, '/uploads/', req.params.name));
+	res.download(path.join(__dirname, '..', '/uploads/', req.params.name));
 });
 
 
-router.post('/logout', async (req, res) => {
+router.get('/logout', async (req, res) => {
+	const db = await openDB();
+	await db.run(`delete
+                  from console_sessions
+                  where uuid=$sid`, {$sid: req.user.sessionId});
+	res.clearCookie('CSID', cookieOptions);
 	res.redirect(303, '/console/');
 });
 

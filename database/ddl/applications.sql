@@ -6,7 +6,7 @@ create table applications (
 	last_name    text    not null,
 	email        text    not null,
 	backup_email text    not null,
-	phone        integer,
+	phone        integer not null,
 	backup_phone integer,
 	team         text    not null,
 	links        text,
