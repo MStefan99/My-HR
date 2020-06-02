@@ -49,6 +49,17 @@ async function redirectIfNotAdmin(req, res, next) {
 }
 
 
+async function logOut(id) {
+	const db = await openDB();
+	const user = await db.run(`select *
+                               from console_users
+                               where uuid=$id`, {$id: id});
+	await db.run(`delete
+                  from console_sessions
+                  where id=$id`, {$id: user.id});
+}
+
+
 router.get('/login', (req, res) => {
 	res.render('console/login');
 });
@@ -225,12 +236,54 @@ router.get('/application/:id', async (req, res) => {
 
 
 router.get('/settings', (req, res) => {
-	res.render('console/settings');
+	res.render('console/settings', {user: req.user});
 });
 
 
-router.get('/file/:name', (req, res) => {
-	res.download(path.join(__dirname, '..', '/uploads/', req.params.name));
+router.post('/settings', async (req, res) => {
+	const db = await openDB();
+
+	if (req.body.password !== req.body.passwordRepeat) {
+		res.render('console/status', {
+			title: 'Passwords do not match', info: 'Please return to ' +
+				'settings page and retype your password.'
+		});
+	} else if (req.body.password.length < 8) {
+		res.render('console/status', {
+			title: 'Your password is too short', info: 'For security of user info on this site ' +
+				'please ensure your password is at least 8 characters long.'
+		});
+	} else {
+		const hash = crypto.createHmac('sha512', hashSecret);
+		hash.update(req.body.password);
+		await db.run(`update console_users
+                      set password_hash=$hash
+                      where uuid=$id`, {
+			$id: req.user.userId,
+			$hash: hash.digest('hex'),
+		});
+		await logOut(req.user.userId);
+		res.clearCookie('CSID', cookieOptions);
+		res.render('console/status', {
+			title: 'Success', info: 'You can log in with your new password now. ' +
+				'Note that you have been logged out on all devices.'
+		});
+	}
+});
+
+
+router.get('/file/:name', async (req, res) => {
+	const db = await openDB();
+	const file = await db.get(`select file_name as fileName,
+                                      file_path as filePath
+                               from applications
+                               where file_path=$path`,
+		{$path: req.params.name});
+	if (file) {
+		res.download(path.join(__dirname, '..', '/uploads/', req.params.name), name);
+	} else {
+		res.status(404).end();
+	}
 });
 
 

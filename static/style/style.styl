@@ -5,7 +5,7 @@ html
 
 	body
 		margin 0
-		background #3B3940
+		background #28282f
 		height 100vh
 
 		a
@@ -24,43 +24,74 @@ html
 			justify-content space-between
 
 		main
-			margin 0 10vw
+			margin 0 auto
+			width 90vw
+
+			@media screen and (min-width 768px)
+				width 60vw
+
+			@media screen and (min-width 1024px)
+				width 40vw
 
 			h1
 				margin 5vh 3vw
 				font-size 3rem
 
-			h2
-				margin 5vh 6vw
-
 			#content-container
-				margin 5vh auto 10vh
-				width 80vw
-
-				@media screen and (min-width 768px)
-					width 60vw
-
-				@media screen and (min-width 1024px)
-					width 30vw
+				margin 5vh 0 10vh
 
 				form
 					margin-top 5vh
 					.disabled
 						color #c00
 
-					input, label, textarea
+					label
 						width 100%
-						margin .5rem auto
+						display inline
+
+					input, textarea
+						width 100%
+						margin .5rem 0
 						display block
 						box-sizing border-box
+						border none
+						outline none
+						background none
+						border-bottom 2px solid #888
+						border-radius 0
+						color #fff
 
-						&[for^="team"]
-							display inline
+						&:hover
+							border-bottom-color #fff
 
 						&[type="radio"]
-							display inline
+							display inline-block
 							width fit-content
 							margin .5rem .5rem .5rem 0
+							cursor: pointer
+
+						&[type="submit"]
+							background #fff
+							color #000
+							border-bottom none
+							font-weight bold
+							padding .2em .5em
+							cursor pointer
+							width fit-content
+
+							&:hover
+								background #ccc
+
+						&[type="file"]
+							border-bottom none
+
+						&[disabled]
+							cursor not-allowed
+							color #888
+
+						&#username
+							text-align right
+							font-size 1rem
 
 					textarea
 						resize vertical
@@ -74,7 +105,8 @@ html
 						color #c00
 
 					#username, #metropolia-domain
-						width 50%
+						max-width 50%
+						width fit-content
 						display inline
 
 		footer

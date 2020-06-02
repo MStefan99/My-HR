@@ -15,23 +15,29 @@ body
 		div#content-container
 			form(action="/join/" method="post" enctype="multipart/form-data")
 				label.required(for="firstname") First name
-				input#firstname(type="text" name="firstName" placeholder="John" required)
+				input#firstname(type="text" name="firstName" placeholder="John"
+					title="Your first name" required)
 				label.required(for="lastname") Last name
-				input#lastname(type="text" name="lastName" placeholder="Doe" required)
+				input#lastname(type="text" name="lastName" placeholder="Doe"
+					title="Your last name" required)
 				label.required(for="email") Your Metropolia email
-				input#email(type="email" name="email" value=email disabled required)
+				input#email(type="email" name="email" value=email
+					title="Filled in automatically" disabled required)
 				label.required(for="backup-email") Secondary email
-				input#backup-email(type="email" name="backupEmail" placeholder="john.doe@gmail.com" required)
+				input#backup-email(type="email" name="backupEmail" placeholder="john.doe@gmail.com"
+					title="Non-Metropolia email used to contact you" required)
 				label.required(for="phone") Main phone number
 				input#phone(type="tel" name="phone"
-					title="Enter your phone starting with 0 or +358"
+					title="Your phone starting with 0 or +358"
 					placeholder="+358400000000" pattern="(0|\\+358).{9}" required)
 				label(for="phone") Secondary phone number
 				input#backup-phone(type="tel" name="backupPhone"
-					title="Enter your phone starting with 0 or +358"
+					title="Your backup phone number in case the main one is unavailable"
 					placeholder="+358400000000" pattern="(0|\\+358).{9}")
 				label.required Select your team
-				input#team-e(type="radio" value="Embedded" name="team" required)
+				br
+				input#team-e(type="radio" value="Embedded" name="team"
+					title="Please select your team" required)
 				label(for="team-e") Embedded team
 				br
 				input#team-f(type="radio" value="Frontend" name="team")

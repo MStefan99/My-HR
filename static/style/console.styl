@@ -26,12 +26,14 @@ html
 			align-items center
 			justify-content space-between
 			background linear-gradient(90deg, primary-color 0%, secondary-color 100%)
-			color #fff
-			vertical-align center
 
 			h1
-				font-size 3rem
-				margin 0 5vw
+				font-size 2rem
+				margin 0 1vw
+
+				@media screen and (min-width 425px)
+					font-size 3rem
+					margin 0 5vw
 
 			.menu-container
 				margin 1vh 2vw
@@ -152,12 +154,20 @@ html
 						margin-bottom 4vh
 
 			div#main-container
+				form
+					input
+						display block
+
+					label, input
+						margin .5em 0
+
 				table
 					width 100%
 
 				table, tr, th, td
 					border 1px solid #000
 					border-collapse collapse
+
 
 				th, td
 					padding 1vh 1vw
@@ -172,21 +182,49 @@ html
 				tr:nth-child(even)
 					background just-gray
 
+				@media screen and (max-width 425px)
+					table, tr, td
+						display block
+
+					th
+						display none
+
+					tr
+						border none
+
+					td
+						border none
+						border-bottom 1px solid #000
+
 				h2
-					margin 2vh 5vw
+					margin 2vh 0
+
+					@media screen and (min-width 425px)
+						margin 2vh 5vw
 
 				.section
-					margin 1vh 7vw
+					margin 1vh 0
+
+					@media screen and (min-width 425px)
+						margin 1vh 7vw
 
 					span
 						display inline-block
 
 					span.label
 						font-weight bold
-						margin .3em 1em
+						margin .3em 0
+
+						@media screen and (min-width 425px)
+							margin .3em 1em
+
+					a
+						@media screen and (max-width 425px)
+							display block
 
 					p
-						margin 1em 3em
+						@media screen and (min-width 425px)
+							margin 1em 3em
 
 		footer
 			background #555

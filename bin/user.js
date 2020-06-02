@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
@@ -20,7 +21,7 @@ router.use(cookieParser());
 
 
 async function sendMail(email, params) {
-	const template = await readFile('mail_template.html', 'utf8');
+	const template = await readFile(path.join(__dirname, 'mail_template.html'), 'utf8');
 
 	const html = template.replace(/%{(.*?)}/g, (match, g1) => params[g1]);
 	const transporter = nodemailer.createTransport({
@@ -31,8 +32,8 @@ async function sendMail(email, params) {
 
 	await transporter.sendMail({
 		from: 'noreply@mstefan99.com',
-		to: email,
-		subject: 'Complete your routerlication for [company name]',
+		to: email.trim(),
+		subject: 'Complete your application for [company name]',
 		html: html
 	});
 }
@@ -102,7 +103,7 @@ router.post('/register', async (req, res) => {
 
 router.get('/registered', (req, res) => {
 	res.render('user/status', {
-		title: 'Check your email!', info: 'We have sent you an email with your routerlication link. ' +
+		title: 'Check your email!', info: 'We have sent you an email with your application link. ' +
 			'Please follow it to complete your registration.'
 	});
 });
@@ -115,7 +116,7 @@ router.get('/join', async (req, res) => {
 	const db = await openDB();
 	const count = (await db.get(`select count(id) as count
                                  from applications`)).count;
-	res.render('user/join', {email: req.session.email, mobile_disabled: (count < 10)});
+	res.render('user/join', {email: req.session.email, mobile_disabled: (count < 15)});
 });
 
 
@@ -152,7 +153,7 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 router.get('/success', async (req, res) => {
 	res.render('user/status', {
 		title: 'Thank you!',
-		info: 'We have received your routerlication and will contact you as soon as possible!'
+		info: 'We have received your application and will contact you as soon as possible!'
 	});
 });
 
