@@ -31,7 +31,11 @@ addEventListener('load', ->
 		tableRow.appendChild(teamCell)
 
 		freeFormCell = document.createElement('td')
-		freeFormCell.innerHTML = application.freeForm || '[No info]'
+		if application.freeForm.length > 200
+			text = application.freeForm.substr(0, 200) + '...'
+		else
+			text = application.freeForm
+		freeFormCell.innerHTML = text || '[No info]'
 		tableRow.appendChild(freeFormCell)
 
 		openCell = document.createElement('td')

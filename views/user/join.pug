@@ -16,16 +16,16 @@ body
 			form(action="/join/" method="post" enctype="multipart/form-data")
 				label.required(for="firstname") First name
 				input#firstname(type="text" name="firstName" placeholder="John"
-					title="Your first name" required)
+					title="Your first name" maxlength=100 required)
 				label.required(for="lastname") Last name
 				input#lastname(type="text" name="lastName" placeholder="Doe"
-					title="Your last name" required)
+					title="Your last name" maxlength=100 required)
 				label.required(for="email") Your Metropolia email
 				input#email(type="email" name="email" value=email
 					title="Filled in automatically" disabled required)
 				label.required(for="backup-email") Secondary email
 				input#backup-email(type="email" name="backupEmail" placeholder="john.doe@gmail.com"
-					title="Non-Metropolia email used to contact you" required)
+					title="Non-Metropolia email used to contact you" maxlength=100 required)
 				label.required(for="phone") Main phone number
 				input#phone(type="tel" name="phone"
 					title="Your phone starting with 0 or +358"
@@ -60,11 +60,12 @@ body
 				br
 				label(for="links") Add useful links (GitHub, LinkedIn, etc.)
 				textarea#links(name="links" placeholder="You can include links to your code, " +
-				"social network pages or anything else. You can also add comments here.")
+					"social network pages or anything else. You can also add comments here. 5000 characters max."
+					maxlength=5000)
 				label(for="free-form") Feel free to tell anything else you want
 				textarea#free-form(name="freeForm" placeholder="Enter anything you want here. " +
-				"You can tell more about yourself, your projects, achievements, work experience or anything " +
-				"else you can think of.")
+					"You can tell more about yourself, your projects, achievements, work experience or anything " +
+					"else you can think of. 5000 characters max." maxlength=5000)
 				label.required(for="cv") Please attach your cv
 				input#cv(type="file" name="cv" required)
 				input#submit(type="submit" value="Join!")

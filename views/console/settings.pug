@@ -15,6 +15,8 @@ body
 				label(for="password-repeat") Repeat new password
 				input#password-repeat(type="password" name="passwordRepeat" required)
 				input(type="submit" value="Update password")
+			if (user.admin)
+				a(href="/console/users") Manage users
 
 	footer
 		include footer

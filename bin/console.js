@@ -1,6 +1,7 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const uuid = require('uuid');
@@ -16,6 +17,38 @@ const hashSecret = 'Your HR secret key'
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(cookieParser());
 router.use(getUser)
+
+
+async function addAdmin() {
+	const db = await openDB();
+	const users = await db.get(`select *
+                                from console_users`);
+	if (!users) {
+		await db.run(`insert into console_users(username, uuid, admin, setup_code)
+                      values ('admin', $id, 1, 'admin')`, {$id: uuid.v4()});
+	}
+}
+
+async function createTables() {
+	const db = await openDB();
+	const tables = await db.all(`select *
+                                 from sqlite_master
+                                 where type='table'`);
+	if (!tables.find(table => table.name === 'console_users')) {
+		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'console_users.sql'), 'utf-8'));
+	}
+	if (!tables.find(table => table.name === 'console_sessions')) {
+		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'console_sessions.sql'), 'utf-8'));
+	}
+}
+
+async function initialize() {
+	await createTables();
+	await addAdmin();
+}
+
+
+initialize();
 
 
 async function getUser(req, res, next) {
@@ -36,13 +69,22 @@ async function getUser(req, res, next) {
 }
 
 
-async function redirectIfNotAdmin(req, res, next) {
+async function redirectIfNotAuthorized(req, res, next) {
 	if (!req.user) {
 		res.redirect(303, '/console/login/');
 	} else if (!req.user.passwordHash) {
 		res.redirect(303, '/console/register/');
 	} else if (!req.user.secret) {
 		res.redirect(303, '/console/setup-otp/');
+	} else {
+		next();
+	}
+}
+
+
+async function redirectIfNotAdmin(req, res, next) {
+	if (!req.user.admin) {
+		res.redirect(303, '/console/');
 	} else {
 		next();
 	}
@@ -70,8 +112,12 @@ router.get('/register', (req, res) => {
 });
 
 
-router.get('/get-otp', (req, res) => {
-	const secret = twoFactor.generateSecret({name: 'My HR'});
+router.get('/get-otp', async (req, res) => {
+	const db = await openDB();
+	const user = await db.get(`select username
+                               from console_users
+                               where uuid=$id`, {$id: req.cookies.CUID});
+	const secret = twoFactor.generateSecret({name: 'My HR', account: user.username || 'My HR'});
 	res.json(secret);
 });
 
@@ -190,12 +236,14 @@ router.post('/setup-otp/', async (req, res) => {
                       set secret=$secret
                       where uuid=$id`, {$secret: req.body.secret, $id: req.cookies.CUID});
 		res.clearCookie('CUID', cookieOptions);
-		res.redirect(303, '/console/');
+		res.render('console/status', {
+			title: 'Success', info: 'You can log in with your new account now!'
+		});
 	}
 });
 
 
-router.use(redirectIfNotAdmin);
+router.use(redirectIfNotAuthorized);
 
 
 router.get('/', (req, res) => {
@@ -294,6 +342,55 @@ router.get('/logout', async (req, res) => {
                   where uuid=$sid`, {$sid: req.user.sessionId});
 	res.clearCookie('CSID', cookieOptions);
 	res.redirect(303, '/console/');
+});
+
+
+router.use(redirectIfNotAdmin);
+
+
+router.get('/users', (req, res) => {
+	res.render('console/users');
+});
+
+
+router.get('/users/remove/:username', async (req, res) => {
+	if (req.params.username !== 'admin') {
+		const db = await openDB();
+		await db.run(`delete
+                      from console_users
+                      where username=$username`, {$username: req.params.username});
+	}
+	res.redirect('/console/users/');
+});
+
+
+router.post('/users', async (req, res) => {
+	const db = await openDB();
+	await db.run(`insert into console_users(username, admin, uuid, setup_code)
+                  values ($username, $admin, $id, $code)`, {
+		$username: req.body.username,
+		$admin: req.body.admin || 0,
+		$id: uuid.v4(),
+		$code: uuid.v4()
+	}).catch(() => {
+	});
+	res.redirect('/console/users/');
+});
+
+
+router.get('/get-users', async (req, res) => {
+	const db = await openDB();
+	const users = await db.all(`select username,
+                                       admin,
+                                       setup_code as setupCode,
+                                       case
+                                           when secret is null
+                                               then 0
+                                           else 1
+                                           end
+                                                  as otpSetup
+                                from console_users`);
+	res.json(users);
 });
 
 

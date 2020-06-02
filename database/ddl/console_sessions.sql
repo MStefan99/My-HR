@@ -3,7 +3,8 @@ create table console_sessions (
 		constraint console_sessions_pk
 			primary key autoincrement,
 	user_id integer not null
-		references console_users,
+		references console_users
+			on delete cascade on update cascade,
 	uuid    text    not null,
 	ip      text    not null,
 	ua      text    not null,

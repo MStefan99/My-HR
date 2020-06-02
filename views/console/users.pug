@@ -1,0 +1,28 @@
+head
+	include head
+
+body
+	header
+		include header-full
+
+	main
+		div#main-container
+			h1 Console users
+			table#users-table
+				tr
+					th Username
+					th Admin
+					th Setup code
+					th 2FA setup done
+					th Remove
+			h3 Add user
+			script(type="text/javascript" src="/js/users.js")
+			form(action="/console/users/" method="post")
+				label Username
+				input(type="text" placeholder="user" name="username" required)
+				input(type="checkbox" name="admin")
+				label Admin
+				input(type="submit" value="Add" required)
+
+	footer
+		include footer
