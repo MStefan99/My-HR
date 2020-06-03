@@ -90,7 +90,7 @@ async function redirectIfNotAuthorized(req, res, next) {
 
 async function redirectIfNotAdmin(req, res, next) {
 	if (!req.user.admin) {
-		res.redirect(303, '/console/');
+		res.render(303, '/console/');
 	} else {
 		next();
 	}
@@ -138,7 +138,7 @@ router.post('/login', async (req, res) => {
                                       uuid,
                                       secret
                                from console_users
-                               where username=$username`, {$username: req.body.username});
+                               where username=$username`, {$username: req.body.username.trim()});
 	const hash = crypto.createHmac('sha512', hashSecret);
 	hash.update(req.body.password);
 
@@ -179,18 +179,19 @@ router.post('/login', async (req, res) => {
 
 router.post('/register/', async (req, res) => {
 	const db = await openDB();
-	const user = await db.get(`select uuid,
+	const user = await db.get(`select id,
+                                      uuid,
                                       username,
                                       setup_code as setupCode
                                from console_users
-                               where username=$username`, {$username: req.body.username});
+                               where username=$username`, {$username: req.body.username.trim()});
 
 	if (!user) {
 		res.render('console/status', {
 			title: 'No such user', info: 'Please check if the username you entered is correct ' +
 				'and try again.'
 		});
-	} else if (user.setupCode !== req.body.setupCode) {
+	} else if (user.setupCode !== req.body.setupCode.trim()) {
 		res.render('console/status', {
 			title: 'Wrong setup code', info: 'You have entered a wrong setup code. ' +
 				'These codes are used as an additional protection against unauthorized users. ' +
@@ -212,8 +213,8 @@ router.post('/register/', async (req, res) => {
 		await db.run(`update console_users
                       set password_hash=$hash,
                           setup_code=null
-                      where setup_code=$code`, {
-			$code: req.body.setupCode,
+                      where id=$id`, {
+			$id: user.id,
 			$hash: hash.digest('hex'),
 		});
 		res.cookie('CUID', user.uuid, cookieOptions);
@@ -337,7 +338,7 @@ router.get('/file/:name', async (req, res) => {
                                where file_path=$path`,
 		{$path: req.params.name});
 	if (file) {
-		res.download(path.join(__dirname, '..', '/uploads/', req.params.name), name);
+		res.download(path.join(__dirname, '..', '/uploads/', req.params.name), file.fileName);
 	} else {
 		res.status(404).end();
 	}
