@@ -8,15 +8,29 @@ body
 	main
 		div#main-container
 			h1 Settings
-			p= 'Your username is: ' + user.username
-			form(action="/console/settings/" method="post")
-				label(for="password") New password
-				input#password(type="password" name="password" required)
-				label(for="password-repeat") Repeat new password
-				input#password-repeat(type="password" name="passwordRepeat" required)
-				input(type="submit" value="Update password")
+			h2 Sessions
+			div.section
+				table#sessions-table
+					tr
+						th IP
+						th OS or device
+						th Browser
+						th Logged in at
+				a(href="/console/exit") Sign out everywhere
+			script(type="text/javascript" src="/js/settings.js")
+			h2 User settings
+			div.section
+				p= 'Your username is: ' + user.username
+				form(action="/console/settings/" method="post")
+					label(for="password") New password
+					input#password(type="password" name="password" required)
+					label(for="password-repeat") Repeat new password
+					input#password-repeat(type="password" name="passwordRepeat" required)
+					input(type="submit" value="Update password")
 			if (user.admin)
-				a(href="/console/users") Manage users
+				h2 Admin options
+				div.section
+					a(href="/console/users") Manage users
 
 	footer
 		include footer

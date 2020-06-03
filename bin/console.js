@@ -10,7 +10,11 @@ const openDB = require('./db');
 
 
 const router = express.Router();
-const cookieOptions = {httpOnly: true, sameSite: 'strict'};
+const cookieOptions = {
+	httpOnly: true,
+	sameSite: 'strict',
+	maxAge: 24 * 60 * 60 * 1000
+};  // 1 day in milliseconds
 const hashSecret = 'Your HR secret key'
 
 
@@ -54,10 +58,12 @@ initialize();
 async function getUser(req, res, next) {
 	if (req.cookies.CSID) {
 		const db = await openDB();
-		req.user = await db.get(`select username,
+		req.user = await db.get(`select cu.id         as id,
+                                        cs.id         as sessionID,
+                                        username,
                                         password_hash as passwordHash,
-                                        cu.uuid       as userId,
-                                        cs.uuid       as sessionId,
+                                        cu.uuid       as userUUID,
+                                        cs.uuid       as sessionUUID,
                                         setup_code,
                                         admin,
                                         secret
@@ -93,12 +99,9 @@ async function redirectIfNotAdmin(req, res, next) {
 
 async function logOut(id) {
 	const db = await openDB();
-	const user = await db.run(`select *
-                               from console_users
-                               where uuid=$id`, {$id: id});
 	await db.run(`delete
                   from console_sessions
-                  where id=$id`, {$id: user.id});
+                  where user_id=$id`, {$id: id});
 }
 
 
@@ -306,17 +309,23 @@ router.post('/settings', async (req, res) => {
 		hash.update(req.body.password);
 		await db.run(`update console_users
                       set password_hash=$hash
-                      where uuid=$id`, {
-			$id: req.user.userId,
+                      where id=$id`, {
+			$id: req.user.id,
 			$hash: hash.digest('hex'),
 		});
-		await logOut(req.user.userId);
+		await logOut(req.user.id);
 		res.clearCookie('CSID', cookieOptions);
 		res.render('console/status', {
 			title: 'Success', info: 'You can log in with your new password now. ' +
 				'Note that you have been logged out on all devices.'
 		});
 	}
+});
+
+
+router.get('/exit', async (req, res) => {
+	await logOut(req.user.id);
+	res.redirect('/console/login/');
 });
 
 
@@ -335,11 +344,20 @@ router.get('/file/:name', async (req, res) => {
 });
 
 
+router.get('/sessions', async (req, res) => {
+	const db = await openDB();
+	const sessions = await db.all(`select ip, ua, time
+                                   from console_sessions
+                                   where user_id=$id`, {$id: req.user.id});
+	res.json(sessions);
+});
+
+
 router.get('/logout', async (req, res) => {
 	const db = await openDB();
 	await db.run(`delete
                   from console_sessions
-                  where uuid=$sid`, {$sid: req.user.sessionId});
+                  where id=$id`, {$id: req.user.sessionID});
 	res.clearCookie('CSID', cookieOptions);
 	res.redirect(303, '/console/');
 });
