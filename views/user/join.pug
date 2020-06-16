@@ -37,21 +37,25 @@ body
 				label.required Select your team
 				br
 				input#team-e(type="radio" value="Embedded" name="team"
-					title="" required)
+					title="Here you'll be developing an IoT device itself" required)
 				span Embedded team
 				br
-				input#team-f(type="radio" value="Frontend" name="team" title="a")
+				input#team-f(type="radio" value="Frontend" name="team"
+					title="Here you'll be developing a web interface")
 				span Frontend team
 				br
-				input#team-b(type="radio" value="Backend" name="team")
+				input#team-b(type="radio" value="Backend" name="team"
+					title="Here you'll be developing a server software connecting other components together")
 				span Backend team
 				br
-				input#team-a(type="radio" value="Android" name="team" disabled=mobile_disabled)
+				input#team-a(type="radio" value="Android" name="team" disabled=mobile_disabled
+					title="Here you'll be developing an Android client")
 				span Android team
 				if mobile_disabled
 					span.disabled **
 				br
-				input#team-i(type="radio" value="iOS" name="team" disabled=mobile_disabled)
+				input#team-i(type="radio" value="iOS" name="team" disabled=mobile_disabled
+					title="Here you'll be developing an iOS client")
 				span iOS team
 				if mobile_disabled
 					span.disabled **
@@ -71,6 +75,7 @@ body
 				input#cv(type="file" name="cv" required)
 				input#submit(type="submit" value="Join!")
 				label.label-info.required-info * Required fields
+				script(type="text/javascript" src="/js/join.js")
 
 	footer
 		include footer
