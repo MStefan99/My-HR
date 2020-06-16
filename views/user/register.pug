@@ -8,18 +8,29 @@ body
 		include header
 
 	main
-		h1 Hi, we're happy to see you!
+		div#splash-wrapper
+			div#splash
+				span#text-left.logo-text.hidden Mine e
+				img#logo.hidden(src="/img/me-logo.svg")
+				span#text-right.logo-text.hidden lipse
+			div#welcome-container.hidden
+				h1 Apply now!
+				h2 Fill in the form below to get started!
+				a(href="#register") Click here to start
+		div#content-container
+			h1#register Hi, we're happy to see you!
 			h2 But just a few steps first...
-			div#content-container
-				p.
-					We need to make sure you are a Metropolia student.
-					For this, please fill in this very simple form below and we'll get back to you in a moment!
-				form(action="/register/" method="post")
-					label.required(for="username") Enter your Metropolia email:
-					input#username(type="text" name="username" required)
-					label#metropolia-domain(for="username") @metropolia.fi
-					input(type="submit")
-					label.label-info.required-info * Required fields
+			p.
+				We need to make sure you are a Metropolia student.
+				For this, please fill in this very simple form below and we'll get back to you in a moment!
+			form(action="/register/" method="post")
+				label.required(for="username") Enter your Metropolia email:
+				input#username(type="text" name="username" required)
+				label#metropolia-domain(for="username") @metropolia.fi
+				input(type="submit")
+				label.label-info.required-info * Required fields
+			a(href="/join") Already registered? Click here!
+		script(type="text/javascript" src="/js/main.js")
 
 	footer
 		include footer

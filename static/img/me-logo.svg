@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;">
+    <g id="Moon" transform="matrix(2.2222,0,0,2.2222,-651.336,-562.391)">
+        <circle cx="518.107" cy="478.081" r="208.704" style="fill:rgb(255,193,75);"/>
+        <clipPath id="_clip1">
+            <circle cx="518.107" cy="478.081" r="208.704"/>
+        </clipPath>
+        <g clip-path="url(#_clip1)">
+            <g id="Shadow" transform="matrix(1,0,0,1,57.8145,-48.9199)">
+                <circle cx="518.107" cy="478.081" r="208.704" style="fill:rgb(11,0,49);"/>
+            </g>
+        </g>
+    </g>
+    <g id="Satellite" transform="matrix(2.2222,0,0,2.2222,-650.635,-563.84)">
+        <path d="M344.125,363.109C424.374,247.259 562.152,252.439 638.57,308.231C611.723,234.667 578.862,170.365 578.862,170.365L40.615,167.062L390.889,721.302L552.349,464.156C552.349,464.156 396.134,381.651 344.125,363.109Z" style="fill:none;"/>
+        <clipPath id="_clip2">
+            <path d="M344.125,363.109C424.374,247.259 562.152,252.439 638.57,308.231C611.723,234.667 578.862,170.365 578.862,170.365L40.615,167.062L390.889,721.302L552.349,464.156C552.349,464.156 396.134,381.651 344.125,363.109Z"/>
+        </clipPath>
+        <g clip-path="url(#_clip2)">
+            <g transform="matrix(-0.972606,-0.590214,0.485133,-0.799444,980.579,1048.88)">
+                <g transform="matrix(-0.338154,0.249652,-0.205205,-0.411399,879.427,345.361)">
+                    <path d="M370.859,681.572C344.963,665.857 336.697,632.073 352.412,606.177C368.127,580.28 401.91,572.014 427.807,587.729C453.703,603.444 461.969,637.227 446.254,663.124C430.539,689.02 396.756,697.287 370.859,681.572Z" style="fill:rgb(218,218,218);"/>
+                    <path d="M399.333,634.65C138.63,476.446 -27.606,273.155 28.341,180.961C84.287,88.768 341.366,142.36 602.069,300.565C862.772,458.769 1029.01,662.06 973.061,754.254C917.115,846.447 660.036,792.855 399.333,634.65Z" style="fill:none;stroke:rgb(218,218,218);stroke-width:24.31px;stroke-linecap:round;stroke-miterlimit:1.5;stroke-dasharray:72.92,72.92,0,0;"/>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

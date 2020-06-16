@@ -8,11 +8,11 @@ body
 		include header
 
 	main
-		h1 Welcome to Mine Eclipse!
-		//iframe(width="560" height="315" src="https://www.youtube.com/embed/NqrKGvQT0eU" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen)
-		p Video will be here
-		h2 Join us today by filling the form below!
 		div#content-container
+			h1 Welcome to Mine Eclipse!
+			// Include video here
+			p(style="color: #c00") Video will be here
+			h2 Join us today by filling the form below!
 			form(action="/join/" method="post" enctype="multipart/form-data")
 				label.required(for="firstname") First name
 				input#firstname(type="text" name="firstName" placeholder="John"
@@ -22,10 +22,10 @@ body
 					title="Your last name" maxlength=100 required)
 				label.required(for="email") Your Metropolia email
 				input#email(type="email" name="email" value=email
-					title="Filled in automatically" disabled required)
+					title="Your Metropolia email, filled in automatically" disabled required)
 				label.required(for="backup-email") Secondary email
 				input#backup-email(type="email" name="backupEmail" placeholder="john.doe@gmail.com"
-					title="Non-Metropolia email used to contact you" maxlength=100 required)
+					title="Your non-Metropolia email" maxlength=100 required)
 				label.required(for="phone") Main phone number
 				input#phone(type="tel" name="phone"
 					title="Your phone starting with 0 or +358"
@@ -37,35 +37,36 @@ body
 				label.required Select your team
 				br
 				input#team-e(type="radio" value="Embedded" name="team"
-					title="Please select your team" required)
-				label(for="team-e") Embedded team
+					title="" required)
+				span Embedded team
 				br
-				input#team-f(type="radio" value="Frontend" name="team")
-				label(for="team-f") Frontend team
+				input#team-f(type="radio" value="Frontend" name="team" title="a")
+				span Frontend team
 				br
 				input#team-b(type="radio" value="Backend" name="team")
-				label(for="team-b") Backend team
+				span Backend team
 				br
 				input#team-a(type="radio" value="Android" name="team" disabled=mobile_disabled)
-				label(for="team-b") Android team
+				span Android team
 				if mobile_disabled
 					span.disabled **
 				br
 				input#team-i(type="radio" value="iOS" name="team" disabled=mobile_disabled)
-				label(for="team-b") iOS team
+				span iOS team
 				if mobile_disabled
 					span.disabled **
 					br
-					span.disabled ** Mobile teams are currently full, please check back later
+					span.disabled.label ** Mobile teams are currently full, please check back later
 				br
 				label(for="links") Add useful links (GitHub, LinkedIn, etc.)
 				textarea#links(name="links" placeholder="You can include links to your code, " +
-					"social network pages or anything else. You can also add comments here. 5000 characters max."
-					maxlength=5000)
-				label(for="free-form") Feel free to tell anything else you want
-				textarea#free-form(name="freeForm" placeholder="Enter anything you want here. " +
+					"social network pages or anything else. You can also add comments here. Maximum 5000 characters."
+					title="Add any relevant links here" maxlength=5000)
+				label(for="free-form") Anything else you'd like to tell
+				textarea#free-form(name="freeForm" placeholder="Feel free to add anything you want here. " +
 					"You can tell more about yourself, your projects, achievements, work experience or anything " +
-					"else you can think of. 5000 characters max." maxlength=5000)
+					"else you can think of. Maximum 5000 characters."
+					title="Add anything about yourself here" maxlength=5000)
 				label.required(for="cv") Please attach your cv
 				input#cv(type="file" name="cv" required)
 				input#submit(type="submit" value="Join!")
