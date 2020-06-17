@@ -1,14 +1,18 @@
-head
-	include head
+doctype html
 
-body
-	header
-		include header-min
+html(lang="en")
+	head
+		title Status - My HR
+		include head
 
-	main
-		div#info
-			h2= title
-			p= info
+	body
+		header
+			include header-min
 
-	footer
-		include footer
+		main
+			div#info
+				h1= title
+				p= info
+
+		footer
+			include footer

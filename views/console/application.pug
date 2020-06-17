@@ -1,46 +1,50 @@
-head
-	include head
+doctype html
 
-body
-	header
-		include header-full
+html(lang="en")
+	head
+		title= application.firstName + '\'s application - My HR'
+		include head
 
-	main
-		div#main-container
-			h1 Application
-			h2 Basic info
-			div.section
-				span.label First name:
-				span= application.firstName
-				br
-				span.label Last name:
-				span= application.lastName
-				br
-				span.label Team selected:
-				span= application.team
-			h2 Contact info
-			div.section
-				span.label Metropolia email:
-				a(href="mailto:" + application.email)= application.email
-				br
-				span.label Other email:
-				a(href="mailto:" + application.backupEmail)= application.backupEmail
-				br
-				span.label Phone:
-				a(href="tel:" + application.phone)= application.phone
-				br
-				span.label Backup phone:
-				a(href="tel:" + application.backupPhone || "")= application.backupPhone || '[Not provided]'
-				br
-			h2 Other
-			div.section
-				span.label Links:
-				p= application.links || '[Empty]'
-				p.label Note: Links are not parsed due to security reasons
-				span.label Free form info:
-				p= application.freeForm || '[Empty]'
-				span.label Download CV:
-				a(href="/console/file/" + application.filePath)= application.fileName
+	body
+		header
+			include header-full
 
-	footer
-		include footer
+		main
+			div#main-container
+				h1 Application
+				h2 Basic info
+				div.section
+					span.label First name:
+					span= application.firstName
+					br
+					span.label Last name:
+					span= application.lastName
+					br
+					span.label Team selected:
+					span= application.team
+				h2 Contact info
+				div.section
+					span.label Metropolia email:
+					a(href="mailto:" + application.email)= application.email
+					br
+					span.label Other email:
+					a(href="mailto:" + application.backupEmail)= application.backupEmail
+					br
+					span.label Phone:
+					a(href="tel:" + application.phone)= application.phone
+					br
+					span.label Backup phone:
+					a(href="tel:" + application.backupPhone || "")= application.backupPhone || '[Not provided]'
+					br
+				h2 Other
+				div.section
+					span.label Links:
+					p.block= application.links || '[Empty]'
+					p.label.block Note: Links are not parsed due to security reasons
+					span.label Free form info:
+					p.block= application.freeForm || '[Empty]'
+					span.label Download CV:
+					a(href="/console/file/" + application.filePath)= application.fileName
+
+		footer
+			include footer

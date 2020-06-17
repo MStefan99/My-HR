@@ -125,8 +125,8 @@ router.post('/register', async (req, res) => {
 
 router.get('/registered', (req, res) => {
 	res.render('user/status', {
-		title: 'Check your email!', info: 'We have sent you an email with your application link. ' +
-			'Please follow it to complete your registration.'
+		title: 'Check your email!', info: 'We\'ve sent you an email with your link. ' +
+			'Please follow it to complete your application.'
 	});
 });
 
@@ -167,7 +167,7 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 router.get('/success', async (req, res) => {
 	res.render('user/status', {
 		title: 'Thank you!',
-		info: 'We have received your application and will contact you as soon as possible!'
+		info: 'We have received your application and will contact you as soon as possible.'
 	});
 });
 
@@ -180,6 +180,11 @@ router.get('/join', async (req, res) => {
 	const count = (await db.get(`select count(id) as count
                                  from applications`)).count;
 	res.render('user/join', {email: req.session.email, mobile_disabled: (count < 15)});
+});
+
+
+router.use((req, res, next) => {
+	res.status(404).render('user/404');
 });
 
 

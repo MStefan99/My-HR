@@ -1,6 +1,4 @@
 sessionTable = document.querySelector('#sessions-table')
-browserMap = new Map()
-browserMap['Firefox'] = ''
 
 
 addEventListener('load', ->

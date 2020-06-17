@@ -1,17 +1,19 @@
 doctype html
 
-head
-	include head
+html(lang="en")
+	head
+		title Status - Mine Eclipse
+		include head
 
-body
-	header
-		include header
+	body
+		header
+			include header
 
-	main
-		div#content-container
-			div#status
-				h1= title
-				h3= info
+		main
+			div#content-container
+				div#status
+					h1= title
+					h3= info
 
-	footer
-		include footer
+		footer
+			include footer

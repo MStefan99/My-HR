@@ -1,0 +1,54 @@
+doctype html
+
+html(lang="en")
+	head
+		title Versions - My HR
+		include head
+
+	body
+		header
+			include header-full
+
+		main
+			div#main-container
+				h1 Version History
+				table#version-table
+					tr
+						th Version
+						th Changelog
+					tr
+						td v0.1.1-beta
+						td
+							p Added version history
+							p Added 404 page
+					tr
+						td v0.1.0-beta
+						td
+							p Added session viewer
+							p Added version info
+					tr
+						td v0.0.5-alpha
+						td
+							p Added user management
+					tr
+						td v0.0.4-alpha
+						td
+							p Added settings
+					tr
+						td v0.0.3-alpha
+						td
+							p Added application viewer
+							p 2FA fixes and improvements
+					tr
+						td v0.0.2-alpha
+						td
+							p Added 2-factor authentication
+							p Added application preview
+					tr
+						td v0.0.1-alpha
+						td
+							p Initial console release
+							p Added user authentication
+
+		footer
+			include footer

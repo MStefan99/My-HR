@@ -84,7 +84,7 @@ html
 					width 30vw
 
 				h2
-					font-weight bolder
+					font-weight bold
 					text-align center
 
 				form
@@ -125,7 +125,7 @@ html
 
 					input[type="submit"], input[type="button"]
 						cursor pointer
-						color white
+						color #fff
 						background primary-color
 						border-bottom-color primary-color
 						transition background .2s linear,
@@ -185,7 +185,11 @@ html
 					border 1px solid #000
 
 				tr:nth-child(even)
-					background just-gray
+					background #eee
+
+				#version-table
+					p:before
+						content "• "
 
 				@media screen and (max-width 425px)
 					table, tr, td
@@ -227,7 +231,7 @@ html
 						@media screen and (max-width 425px)
 							display block
 
-					p
+					p.block
 						white-space pre-line
 
 						@media screen and (min-width 425px)
@@ -237,13 +241,22 @@ html
 							font-weight bold
 							font-style italic
 
+							&:before
+								content "• "
+
 		footer
 			display flex
 			flex-flow row wrap
 			justify-content space-between
 			background #555
-			color white
+			color #fff
 			padding .5em 3em
 
 			p
-				margin .5em 0
+				margin .5em 2em
+
+			a
+				color #fff
+
+				&:hover
+					color just-gray

@@ -19,7 +19,7 @@ addEventListener('load', ->
 		tableRow.appendChild(adminCell)
 
 		registeredCell = document.createElement('td')
-		registeredCell.innerHTML = user.setupCode || '[Already setup]'
+		registeredCell.innerHTML = user.setupCode || '[Already set up]'
 		tableRow.appendChild(registeredCell)
 
 		otpCell = document.createElement('td')
@@ -29,7 +29,7 @@ addEventListener('load', ->
 		removeCell = document.createElement('td')
 		tableRow.appendChild(removeCell)
 		removeLink = document.createElement('a')
-		removeLink.href = if user.username != 'admin' then '/console/users/remove/' + user.username else ''
+		removeLink.href = if user.username != 'admin' then '/console/users/remove/' + user.username else '#'
 		removeLink.innerHTML = 'Remove'
 		removeCell.appendChild(removeLink)
 )

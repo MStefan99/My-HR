@@ -41,7 +41,7 @@ addEventListener('load', ->
 		openCell = document.createElement('td')
 		openLink = document.createElement('a')
 		openLink.innerHTML = 'Open'
-		openLink.href = '/console/application/' + application.id
+		openLink.href = '/console/applications/' + application.id
 		tableRow.appendChild(openCell)
 		openCell.appendChild(openLink)
 )

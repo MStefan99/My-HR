@@ -1,21 +1,25 @@
-head
-	include head
+doctype html
 
-body
-	header
-		include header-full
+html(lang="en")
+	head
+		title Applications - My HR
+		include head
 
-	main
-		div#main-container
-			h1 Received applications
-			table#applications-table
-				tr
-					th First name
-					th Last name
-					th Team
-					th Info
-					th More
-			script(type="text/javascript", src="/js/applications.js")
+	body
+		header
+			include header-full
 
-	footer
-		include footer
+		main
+			div#main-container
+				h1 Received applications
+				table#applications-table
+					tr
+						th First name
+						th Last name
+						th Team
+						th Info
+						th More
+				script(type="text/javascript", src="/js/applications.js")
+
+		footer
+			include footer

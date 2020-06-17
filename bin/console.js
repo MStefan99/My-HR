@@ -255,6 +255,11 @@ router.get('/', (req, res) => {
 });
 
 
+router.get('/versions', (req, res) => {
+	res.render('console/versions');
+});
+
+
 router.get('/applications', async (req, res) => {
 	const db = await openDB();
 	const applications = await db.all(`select id,
@@ -267,7 +272,7 @@ router.get('/applications', async (req, res) => {
 });
 
 
-router.get('/application/:id', async (req, res) => {
+router.get('/applications/:id', async (req, res) => {
 	const db = await openDB();
 	const application = await db.get(`select id,
                                              first_name   as firstName,
@@ -289,6 +294,15 @@ router.get('/application/:id', async (req, res) => {
 
 router.get('/settings', (req, res) => {
 	res.render('console/settings', {user: req.user});
+});
+
+
+router.get('/sessions', async (req, res) => {
+	const db = await openDB();
+	const sessions = await db.all(`select ip, ua, time
+                                   from console_sessions
+                                   where user_id=$id`, {$id: req.user.id});
+	res.json(sessions);
 });
 
 
@@ -324,12 +338,6 @@ router.post('/settings', async (req, res) => {
 });
 
 
-router.get('/exit', async (req, res) => {
-	await logOut(req.user.id);
-	res.redirect('/console/login/');
-});
-
-
 router.get('/file/:name', async (req, res) => {
 	const db = await openDB();
 	const file = await db.get(`select file_name as fileName,
@@ -345,15 +353,6 @@ router.get('/file/:name', async (req, res) => {
 });
 
 
-router.get('/sessions', async (req, res) => {
-	const db = await openDB();
-	const sessions = await db.all(`select ip, ua, time
-                                   from console_sessions
-                                   where user_id=$id`, {$id: req.user.id});
-	res.json(sessions);
-});
-
-
 router.get('/logout', async (req, res) => {
 	const db = await openDB();
 	await db.run(`delete
@@ -361,6 +360,12 @@ router.get('/logout', async (req, res) => {
                   where id=$id`, {$id: req.user.sessionID});
 	res.clearCookie('CSID', cookieOptions);
 	res.redirect(303, '/console/');
+});
+
+
+router.get('/exit', async (req, res) => {
+	await logOut(req.user.id);
+	res.redirect('/console/login/');
 });
 
 
@@ -378,8 +383,13 @@ router.get('/users/remove/:username', async (req, res) => {
 		await db.run(`delete
                       from console_users
                       where username=$username`, {$username: req.params.username});
+		res.redirect('/console/users/');
+	} else {
+		res.render('console/status', {
+			title: 'Not allowed!', info: 'Admin user cannot be removed, even by another ' +
+				'administrator.'
+		});
 	}
-	res.redirect('/console/users/');
 });
 
 
@@ -410,6 +420,11 @@ router.get('/get-users', async (req, res) => {
                                                   as otpSetup
                                 from console_users`);
 	res.json(users);
+});
+
+
+router.use((req, res, next) => {
+	res.status(404).render('console/404');
 });
 
 

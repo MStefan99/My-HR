@@ -1,29 +1,33 @@
-head
-	include head
+doctype html
 
-body
-	header
-		include header-min
+html(lang="en")
+	head
+		title Register - My HR
+		include head
 
-	main
-		div#login-form
-			h2 Register at My HR console
-			form#register-form(action="/console/register/" method="post")
-				label.required(for="username") Your username
-				input.text#username(type="text" name="username" required)
-				label.required(for="code") Your setup code
-				input.text#code(type="text" name="setupCode" required)
-				label.required(for="password") Your password
-				input.text#password(type="password" name="password"
-					pattern=".{8,128}" title="8 or more characters" required)
-				label.label-status#pwd-label(for="password-repeat")
-				label.required(for="password") Repeat your password
-				input.text#password-repeat(type="password" name="passwordRepeat"
-					pattern=".{8,128}" title="8 or more characters" required)
-				label.label-status#pwdr-label(for="password-repeat")
-				input#submit(type="submit" value="Register")
-				label.label-info.required-info * Required fields
-			script(type="text/javascript" src="/js/register.js")
+	body
+		header
+			include header-min
 
-	footer
-		include footer
+		main
+			div#login-form
+				h2 Register at My HR console
+				form#register-form(action="/console/register/" method="post")
+					label.required(for="username") Your username
+					input.text#username(type="text" name="username" required)
+					label.required(for="code") Your setup code
+					input.text#code(type="text" name="setupCode" required)
+					label.required(for="password") Your password
+					input.text#password(type="password" name="password"
+						pattern=".{8,128}" title="8 or more characters" required)
+					label.label-status#pwd-label(for="password-repeat")
+					label.required(for="password") Repeat your password
+					input.text#password-repeat(type="password" name="passwordRepeat"
+						pattern=".{8,128}" title="8 or more characters" required)
+					label.label-status#pwdr-label(for="password-repeat")
+					input#submit(type="submit" value="Register")
+					label.label-info.required-info * Required fields
+				script(type="text/javascript" src="/js/register.js")
+
+		footer
+			include footer
