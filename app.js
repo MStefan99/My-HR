@@ -13,6 +13,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/style', express.static(path.join(__dirname, 'static', 'style')));
 app.use('/js', express.static(path.join(__dirname, 'static', 'js')));
 app.use('/img', express.static(path.join(__dirname, 'static', 'img')));
+app.use('/favicon.ico', express.static(path.join(__dirname, 'static', 'img', 'me-logo.svg')));
 app.use('/console', consoleRouter);
 app.use(applicationRouter);
 

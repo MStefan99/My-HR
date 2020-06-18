@@ -6,7 +6,7 @@ remove = (element) ->
 
 
 addEventListener('load', ->
-	res = await fetch('/console/get-applications/');
+	res = await fetch('/console/get-stars/');
 	applications = await res.json();
 
 	oldCells = document.querySelectorAll('td')

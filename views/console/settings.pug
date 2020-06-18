@@ -14,12 +14,14 @@ html(lang="en")
 				h1 Settings
 				h2 Sessions
 				div.section
-					table#sessions-table
-						tr
-							th IP
-							th OS / Device
-							th Browser
-							th Logged in at
+					table
+						thead
+							tr
+								th IP
+								th OS / Device
+								th Browser
+								th Logged in at
+						tbody#sessions-table
 					a(href="/console/exit") Sign out everywhere
 				script(type="text/javascript" src="/js/settings.js")
 				h2 User settings
@@ -31,6 +33,9 @@ html(lang="en")
 						label(for="password-repeat") Repeat new password
 						input#password-repeat(type="password" name="passwordRepeat" required)
 						input(type="submit" value="Update password")
+						label.
+							Be careful when selecting your password! We do not store your password
+							which means there is no way to restore lost or forgotten password.
 				if (user.admin)
 					h2 Admin options
 					div.section

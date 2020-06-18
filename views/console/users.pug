@@ -12,21 +12,23 @@ html(lang="en")
 		main
 			div#main-container
 				h1 Console users
-				table#users-table
-					tr
-						th Username
-						th Admin
-						th Setup code
-						th 2FA setup done
-						th Remove
+				table
+					thead
+						tr
+							th Username
+							th Admin
+							th Setup code
+							th 2FA setup done
+							th Remove
+					tbody#users-table
 				h3 Add user
-				script(type="text/javascript" src="/js/users.js")
-				form(action="/console/users/" method="post")
+				form
 					label Username
-					input(type="text" placeholder="user" name="username" required)
-					input(type="checkbox" name="admin")
+					input#username(type="text" placeholder="user" name="username" required)
+					input#admin(type="checkbox" name="admin")
 					label Admin
-					input(type="submit" value="Add" required)
+					input#submit(type="button" value="Add" required)
+			script(type="text/javascript" src="/js/users.js")
 
 		footer
 			include footer

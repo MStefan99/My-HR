@@ -18,6 +18,7 @@ const cookieOptions = {
 const hashSecret = 'Your HR secret key'
 
 
+router.use('/favicon.ico', express.static(path.join(__dirname, '..', 'static', 'img', 'mh-logo.svg')));
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(cookieParser());
 router.use(getUser)
@@ -43,6 +44,9 @@ async function createTables() {
 	}
 	if (!tables.find(table => table.name === 'console_sessions')) {
 		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'console_sessions.sql'), 'utf-8'));
+	}
+	if (!tables.find(table => table.name === 'console_stars')) {
+		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'console_stars.sql'), 'utf-8'));
 	}
 }
 
@@ -255,12 +259,17 @@ router.get('/', (req, res) => {
 });
 
 
+router.get('/stars', async (req, res) => {
+	res.render('console/stars');
+});
+
+
 router.get('/versions', (req, res) => {
 	res.render('console/versions');
 });
 
 
-router.get('/applications', async (req, res) => {
+router.get('/get-applications', async (req, res) => {
 	const db = await openDB();
 	const applications = await db.all(`select id,
                                               first_name as firstName,
@@ -288,7 +297,57 @@ router.get('/applications/:id', async (req, res) => {
                                              file_path    as filePath
                                       from applications
                                       where id=$id`, {$id: req.params.id});
-	res.render('console/application', {application: application});
+	if (application) {
+		res.render('console/application', {application: application});
+	} else {
+		res.render('console/404');
+	}
+});
+
+
+router.get('/get-stars', async (req, res) => {
+	const db = await openDB();
+	const stars = await db.all(`select a.id,
+                                       first_name as firstName,
+                                       last_name  as lastName,
+                                       team,
+                                       free_form  as freeForm
+                                from applications a
+                                         left join
+                                     console_stars cs on a.id=cs.application_id
+                                where cs.user_id=$id`, {$id: req.user.id});
+	res.json(stars);
+});
+
+
+router.get('/get-stars/:id', async (req, res) => {
+	const db = await openDB();
+	const star = await db.all(`select 1
+                               from console_stars
+                               where user_id=$uid
+                                 and application_id=$aid`,
+		{$uid: req.user.id, $aid: req.params.id});
+	res.json(star.length > 0);
+});
+
+
+router.post('/stars', async (req, res) => {
+	const db = await openDB();
+	await db.run(`insert into console_stars(user_id, application_id)
+                  values ($uid, $aid)`,
+		{$uid: req.user.id, $aid: req.query.applicationId});
+	res.end();
+});
+
+
+router.delete('/stars', async (req, res) => {
+	const db = await openDB();
+	await db.run(`delete
+                  from console_stars
+                  where user_id=$uid
+                    and application_id=$aid`,
+		{$uid: req.user.id, $aid: req.query.applicationId});
+	res.end();
 });
 
 
@@ -301,7 +360,8 @@ router.get('/sessions', async (req, res) => {
 	const db = await openDB();
 	const sessions = await db.all(`select ip, ua, time
                                    from console_sessions
-                                   where user_id=$id`, {$id: req.user.id});
+                                   where user_id=$id
+                                   order by time desc`, {$id: req.user.id});
 	res.json(sessions);
 });
 
@@ -377,18 +437,15 @@ router.get('/users', (req, res) => {
 });
 
 
-router.get('/users/remove/:username', async (req, res) => {
-	if (req.params.username !== 'admin') {
+router.delete('/users', async (req, res) => {
+	if (req.query.username !== 'admin') {
 		const db = await openDB();
 		await db.run(`delete
                       from console_users
-                      where username=$username`, {$username: req.params.username});
-		res.redirect('/console/users/');
+                      where username=$username`, {$username: req.query.username});
+		res.end();
 	} else {
-		res.render('console/status', {
-			title: 'Not allowed!', info: 'Admin user cannot be removed, even by another ' +
-				'administrator.'
-		});
+		res.status(400).end();
 	}
 });
 
@@ -397,13 +454,14 @@ router.post('/users', async (req, res) => {
 	const db = await openDB();
 	await db.run(`insert into console_users(username, admin, uuid, setup_code)
                   values ($username, $admin, $id, $code)`, {
-		$username: req.body.username,
-		$admin: req.body.admin || 0,
+		$username: req.query.username,
+		$admin: req.query.admin || 0,
 		$id: uuid.v4(),
 		$code: uuid.v4()
 	}).catch(() => {
+		res.status(422);
 	});
-	res.redirect('/console/users/');
+	res.end();
 });
 
 

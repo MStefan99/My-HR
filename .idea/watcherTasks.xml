@@ -2,26 +2,6 @@
 <project version="4">
   <component name="ProjectTasksOptions" suppressed-tasks="Pug/Jade">
     <TaskOptions isEnabled="true">
-      <option name="arguments" value="$FileName$" />
-      <option name="checkSyntaxErrors" value="true" />
-      <option name="description" />
-      <option name="exitCodeBehavior" value="ERROR" />
-      <option name="fileExtension" value="styl" />
-      <option name="immediateSync" value="true" />
-      <option name="name" value="Stylus" />
-      <option name="output" value="$FileNameWithoutExtension$.css" />
-      <option name="outputFilters">
-        <array />
-      </option>
-      <option name="outputFromStdout" value="false" />
-      <option name="program" value="stylus" />
-      <option name="runOnExternalChanges" value="true" />
-      <option name="scopeName" value="Project Files" />
-      <option name="trackOnlyRoot" value="true" />
-      <option name="workingDir" value="$FileDir$" />
-      <envs />
-    </TaskOptions>
-    <TaskOptions isEnabled="true">
       <option name="arguments" value="--map --compile $FileName$" />
       <option name="checkSyntaxErrors" value="true" />
       <option name="description" />
@@ -42,7 +22,27 @@
       <option name="outputFromStdout" value="false" />
       <option name="program" value="coffee" />
       <option name="runOnExternalChanges" value="true" />
-      <option name="scopeName" value="Project Files" />
+      <option name="scopeName" value="CoffeeScript" />
+      <option name="trackOnlyRoot" value="true" />
+      <option name="workingDir" value="$FileDir$" />
+      <envs />
+    </TaskOptions>
+    <TaskOptions isEnabled="true">
+      <option name="arguments" value="$FileName$" />
+      <option name="checkSyntaxErrors" value="true" />
+      <option name="description" />
+      <option name="exitCodeBehavior" value="ERROR" />
+      <option name="fileExtension" value="styl" />
+      <option name="immediateSync" value="true" />
+      <option name="name" value="Stylus" />
+      <option name="output" value="$FileNameWithoutExtension$.css" />
+      <option name="outputFilters">
+        <array />
+      </option>
+      <option name="outputFromStdout" value="false" />
+      <option name="program" value="stylus" />
+      <option name="runOnExternalChanges" value="true" />
+      <option name="scopeName" value="Stylus" />
       <option name="trackOnlyRoot" value="true" />
       <option name="workingDir" value="$FileDir$" />
       <envs />

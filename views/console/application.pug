@@ -12,6 +12,14 @@ html(lang="en")
 		main
 			div#main-container
 				h1 Application
+				div.button-container
+					span#star-button.button
+							span#star-text.text
+							img#star-icon.icon(alt="Star icon")
+					span#share-button.button
+						span.text Share
+						img.icon(alt="Share icon" src="/img/share.svg")
+				script(type="text/javascript" src="/js/application.js")
 				h2 Basic info
 				div.section
 					span.label First name:

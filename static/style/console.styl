@@ -40,29 +40,27 @@ html
 				display flex
 				flex-flow row wrap
 
-			a
-				color #fff
-				text-decoration none
+				@media screen and (max-width 425px)
+					flex-flow column nowrap
 
-			.button
-				background #555
-				text-align center
-				cursor pointer
-				margin .5vh .5vw
-				padding .5em 1em
-				border-radius .5em
-				transition background .2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-				color .2s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+				a
+					color #fff
+					text-decoration none
 
-				&:hover
-					color primary-color-light
-					background #444
-
-				p
-					user-select none
+				.button
+					background #555
+					white-space nowrap
 					text-align center
-					text-decoration underline
-					margin 0
+					cursor pointer
+					margin .5vh .5vw
+					padding .5em 1em
+					border-radius .5em
+					transition background .2s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+					color .2s cubic-bezier(0.25, 0.46, 0.45, 0.94)
+
+					&:hover
+						color primary-color-light
+						background #444
 
 		main
 			margin 5vh 5vw
@@ -154,6 +152,31 @@ html
 						margin-bottom 4vh
 
 			div#main-container
+					.button
+						display inline-block
+						padding .25em 0
+						margin 0 .5em
+						width fit-content
+						text-decoration none
+						color #000
+						background #eee
+						cursor pointer
+						user-select none
+						border-radius .25em
+						border 1px solid just-gray
+
+						&:nth-child(1)
+							margin-left 0
+
+						.text
+							margin 0 .25em
+							font-weight bold
+
+						.icon
+							height 20px
+							margin 0 .25em
+							vertical-align text-bottom
+
 				form
 					label, input[type="checkbox"]
 						display inline
@@ -175,8 +198,10 @@ html
 
 				th, td
 					padding 1vh 1vw
-					word-break break-word
-					max-width 40vh
+
+					.button
+						text-decoration underline
+						cursor pointer
 
 				th
 					font-weight bold
@@ -191,19 +216,20 @@ html
 					p:before
 						content "• "
 
-				@media screen and (max-width 425px)
-					table, tr, td
-						display block
+				@media screen and (max-width 768px)
+					table
+						border-bottom none
 
-					th
+					thead tr
 						display none
 
-					tr
-						border none
+					tbody
+						tr, td
+							display block
+							border none
 
-					td
-						border none
-						border-bottom 1px solid #000
+						tr, td
+							border-bottom 1px solid #000
 
 				h2
 					margin 2vh 0
@@ -250,7 +276,7 @@ html
 			justify-content space-between
 			background #555
 			color #fff
-			padding .5em 3em
+			padding .5em 0
 
 			p
 				margin .5em 2em
