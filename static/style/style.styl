@@ -5,14 +5,14 @@ html
 	scroll-behavior smooth
 
 	body
+		display flex
+		flex-direction column
+		min-height 100vh
 		margin 0
 		background #28282f
-		height 100vh
-		display flex
-		flex-flow column nowrap
-		justify-content space-between
 
 		a
+			font-weight bold
 			color #fff
 
 			&:hover
@@ -44,6 +44,7 @@ html
 		main
 			margin-top 15vh
 			margin-bottom 10vh
+			flex 1 0
 
 			#splash-wrapper
 				height 100vh

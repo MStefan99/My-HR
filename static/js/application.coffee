@@ -14,8 +14,12 @@ addEventListener('load', ->
 
 
 shareButton.addEventListener('click', ->
-	await navigator.clipboard.writeText(window.location.href)
-	alert('Link copied to clipboard!')
+	try
+		await navigator.clipboard.writeText(window.location.href)
+		alert('Link copied to clipboard!')
+	catch
+		alert('Unfortunately, we can\'t copy the link on your device.
+			Please copy the link from the address bar manually.')
 )
 
 
