@@ -1,4 +1,5 @@
 table = document.querySelector('#applications-table')
+applicationsHeader = document.querySelector('#applications-header')
 
 
 remove = (element) ->
@@ -6,7 +7,18 @@ remove = (element) ->
 
 
 addEventListener('load', ->
-	res = await fetch('/console/get-applications/');
+	params = new URLSearchParams(window.location.search)
+	path = '/console/get-applications/?type=' + (params.get('type') || 'all')
+
+	switch (params.get('type'))
+		when null then title = 'All applications'
+		when 'stars' then title = 'Your stars'
+		when 'accepted' then title = 'Accepted applications'
+		when 'rejected' then title = 'Rejected applications'
+		when 'pending' then title = 'Pending applications'
+	applicationsHeader.innerHTML = title
+
+	res = await fetch(path);
 	applications = await res.json();
 
 	oldCells = document.querySelectorAll('td')
@@ -17,6 +29,9 @@ addEventListener('load', ->
 	for application in applications
 		tableRow = document.createElement('tr')
 		table.appendChild(tableRow)
+
+		statusCell = document.createElement('td')
+		tableRow.appendChild(statusCell)
 
 		firstNameCell = document.createElement('td')
 		firstNameCell.innerHTML = application.firstName

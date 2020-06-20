@@ -2,7 +2,7 @@ doctype html
 
 html(lang="en")
 	head
-		title Applications - My HR
+		title= 'Home - My HR'
 		include head
 
 	body
@@ -11,17 +11,17 @@ html(lang="en")
 
 		main
 			div#main-container
-				h1 Received applications
-				table
-					thead
-						tr
-							th First name
-							th Last name
-							th Team
-							th Info
-							th More
-					tbody#applications-table
-				script(type="text/javascript", src="/js/applications.js")
+				h1 My HR
+				h2
+					a(href="/console/applications/") All applications
+				h2
+					a(href="/console/applications/?type=stars") Your stars
+				h2
+					a(href="/console/applications/?type=accepted") Accepted applications
+				h2
+					a(href="/console/applications/?type=rejected") Rejected applications
+				h2
+					a(href="/console/applications/?type=pending") Pending applications
 
 		footer
 			include footer

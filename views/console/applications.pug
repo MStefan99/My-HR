@@ -2,7 +2,7 @@ doctype html
 
 html(lang="en")
 	head
-		title Stars - My HR
+		title Applications - My HR
 		include head
 
 	body
@@ -11,17 +11,18 @@ html(lang="en")
 
 		main
 			div#main-container
-				h1 Your stars
+				h1#applications-header Applications
 				table
 					thead
 						tr
+							th Status
 							th First name
 							th Last name
 							th Team
 							th Info
 							th More
 					tbody#applications-table
-				script(type="text/javascript", src="/js/stars.js")
+				script(type="text/javascript", src="/js/applications.js")
 
 		footer
 			include footer

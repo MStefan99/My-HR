@@ -20,20 +20,23 @@ router.use(bodyParser.urlencoded({extended: true}));
 router.use(cookieParser());
 
 
-async function sendMail(email, params) {
-	const template = await readFile(path.join(__dirname, 'mail_template.html'), 'utf8');
+async function sendMail(email, subject, template, params) {
+	const text = await readFile(path.join(__dirname, 'mail', template), 'utf8');
 
-	const html = template.replace(/%{(.*?)}/g, (match, g1) => params[g1]);
+	const html = text.replace(/%{(.*?)}/g, (match, g1) => params[g1]);
 	const transporter = nodemailer.createTransport({
-		host: "mail.inet.fi",
+		host: 'mail.inet.fi',
 		port: 25,
 		secure: false,
+		tls: {
+			rejectUnauthorized: false
+		}
 	});
 
 	await transporter.sendMail({
 		from: 'noreply@mstefan99.com',
 		to: email.trim(),
-		subject: 'Complete your application for Mine Eclipse',
+		subject: subject,
 		html: html
 	});
 }
@@ -72,14 +75,15 @@ async function redirectIfNotAuthorized(req, res, next) {
                                   where uuid=$uuid`, {$uuid: id});
 	if (!session) {
 		res.render('user/status', {
-			title: 'No link',
+			title: 'Not registered',
 			info: 'To ensure our data stays safe we\'ve limited who can access this page. To continue, please ' +
 				'return to the home page and get a link by filling in a form. We apologize for the inconvenience.'
 		});
 	} else {
 		if (session.ip !== ip) {
 			res.render('user/status', {
-				title: 'Wrong address', info: 'To ensure our data stays safe we\'ve limited who can access this page. ' +
+				title: 'Wrong address',
+				info: 'To ensure our data stays safe we\'ve limited who can access this page. ' +
 					'As a result, you can only view it from the same address as when you had while ' +
 					'getting your link on the home page. Open the link from that address or create a new link by ' +
 					'returning to the home page. We apologize for the inconvenience.'
@@ -119,7 +123,10 @@ router.post('/register', async (req, res) => {
 	await db.run(`insert into sessions(uuid, email, ip, created_at)
                   values ($uuid, $email, $ip, $time)`,
 		{$uuid: id, $email: email, $ip: ip, $time: Date.now()});
-	await sendMail(email, {sid: id});
+	await sendMail(email,
+		'Complete your application for Mine Eclipse',
+		'registered.html',
+		{sid: id});
 	res.redirect(303, '/registered/');
 });
 

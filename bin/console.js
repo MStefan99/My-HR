@@ -259,8 +259,8 @@ router.get('/', (req, res) => {
 });
 
 
-router.get('/stars', async (req, res) => {
-	res.render('console/stars');
+router.get('/applications', async (req, res) => {
+	res.render('console/applications');
 });
 
 
@@ -271,12 +271,61 @@ router.get('/versions', (req, res) => {
 
 router.get('/get-applications', async (req, res) => {
 	const db = await openDB();
-	const applications = await db.all(`select id,
-                                              first_name as firstName,
-                                              last_name  as lastName,
-                                              team,
-                                              free_form  as freeForm
-                                       from applications`);
+	let applications;
+	switch (req.query.type) {
+		case 'all':
+		default:
+			applications = await db.all(`select id,
+                                                first_name as firstName,
+                                                last_name  as lastName,
+                                                team,
+                                                free_form  as freeForm,
+                                                accepted
+                                         from applications`);
+			break;
+		case 'stars':
+			applications = await db.all(`select a.id,
+                                                first_name as firstName,
+                                                last_name  as lastName,
+                                                team,
+                                                free_form  as freeForm,
+                                                accepted
+                                         from applications a
+                                                  left join
+                                              console_stars cs on a.id=cs.application_id
+                                         where cs.user_id=$id`, {$id: req.user.id});
+			break;
+		case 'accepted':
+			applications = await db.all(`select id,
+                                                first_name as firstName,
+                                                last_name  as lastName,
+                                                team,
+                                                free_form  as freeForm,
+                                                accepted
+                                         from applications
+                                         where accepted=1`);
+			break;
+		case 'rejected':
+			applications = await db.all(`select id,
+                                                first_name as firstName,
+                                                last_name  as lastName,
+                                                team,
+                                                free_form  as freeForm,
+                                                accepted
+                                         from applications
+                                         where accepted=-1`);
+			break;
+		case 'pending':
+			applications = await db.all(`select id,
+                                                first_name as firstName,
+                                                last_name  as lastName,
+                                                team,
+                                                free_form  as freeForm,
+                                                accepted
+                                         from applications
+                                         where accepted=0`);
+			break;
+	}
 	res.json(applications);
 });
 
@@ -302,21 +351,6 @@ router.get('/applications/:id', async (req, res) => {
 	} else {
 		res.render('console/404');
 	}
-});
-
-
-router.get('/get-stars', async (req, res) => {
-	const db = await openDB();
-	const stars = await db.all(`select a.id,
-                                       first_name as firstName,
-                                       last_name  as lastName,
-                                       team,
-                                       free_form  as freeForm
-                                from applications a
-                                         left join
-                                     console_stars cs on a.id=cs.application_id
-                                where cs.user_id=$id`, {$id: req.user.id});
-	res.json(stars);
 });
 
 
@@ -455,7 +489,7 @@ router.post('/users', async (req, res) => {
 	await db.run(`insert into console_users(username, admin, uuid, setup_code)
                   values ($username, $admin, $id, $code)`, {
 		$username: req.query.username,
-		$admin: req.query.admin || 0,
+		$admin: req.query.admin ? 1 : 0,
 		$id: uuid.v4(),
 		$code: uuid.v4()
 	}).catch(() => {

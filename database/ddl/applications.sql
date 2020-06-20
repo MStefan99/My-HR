@@ -12,7 +12,8 @@ create table applications (
 	links        text,
 	free_form    text,
 	file_name    text    not null,
-	file_path    text    not null
+	file_path    text    not null,
+	accepted     integer not null default 0
 );
 
 create unique index applications_file_path_uindex

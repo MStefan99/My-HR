@@ -12,18 +12,25 @@ html(lang="en")
 		main
 			div#main-container
 				h1 Application
-				div.button-container
-					span#star-button.button
-							span#star-text.text
-							img#star-icon.icon(alt="Star icon")
-					span#share-button.button
-						span.text Share
-						img.icon(alt="Share icon" src="/img/share.svg")
-				script(type="text/javascript" src="/js/application.js")
+				h2 Actions
+				div.section
+					div.button-container
+						span#star-button.button
+								span#star-text.text
+								img#star-icon.icon(alt="Star icon")
+						span#share-button.button
+							span.text Share
+							img.icon(alt="Share icon" src="/img/share.svg")
+						span#accept-button.button
+							span.text Accept
+							img.icon(alt="Accept icon" src="/img/checkmark.svg")
+						span#reject-button.button
+							span.text Reject
+							img.icon(alt="Reject icon" src="/img/cross.svg")
 				h2 Basic info
 				div.section
 					span.label First name:
-					span= application.firstName
+					span#first-name= application.firstName
 					br
 					span.label Last name:
 					span= application.lastName
@@ -53,6 +60,7 @@ html(lang="en")
 					p.block= application.freeForm || '[Empty]'
 					span.label Download CV:
 					a(href="/console/file/" + application.filePath)= application.fileName
+			script(type="text/javascript" src="/js/application.js")
 
 		footer
 			include footer
