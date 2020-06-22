@@ -98,6 +98,7 @@ async function redirectIfNotAuthorized(req, res, next) {
 	if (!req.session) {
 		res.redirect(303, '/console/login/');
 	} else if (req.session.ua !== req.headers['user-agent']
+		|| req.session.ip !== req.connection.remoteAddress
 		|| Date.now() - req.session.time > cookieOptions.maxAge) {
 		res.redirect('/console/logout/');
 	} else if (!req.user.passwordHash) {

@@ -1,5 +1,6 @@
 table = document.querySelector('#applications-table')
 applicationsHeader = document.querySelector('#applications-header')
+tabElements = document.querySelectorAll('.tab')
 
 
 remove = (element) ->
@@ -29,7 +30,7 @@ addEventListener('load', ->
 	for application in applications
 		do (application) ->
 			tableRow = document.createElement('tr')
-			tableRow.classList.add('clickable')
+			tableRow.classList.add('clickable', 'application-' + application.team.toLowerCase())
 			tableRow.onclick = ->
 				window.location = '/console/applications/' + application.id
 			table.appendChild(tableRow)
@@ -64,3 +65,28 @@ addEventListener('load', ->
 			freeFormCell.innerHTML = text || '[No info]'
 			tableRow.appendChild(freeFormCell)
 )
+
+
+tabElements.forEach((e) ->
+	e.addEventListener('click', ->
+		tabElements.forEach((e) ->
+			e.classList.remove('selected')
+		)
+		e.classList.add('selected')
+		filter(e.id.replace('tab-', ''));
+	)
+)
+
+
+filter = (team) ->
+	if team isnt 'all' and team isnt 'embedded' and team isnt 'backend' \
+		and team isnt 'frontend' and team isnt 'android' and team isnt 'ios'
+		throw new Error('No such team')
+	console.log(team)
+
+	tableRows = document.querySelectorAll('tbody tr')
+
+	for row in tableRows
+		if row.className.match(team) or team is 'all'
+			row.classList.remove('hidden')
+		else row.classList.add('hidden')

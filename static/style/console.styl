@@ -176,6 +176,23 @@ html
 						margin-bottom 4vh
 
 			div#main-container
+				#tab-container
+					display flex
+					flex-flow row wrap
+					justify-content space-between
+
+					.tab
+						border-top 1px solid black
+						padding 1em .5em
+						background just-gray
+						text-align center
+						cursor pointer
+						user-select none
+						flex 1 0
+
+						&.selected
+							background white
+
 				#status-icon
 					margin-left .25em
 
@@ -258,12 +275,12 @@ html
 								&:hover
 									background just-gray
 
+							&.hidden
+								display none
+
 				table, tr, th, td
 					border 1px solid black
 					border-collapse collapse
-
-				tr:nth-child(even)
-					background #eee
 
 				#version-table
 					p:before

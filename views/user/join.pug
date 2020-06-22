@@ -16,11 +16,11 @@ html(lang="en")
 				p(style="color: #c00") Video will be here
 				h2 Join us today by filling the form below!
 				form(action="/join/" method="post" enctype="multipart/form-data")
-					label.required(for="firstname") First name
-					input#firstname(type="text" name="firstName" placeholder="John"
+					label.required(for="first-name") First name
+					input#first-name(type="text" name="firstName" placeholder="John"
 						title="Your first name" maxlength=100 required)
-					label.required(for="lastname") Last name
-					input#lastname(type="text" name="lastName" placeholder="Doe"
+					label.required(for="last-name") Last name
+					input#last-name(type="text" name="lastName" placeholder="Doe"
 						title="Your last name" maxlength=100 required)
 					label.required(for="email") Your Metropolia email
 					input#email(type="email" name="email" value=email
@@ -40,38 +40,32 @@ html(lang="en")
 					br
 					input#team-e(type="radio" value="Embedded" name="team"
 						title="Here you'll be developing an IoT device itself" required)
-					span Embedded team
+					label.inline(for="team-e") Embedded team
 					br
 					input#team-f(type="radio" value="Frontend" name="team"
 						title="Here you'll be developing a web interface")
-					span Frontend team
+					label.inline(for="team-f") Frontend team
 					br
 					input#team-b(type="radio" value="Backend" name="team"
 						title="Here you'll be developing a server software connecting other components together")
-					span Backend team
+					label.inline(for="team-b") Backend team
 					br
-					input#team-a(type="radio" value="Android" name="team" disabled=mobile_disabled
+					input#team-a(type="radio" value="Android" name="team"
 						title="Here you'll be developing an Android client")
-					span Android team
-					if mobile_disabled
-						span.disabled **
+					label.inline(for="team-a") Android team
 					br
-					input#team-i(type="radio" value="iOS" name="team" disabled=mobile_disabled
+					input#team-i(type="radio" value="iOS" name="team"
 						title="Here you'll be developing an iOS client")
-					span iOS team
-					if mobile_disabled
-						span.disabled **
-						br
-						span.disabled.label ** Mobile teams are currently full, please check back later
+					label.inline(for="team-i") iOS team
 					br
 					label(for="links") Add useful links (GitHub, LinkedIn, etc.)
 					textarea#links(name="links" placeholder="You can include links to your code, " +
-		  "social network pages or anything else. You can also add comments here. Maximum 5000 characters."
+			"social network pages or anything else. You can also add comments here. Maximum 5000 characters."
 						title="Add any relevant links here" maxlength=5000)
 					label(for="free-form") Anything else you'd like to tell
 					textarea#free-form(name="freeForm" placeholder="Feel free to add anything you want here. " +
-		  "You can tell more about yourself, your projects, achievements, work experience or anything " +
-		  "else you can think of. Maximum 5000 characters."
+			"You can tell more about yourself, your projects, achievements, work experience or anything " +
+			"else you can think of. Maximum 5000 characters."
 						title="Add anything about yourself here" maxlength=5000)
 					label.required(for="cv") Please attach your cv
 					input#cv(type="file" name="cv" required)

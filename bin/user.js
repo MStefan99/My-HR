@@ -4,6 +4,7 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
+const util = require('util');
 const multer = require('multer')
 const sendMail = require('./mail');
 const openDB = require('./db');
@@ -17,6 +18,8 @@ const cookieOptions = {
 	maxAge: 30 * 60 * 1000  // 30 min in milliseconds
 };
 
+
+unlink = util.promisify(fs.unlink);
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(cookieParser());
@@ -39,28 +42,34 @@ async function createTables() {
 createTables();
 
 
-async function redirectIfNotAuthorized(req, res, next) {
+async function getSession(req, res, next) {
 	const id = req.query.sessionId || req.cookies.SID;
 	if (req.query.sessionId) {
 		res.cookie('SID', req.query.sessionId, cookieOptions);
 	}
-	const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
 
 	const db = await openDB();
-	const session = await db.get(`select uuid,
-                                         email,
-                                         ip,
-                                         created_at as createdAt
-                                  from sessions
-                                  where uuid=$uuid`, {$uuid: id});
-	if (!session) {
+	req.session = await db.get(`select id,
+                                       uuid,
+                                       email,
+                                       ip,
+                                       created_at as createdAt
+                                from sessions
+                                where uuid=$uuid`, {$uuid: id});
+	next();
+}
+
+
+async function redirectIfNotAuthorized(req, res, next) {
+	const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	if (!req.session) {
 		res.render('user/status', {
 			title: 'Not registered',
 			info: 'To ensure our data stays safe we\'ve limited who can access this page. To continue, please ' +
 				'return to the home page and get a link by filling in a form. We apologize for the inconvenience.'
 		});
 	} else {
-		if (session.ip !== ip) {
+		if (req.session.ip !== ip) {
 			res.render('user/status', {
 				title: 'Wrong address',
 				info: 'To ensure our data stays safe we\'ve limited who can access this page. ' +
@@ -69,7 +78,6 @@ async function redirectIfNotAuthorized(req, res, next) {
 					'returning to the home page. We apologize for the inconvenience.'
 			});
 		} else {
-			req.session = session;
 			next();
 		}
 	}
@@ -119,6 +127,7 @@ router.get('/registered', (req, res) => {
 });
 
 
+router.use(getSession);
 router.use(redirectIfNotAuthorized);
 
 
@@ -163,11 +172,66 @@ router.get('/success', async (req, res) => {
 router.use(redirectIfExpired)
 
 
-router.get('/join', async (req, res) => {
+router.get('/manage', (req, res) => {
+	res.render('user/manage');
+});
+
+
+router.get('/applications', async (req, res) => {
 	const db = await openDB();
-	const count = (await db.get(`select count(id) as count
-                                 from applications`)).count;
-	res.render('user/join', {email: req.session.email, mobile_disabled: (count < 15)});
+	const applications = await db.all(`select id,
+                                              backup_email as backupEmail,
+                                              phone,
+                                              file_name    as fileName,
+                                              file_path    as filePath,
+                                              accepted
+                                       from applications
+                                       where email=$email`, {$email: req.session.email});
+	res.json(applications);
+});
+
+
+router.get('/download/:path', async (req, res) => {
+	const db = await openDB();
+	const file = await db.get(`select file_name as fileName
+                               from applications
+                               where email=$email
+                                 and file_path=$path`,
+		{$email: req.session.email, $path: req.params.path});
+	if (file) {
+		res.download(path.join(__dirname, '..', '/uploads/', req.params.path), file.fileName);
+	} else {
+		res.render('user/status', {
+			title: 'No such file', info: 'The file requested was not found in the system. ' +
+				'Please check the address and try again.'
+		});
+	}
+});
+
+
+router.delete('/applications/:id', async (req, res) => {
+	const db = await openDB();
+	const application = await db.get(`select file_path as filePath
+                                      from applications
+                                      where email=$email
+                                        and id=$id
+                                        and accepted!=1`,
+		{$email: req.session.email, $id: req.params.id});
+	if (application) {
+		await unlink(path.join(__dirname, '..', 'uploads', application.filePath));
+		await db.run(`delete
+                      from applications
+                      where id=$id`,
+			{$id: req.params.id})
+	} else {
+		res.status(400);
+	}
+	res.end();
+});
+
+
+router.get('/join', (req, res) => {
+	res.render('user/join', {email: req.session.email});
 });
 
 

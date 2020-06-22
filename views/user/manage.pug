@@ -1,0 +1,34 @@
+doctype html
+
+html(lang="en")
+	head
+		title= 'Manage your data - Mine Eclipse'
+		include head
+
+	body
+		header
+			include header
+
+		main
+			div#content-container
+				div#status
+					h1 Manage your data
+					h3.
+						Here is all your data stored on this website. You can choose to delete anything here
+						but we recommend that you leave your application in our system even after the recruiting
+						is complete so that we could offer you a new position in the future.
+					table.center
+						thead
+							tr
+								td Non-Metropolia Email
+								td Phone
+								td CV
+								td Remove
+						tbody#applications-table
+					script(type="text/javascript", src="/js/manage.js")
+					p.
+						* Some information, like your name, is not shown here, but it will
+						also be deleted if you choose to remove your application from the system.
+						Accepted applications cannot be removed from the system.
+		footer
+			include footer

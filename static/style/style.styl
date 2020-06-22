@@ -1,5 +1,12 @@
+main-color = #28282f
+main-color-dark = #232329
+overlay-color = #00000088
+kinda-gray = #888
+healthy-red = #c00
+
+
 html
-	color #fff
+	color white
 	font-size 12pt
 	font-family sans-serif
 	scroll-behavior smooth
@@ -9,14 +16,14 @@ html
 		flex-direction column
 		min-height 100vh
 		margin 0
-		background #28282f
+		background main-color
 
 		a
 			font-weight bold
-			color #fff
+			color white
 
 			&:hover
-				color #888
+				color kinda-gray
 
 		header
 			height 10vh
@@ -25,7 +32,7 @@ html
 			top 0
 			left 0
 			right 0
-			background #00000088
+			background overlay-color
 			display flex
 			flex-flow row wrap
 			align-items center
@@ -45,6 +52,9 @@ html
 			margin-top 15vh
 			margin-bottom 10vh
 			flex 1 0
+
+			.center
+				margin 0 auto
 
 			#splash-wrapper
 				height 100vh
@@ -139,13 +149,20 @@ html
 					margin-top 5vh
 					margin-bottom 5vh
 
-					.disabled
-						color #c00
-
 					label
 						width 100%
 						display inline-block
 						margin-top .8em
+
+						&.inline
+							display inline
+
+						&.label-info.required-info
+							color healthy-red
+
+						&.required:after
+							content "*"
+							color healthy-red
 
 					input, textarea
 						width 100%
@@ -155,12 +172,12 @@ html
 						border none
 						outline none
 						background none
-						border-bottom 2px solid #888
+						border-bottom 2px solid kinda-gray
 						border-radius 0
-						color #fff
+						color white
 
 						&:hover
-							border-bottom-color #fff
+							border-bottom-color white
 
 						&[type="radio"]
 							display inline-block
@@ -170,25 +187,25 @@ html
 
 						&[type="submit"]
 							background none
-							color #fff
-							border-bottom-color #fff
+							color white
+							border-bottom-color white
 							font-weight bold
 							padding .2em .5em
 							cursor pointer
 							width fit-content
 
 							&:hover
-								background #fff
-								color #000
+								background white
+								color black
 
 						&[type="file"]
-							color #fff
+							color white
 							border-bottom none
 							cursor pointer
 
 						&[disabled]
 							cursor not-allowed
-							color #888
+							color kinda-gray
 
 						&#username
 							text-align right
@@ -199,23 +216,36 @@ html
 						resize vertical
 						height 10rem
 
-					label.label-info.required-info
-						color #c00
-
-					label.required:after
-						content "*"
-						color #c00
-
 					#username, #metropolia-domain
 						max-width 50%
 						width fit-content
 						display inline
 
+				table
+					border-collapse collapse
+
+					td
+						padding .5em
+
+						.clickable
+							text-decoration underline
+							cursor pointer
+
+							&:hover
+								color kinda-gray
+
+					thead tr
+						background overlay-color
+
+					@media screen and (max-width 768px)
+						td, tr, th
+							display block
+
 		footer
 			display flex
 			flex-flow row wrap
 			justify-content space-between
-			background #00000022
+			background main-color-dark
 			padding .5em 0
 
 			p
