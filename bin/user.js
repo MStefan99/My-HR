@@ -5,41 +5,21 @@ const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser');
 const uuid = require('uuid');
 const multer = require('multer')
-const nodemailer = require('nodemailer');
-const util = require('util');
+const sendMail = require('./mail');
 const openDB = require('./db');
 
 
 const router = express.Router();
 const upload = multer({dest: 'uploads/'});
-const readFile = util.promisify(fs.readFile);
-const cookieOptions = {httpOnly: true, sameSite: 'strict'};
+const cookieOptions = {
+	httpOnly: true,
+	sameSite: 'strict',
+	maxAge: 30 * 60 * 1000  // 30 min in milliseconds
+};
 
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(cookieParser());
-
-
-async function sendMail(email, subject, template, params) {
-	const text = await readFile(path.join(__dirname, 'mail', template), 'utf8');
-
-	const html = text.replace(/%{(.*?)}/g, (match, g1) => params[g1]);
-	const transporter = nodemailer.createTransport({
-		host: 'mail.inet.fi',
-		port: 25,
-		secure: false,
-		tls: {
-			rejectUnauthorized: false
-		}
-	});
-
-	await transporter.sendMail({
-		from: 'noreply@mstefan99.com',
-		to: email.trim(),
-		subject: subject,
-		html: html
-	});
-}
 
 
 async function createTables() {
@@ -97,7 +77,7 @@ async function redirectIfNotAuthorized(req, res, next) {
 
 
 async function redirectIfExpired(req, res, next) {
-	if (Date.now() - req.session.createdAt > 1800000) {
+	if (Date.now() - req.session.createdAt > cookieOptions.maxAge) {
 		res.render('user/status', {
 			title: 'Link expired', info: 'To ensure our data stays safe we\'ve limited the time during which ' +
 				'links are valid. Your one has now expired, meaning you need to return to the home page ' +
@@ -156,12 +136,12 @@ router.post('/join', upload.single('cv'), async (req, res) => {
                                            file_name,
                                            file_path)
                   values ($fn, $ln, $email, $be, $phone, $bp, $team, $links, $ff, $fln, $flp)`, {
-		$fn: req.body.firstName,
-		$ln: req.body.lastName,
-		$email: req.session.email,
-		$be: req.body.backupEmail,
-		$phone: req.body.phone,
-		$bp: req.body.backupPhone,
+		$fn: req.body.firstName.trim(),
+		$ln: req.body.lastName.trim(),
+		$email: req.session.email.trim(),
+		$be: req.body.backupEmail.trim(),
+		$phone: req.body.phone.trim(),
+		$bp: req.body.backupPhone.trim(),
 		$team: req.body.team,
 		$links: req.body.links,
 		$ff: req.body.freeForm,

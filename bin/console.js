@@ -6,6 +6,7 @@ const path = require('path');
 const crypto = require('crypto');
 const uuid = require('uuid');
 const twoFactor = require('node-2fa');
+const sendMail = require('./mail');
 const openDB = require('./db');
 
 
@@ -13,14 +14,15 @@ const router = express.Router();
 const cookieOptions = {
 	httpOnly: true,
 	sameSite: 'strict',
-	maxAge: 24 * 60 * 60 * 1000
-};  // 1 day in milliseconds
+	maxAge: 24 * 60 * 60 * 1000  // 1 day in milliseconds
+};
 const hashSecret = 'Your HR secret key'
 
 
 router.use('/favicon.ico', express.static(path.join(__dirname, '..', 'static', 'img', 'mh-logo.svg')));
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(cookieParser());
+router.use(getSession)
 router.use(getUser)
 
 
@@ -59,29 +61,45 @@ async function initialize() {
 initialize();
 
 
-async function getUser(req, res, next) {
+async function getSession(req, res, next) {
 	if (req.cookies.CSID) {
 		const db = await openDB();
-		req.user = await db.get(`select cu.id         as id,
-                                        cs.id         as sessionID,
+		req.session = await db.get(`select id,
+                                           user_id as userId,
+                                           uuid,
+                                           ip,
+                                           ua,
+                                           time
+                                    from console_sessions
+                                    where uuid=$sid`, {$sid: req.cookies.CSID})
+	}
+	next();
+}
+
+
+async function getUser(req, res, next) {
+	if (req.session) {
+		const db = await openDB();
+		req.user = await db.get(`select id,
                                         username,
                                         password_hash as passwordHash,
-                                        cu.uuid       as userUUID,
-                                        cs.uuid       as sessionUUID,
+                                        uuid,
                                         setup_code,
                                         admin,
                                         secret
-                                 from console_sessions cs
-                                          left join console_users cu on cs.user_id=cu.id
-                                 where cs.uuid=$sid`, {$sid: req.cookies.CSID})
+                                 from console_users
+                                 where id=$uid`, {$uid: req.session.userId})
 	}
 	next();
 }
 
 
 async function redirectIfNotAuthorized(req, res, next) {
-	if (!req.user) {
+	if (!req.session) {
 		res.redirect(303, '/console/login/');
+	} else if (req.session.ua !== req.headers['user-agent']
+		|| Date.now() - req.session.time > cookieOptions.maxAge) {
+		res.redirect('/console/logout/');
 	} else if (!req.user.passwordHash) {
 		res.redirect(303, '/console/register/');
 	} else if (!req.user.secret) {
@@ -119,6 +137,11 @@ router.get('/register', (req, res) => {
 });
 
 
+router.get('/setup-otp', (req, res) => {
+	res.render('console/setup_otp');
+});
+
+
 router.get('/get-otp', async (req, res) => {
 	const db = await openDB();
 	const user = await db.get(`select username
@@ -126,11 +149,6 @@ router.get('/get-otp', async (req, res) => {
                                where uuid=$id`, {$id: req.cookies.CUID});
 	const secret = twoFactor.generateSecret({name: 'My HR', account: user.username || 'My HR'});
 	res.json(secret);
-});
-
-
-router.get('/setup-otp', (req, res) => {
-	res.render('console/setup_otp');
 });
 
 
@@ -251,6 +269,22 @@ router.post('/setup-otp/', async (req, res) => {
 });
 
 
+router.get('/logout', async (req, res) => {
+	const db = await openDB();
+	await db.run(`delete
+                  from console_sessions
+                  where id=$id`, {$id: req.session.id});
+	res.clearCookie('CSID', cookieOptions);
+	res.redirect(303, '/console/');
+});
+
+
+router.get('/exit', async (req, res) => {
+	await logOut(req.user.id);
+	res.redirect('/console/login/');
+});
+
+
 router.use(redirectIfNotAuthorized);
 
 
@@ -293,7 +327,8 @@ router.get('/get-applications', async (req, res) => {
                                          from applications a
                                                   left join
                                               console_stars cs on a.id=cs.application_id
-                                         where cs.user_id=$id`, {$id: req.user.id});
+                                         where cs.user_id=$id
+                                         order by cs.id desc`, {$id: req.user.id});
 			break;
 		case 'accepted':
 			applications = await db.all(`select id,
@@ -330,7 +365,12 @@ router.get('/get-applications', async (req, res) => {
 });
 
 
-router.get('/applications/:id', async (req, res) => {
+router.get('/applications/\*', async (req, res) => {
+	res.render('console/application');
+});
+
+
+router.get('/get-application/:id', async (req, res) => {
 	const db = await openDB();
 	const application = await db.get(`select id,
                                              first_name   as firstName,
@@ -343,25 +383,17 @@ router.get('/applications/:id', async (req, res) => {
                                              links,
                                              free_form    as freeForm,
                                              file_name    as fileName,
-                                             file_path    as filePath
+                                             file_path    as filePath,
+                                             accepted
                                       from applications
-                                      where id=$id`, {$id: req.params.id});
-	if (application) {
-		res.render('console/application', {application: application});
-	} else {
-		res.render('console/404');
-	}
-});
-
-
-router.get('/get-stars/:id', async (req, res) => {
-	const db = await openDB();
-	const star = await db.all(`select 1
-                               from console_stars
-                               where user_id=$uid
-                                 and application_id=$aid`,
-		{$uid: req.user.id, $aid: req.params.id});
-	res.json(star.length > 0);
+                                      where id=$id`,
+		{$id: req.params.id});
+	application.starred = !!(await db.get(`select 1
+                                           from console_stars
+                                           where user_id=$uid
+                                             and application_id=$aid`,
+		{$uid: req.user.id, $aid: req.params.id}))
+	res.json(application);
 });
 
 
@@ -382,6 +414,54 @@ router.delete('/stars', async (req, res) => {
                     and application_id=$aid`,
 		{$uid: req.user.id, $aid: req.query.applicationId});
 	res.end();
+});
+
+
+router.post('/applications/accept', async (req, res) => {
+	const db = await openDB();
+	const application = await db.get(`select first_name as name,
+                                             email,
+                                             accepted
+                                      from applications
+                                      where id=$id`, {$id: req.query.id});
+	if (!application) {
+		res.status(400);
+	} else if (application.accepted) {
+		res.status(400);
+	} else {
+		await db.run(`update applications
+                      set accepted=1
+                      where id=$id`, {$id: req.query.id});
+		await sendMail(application.email,
+			'Welcome to Mine Eclipse!',
+			'accepted.html',
+			{name: application.name});
+		res.end();
+	}
+});
+
+
+router.post('/applications/reject', async (req, res) => {
+	const db = await openDB();
+	const application = await db.get(`select first_name as name,
+                                             email,
+                                             accepted
+                                      from applications
+                                      where id=$id`, {$id: req.query.id});
+	if (!application) {
+		res.status(400);
+	} else if (application.accepted) {
+		res.status(400);
+	} else {
+		await db.run(`update applications
+                      set accepted= -1
+                      where id=$id`, {$id: req.query.id});
+		await sendMail(application.email,
+			'Your Mine Eclipse application',
+			'rejected.html',
+			{name: application.name});
+		res.end();
+	}
 });
 
 
@@ -444,22 +524,6 @@ router.get('/file/:name', async (req, res) => {
 	} else {
 		res.status(404).end();
 	}
-});
-
-
-router.get('/logout', async (req, res) => {
-	const db = await openDB();
-	await db.run(`delete
-                  from console_sessions
-                  where id=$id`, {$id: req.user.sessionID});
-	res.clearCookie('CSID', cookieOptions);
-	res.redirect(303, '/console/');
-});
-
-
-router.get('/exit', async (req, res) => {
-	await logOut(req.user.id);
-	res.redirect('/console/login/');
 });
 
 

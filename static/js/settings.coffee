@@ -19,6 +19,12 @@ addEventListener('load', ->
 			os = res[2]
 		else if res[2] is 'Win64'
 			os = res[1].replace('NT ', '').replace('.0', '')
+		else if res[1] is 'Macintosh'
+			os = 'macOS ' + res[2].replace(/.*Mac OS X (.*?)$/, '$1').replace(/_/g, '.')
+		else if res[1] is 'iPhone'
+			os = 'iPhone (iOS ' + res[2].replace(/.*OS (.*?) like.*/, '$1)').replace(/_/g, '.')
+		else if res[1] is 'iPad'
+			os = 'iPad (iPadOS ' + res[2].replace(/.*OS (.*?) like.*/, '$1)').replace(/_/g, '.')
 		else
 			os = res[1]
 		osCell.innerHTML = os

@@ -2,7 +2,7 @@ doctype html
 
 html(lang="en")
 	head
-		title= application.firstName + '\'s application - My HR'
+		title= 'Application - My HR'
 		include head
 
 	body
@@ -12,54 +12,55 @@ html(lang="en")
 		main
 			div#main-container
 				h1 Application
+					img#status-icon.icon(alt="Status icon")
 				h2 Actions
 				div.section
 					div.button-container
-						span#star-button.button
-								span#star-text.text
-								img#star-icon.icon(alt="Star icon")
-						span#share-button.button
+						span#star-button.button(title="Save this application and return to it later")
+								span#star-text.text Star
+								img#star-icon.icon(alt="Star icon" src="/img/star-inactive.svg")
+						span#share-button.button(title="Share this application")
 							span.text Share
 							img.icon(alt="Share icon" src="/img/share.svg")
-						span#accept-button.button
+						span#accept-button.button(title="Accept this application")
 							span.text Accept
 							img.icon(alt="Accept icon" src="/img/checkmark.svg")
-						span#reject-button.button
+						span#reject-button.button(title="Reject this application")
 							span.text Reject
 							img.icon(alt="Reject icon" src="/img/cross.svg")
 				h2 Basic info
 				div.section
 					span.label First name:
-					span#first-name= application.firstName
+					span#first-name
 					br
 					span.label Last name:
-					span= application.lastName
+					span#last-name
 					br
 					span.label Team selected:
-					span= application.team
+					span#team
 				h2 Contact info
 				div.section
 					span.label Metropolia email:
-					a(href="mailto:" + application.email)= application.email
+					a#email
 					br
 					span.label Other email:
-					a(href="mailto:" + application.backupEmail)= application.backupEmail
+					a#backup-email
 					br
 					span.label Phone:
-					a(href="tel:" + application.phone)= application.phone
+					a#phone
 					br
 					span.label Backup phone:
-					a(href="tel:" + application.backupPhone || "")= application.backupPhone || '[Not provided]'
+					a#backup-phone
 					br
 				h2 Other
 				div.section
 					span.label Links:
-					p.block= application.links || '[Empty]'
+					p.block#links
 					p.label.block Note: Links are not parsed due to security reasons
 					span.label Free form info:
-					p.block= application.freeForm || '[Empty]'
+					p.block#free-form
 					span.label Download CV:
-					a(href="/console/file/" + application.filePath)= application.fileName
+					a#file-link
 			script(type="text/javascript" src="/js/application.js")
 
 		footer

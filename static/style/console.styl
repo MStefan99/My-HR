@@ -27,6 +27,11 @@ html
 		margin 0
 		background #eaeaea
 
+		noscript
+			color simply-red
+			font-weight bold
+			text-decoration underline
+
 		header
 			display flex
 			flex-flow row nowrap
@@ -77,7 +82,6 @@ html
 			margin 5vh 5vw
 			padding 3vh 3vw
 			background white
-
 
 			h1 a, h2 a, h3 a
 				color inherit
@@ -172,6 +176,9 @@ html
 						margin-bottom 4vh
 
 			div#main-container
+				#status-icon
+					margin-left .25em
+
 				.button
 					display inline-block
 					padding .25em 0
@@ -202,9 +209,15 @@ html
 						font-weight bold
 
 					.icon
-						height 20px
 						margin 0 .25em
 						vertical-align text-bottom
+
+				.icon
+					width 20px
+
+				.center
+					display block
+					margin 0 auto
 
 				form
 					label, input[type="checkbox"]
@@ -221,22 +234,33 @@ html
 					width 100%
 					margin 1vh 0
 
+					th, td
+						padding 1vh 1vw
+
+						.button
+							text-decoration underline
+							cursor pointer
+
+					thead tr
+						font-weight bold
+						background pretty-gray
+						color white
+
+						td
+							border 1px solid black
+
+					tbody
+						tr
+							&.clickable
+								user-select none
+								cursor pointer
+
+								&:hover
+									background just-gray
+
 				table, tr, th, td
 					border 1px solid black
 					border-collapse collapse
-
-				th, td
-					padding 1vh 1vw
-
-					.button
-						text-decoration underline
-						cursor pointer
-
-				th
-					font-weight bold
-					background pretty-gray
-					color white
-					border 1px solid black
 
 				tr:nth-child(even)
 					background #eee
@@ -246,18 +270,24 @@ html
 						content "• "
 
 				@media screen and (max-width 768px)
-					table
-						border-bottom none
+					thead
+						tr
+							display flex
+							flex-flow row nowrap
+							justify-content flex-start
 
-					thead tr
-						display none
+						tr, th
+							border none
 
 					tbody
 						tr, td
-							display block
 							border none
 
-						tr, td
+						td
+							display inline-block
+
+						tr
+							display block
 							border-bottom 1px solid black
 
 				h2
