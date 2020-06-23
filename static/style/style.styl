@@ -1,5 +1,6 @@
-main-color = #28282f
-main-color-dark = #232329
+theme-color = #ffc14b
+background-color = #28282f
+background-color-dark = #232329
 overlay-color = #00000088
 kinda-gray = #888
 healthy-red = #c00
@@ -16,7 +17,7 @@ html
 		flex-direction column
 		min-height 100vh
 		margin 0
-		background main-color
+		background background-color
 
 		a
 			font-weight bold
@@ -175,9 +176,13 @@ html
 						border-bottom 2px solid kinda-gray
 						border-radius 0
 						color white
+						transition border-bottom-color .2s linear
 
 						&:hover
 							border-bottom-color white
+
+						&:focus
+							border-bottom-color theme-color
 
 						&[type="radio"]
 							display inline-block
@@ -245,7 +250,7 @@ html
 			display flex
 			flex-flow row wrap
 			justify-content space-between
-			background main-color-dark
+			background background-color-dark
 			padding .5em 0
 
 			p
