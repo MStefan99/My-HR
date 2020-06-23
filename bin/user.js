@@ -17,6 +17,7 @@ const cookieOptions = {
 	sameSite: 'strict',
 	maxAge: 30 * 60 * 1000  // 30 min in milliseconds
 };
+const publicCache = 'public, max-age=86400'  // 1 day in seconds
 
 
 unlink = util.promisify(fs.unlink);
@@ -98,6 +99,7 @@ async function redirectIfExpired(req, res, next) {
 
 
 router.get('/', (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('user/register');
 });
 
@@ -120,6 +122,7 @@ router.post('/register', async (req, res) => {
 
 
 router.get('/registered', (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('user/status', {
 		title: 'Check your email', info: 'We\'ve sent you an email with your link! ' +
 			'Please follow it to complete your application.'
@@ -162,6 +165,7 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 
 
 router.get('/success', async (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('user/status', {
 		title: 'Thank you',
 		info: 'We have received your application and will contact you as soon as possible.'
@@ -173,6 +177,7 @@ router.use(redirectIfExpired)
 
 
 router.get('/manage', (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('user/manage');
 });
 
@@ -192,6 +197,7 @@ router.get('/applications', async (req, res) => {
 
 
 router.get('/download/:path', async (req, res) => {
+	res.set('Cache-control', publicCache);
 	const db = await openDB();
 	const file = await db.get(`select file_name as fileName
                                from applications

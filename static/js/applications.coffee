@@ -1,4 +1,5 @@
 table = document.querySelector('#applications-table')
+applicationCountElement = document.querySelector('#application-count')
 applicationsHeader = document.querySelector('#applications-header')
 tabElements = document.querySelectorAll('.tab')
 
@@ -27,12 +28,13 @@ addEventListener('load', ->
 		for cell in oldCells
 			remove(cell)
 
+	applicationCountElement.innerHTML = applications.length + ' applications received so far in all teams.'
 	for application in applications
 		do (application) ->
 			tableRow = document.createElement('tr')
 			tableRow.classList.add('clickable', 'application-' + application.team.toLowerCase())
 			tableRow.onclick = ->
-				window.location = '/console/applications/' + application.id
+				window.location = '/console/application/?id=' + application.id
 			table.appendChild(tableRow)
 
 			statusCell = document.createElement('td')
@@ -64,29 +66,49 @@ addEventListener('load', ->
 				text = application.freeForm
 			freeFormCell.innerHTML = text || '[No info]'
 			tableRow.appendChild(freeFormCell)
+
+	filter(params.get('team') || 'all', false)
+)
+
+
+addEventListener('popstate', (e) ->
+	if history.state
+		team = history.state.team
+	else 
+		team = 'all'
+	filter(team, false)
 )
 
 
 tabElements.forEach((e) ->
 	e.addEventListener('click', ->
-		tabElements.forEach((e) ->
-			e.classList.remove('selected')
-		)
-		e.classList.add('selected')
-		filter(e.id.replace('tab-', ''));
+		team = e.id.replace('tab-', '')
+		filter(team);
 	)
 )
 
 
-filter = (team) ->
+filter = (team, save=true) ->
+	updateTabs(team)
 	if team isnt 'all' and team isnt 'embedded' and team isnt 'backend' \
 		and team isnt 'frontend' and team isnt 'android' and team isnt 'ios'
 		throw new Error('No such team')
-	console.log(team)
+
+	if save
+		path = new URLSearchParams(window.location.search)
+		path.set('team', team)
+		window.history.pushState({team: team}, 'Team filtered', '?' + path)
 
 	tableRows = document.querySelectorAll('tbody tr')
-
 	for row in tableRows
 		if row.className.match(team) or team is 'all'
 			row.classList.remove('hidden')
 		else row.classList.add('hidden')
+
+
+updateTabs = (team) ->
+	tab = document.querySelector('#tab-' + team)
+	tabElements.forEach((e) ->
+		e.classList.remove('selected')
+	)
+	tab.classList.add('selected')

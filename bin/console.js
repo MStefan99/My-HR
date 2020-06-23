@@ -11,15 +11,21 @@ const openDB = require('./db');
 
 
 const router = express.Router();
+const hashSecret = 'Your HR secret key'
 const cookieOptions = {
 	httpOnly: true,
 	sameSite: 'strict',
 	maxAge: 24 * 60 * 60 * 1000  // 1 day in milliseconds
 };
-const hashSecret = 'Your HR secret key'
+const publicCache = 'public, max-age=86400'  // 1 day in seconds
+const privateCache = 'private, max-age=86400'  // 1 day in seconds
 
 
-router.use('/favicon.ico', express.static(path.join(__dirname, '..', 'static', 'img', 'mh-logo.svg')));
+router.use('/favicon.ico', express.static(path.join(__dirname, '..', 'static', 'img', 'mh-logo.svg'), {
+	setHeaders: (res, path, stat) => {
+		res.set('Cache-control', publicCache);
+	}
+}));
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(cookieParser());
 router.use(getSession)
@@ -129,16 +135,19 @@ async function logOut(id) {
 
 
 router.get('/login', (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('console/login');
 });
 
 
 router.get('/register', (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('console/register');
 });
 
 
 router.get('/setup-otp', (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('console/setup_otp');
 });
 
@@ -290,16 +299,19 @@ router.use(redirectIfNotAuthorized);
 
 
 router.get('/', (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('console/home');
 });
 
 
 router.get('/applications', async (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('console/applications');
 });
 
 
 router.get('/versions', (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('console/versions');
 });
 
@@ -366,7 +378,8 @@ router.get('/get-applications', async (req, res) => {
 });
 
 
-router.get('/applications/\*', async (req, res) => {
+router.get('/application/', async (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('console/application');
 });
 
@@ -389,11 +402,13 @@ router.get('/get-application/:id', async (req, res) => {
                                       from applications
                                       where id=$id`,
 		{$id: req.params.id});
-	application.starred = !!(await db.get(`select 1
-                                           from console_stars
-                                           where user_id=$uid
-                                             and application_id=$aid`,
-		{$uid: req.user.id, $aid: req.params.id}))
+	if (application) {
+		application.starred = !!(await db.get(`select 1
+                                               from console_stars
+                                               where user_id=$uid
+                                                 and application_id=$aid`,
+			{$uid: req.user.id, $aid: req.params.id}))
+	}
 	res.json(application);
 });
 
@@ -467,6 +482,7 @@ router.post('/applications/reject', async (req, res) => {
 
 
 router.get('/settings', (req, res) => {
+	res.set('Cache-control', privateCache);
 	res.render('console/settings', {user: req.user});
 });
 
@@ -514,6 +530,7 @@ router.post('/settings', async (req, res) => {
 
 
 router.get('/file/:name', async (req, res) => {
+	res.set('Cache-control', publicCache);
 	const db = await openDB();
 	const file = await db.get(`select file_name as fileName,
                                       file_path as filePath
@@ -532,6 +549,7 @@ router.use(redirectIfNotAdmin);
 
 
 router.get('/users', (req, res) => {
+	res.set('Cache-control', publicCache);
 	res.render('console/users');
 });
 

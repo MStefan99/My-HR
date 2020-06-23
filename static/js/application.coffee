@@ -23,7 +23,9 @@ application = {}
 
 
 addEventListener('load', ->
-	res = await fetch('/console/get-application/' + applicationId)
+	params = new URLSearchParams(window.location.search)
+
+	res = await fetch('/console/get-application/' + params.get('id'))
 	application = await res.json()
 	updateStar(application.starred)
 	if application.accepted
@@ -39,6 +41,7 @@ addEventListener('load', ->
 		when 0 then statusIcon.src = '/img/progress.svg'
 		when 1 then statusIcon.src = '/img/checkmark.svg'
 		when -1 then statusIcon.src = '/img/cross.svg'
+	statusIcon.alt = 'Status icon'
 
 	document.title = application.firstName + '\'s application - My HR'
 
@@ -59,7 +62,7 @@ addEventListener('load', ->
 	linksElement.innerHTML = if application.links then application.links else '[Empty]'
 	freeFormElement.innerHTML = if application.freeForm then application.freeForm else '[Empty]'
 	fileLinkElement.innerHTML = application.fileName
-	fileLinkElement.href = application.filePath
+	fileLinkElement.href = '/console/file/' + application.filePath
 )
 
 

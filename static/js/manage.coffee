@@ -48,11 +48,15 @@ update = ->
 				removeLink.innerHTML = 'Remove'
 				removeLink.classList.add('clickable')
 				removeLink.addEventListener('click', ->
-					await fetch('/applications/' + application.id, {
-						method: 'delete'
-					})
-					update()
-					alert('Your application was successfully deleted')
+					if confirm('Are you sure you want to delete your application?
+							If you choose to continue, we will delete all data associated with
+							this application and will no longer be able to offer you a
+							Mine Eclipse position. Do you still wish to continue?')
+						await fetch('/applications/' + application.id, {
+							method: 'delete'
+						})
+						update()
+						alert('Your application was successfully deleted')
 				)
 			else
 				removeLink.innerHTML = 'Accepted'
