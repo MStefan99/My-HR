@@ -1,33 +1,42 @@
 const libSession = require('../../lib/user/session');
 
-
-test('Get session with wrong id', async () => {
-	expect(await libSession.getSession(-1)).toBeUndefined();
-});
+const testLibSession = require('../testLib/user/session');
 
 
-test('Deny user with no session', () => {
-	expect(libSession.checkAuthStatus(null, null)).toBe('NO_SESSION');
-});
+describe('With test session', () => {
+	let createdSession;
+
+	const username = 'user1';
+	const email = username + '@metropolia.fi';
+	const ip = '::1';
+	const session = {email: email, ip: ip};
 
 
-test('Deny user with wrong IP', () => {
-	expect(libSession.checkAuthStatus({ip: '::1'}, '::2')).toBe('WRONG_IP');
-});
+	beforeAll(async () => {
+		createdSession = await libSession.createSession(username, ip);
+	});
 
 
-test('Allow user with session', () => {
-	expect(libSession.checkAuthStatus({ip: '::1'}, '::1')).toBe('OK');
-});
+	afterAll(async () => {
+		await testLibSession.deleteSession(createdSession);
+	});
 
 
-test('Deny expired session', () => {
-	expect(libSession.checkExpirationStatus({createdAt: Date.now() - 600 * 60 * 1000}, 30 * 60 * 1000))
-		.toBe('EXPIRED');
-});
+	test('Check created session', async () => {
+		expect(createdSession).toMatchObject(session);
+	});
 
 
-test('Allow active session', () => {
-	expect(libSession.checkExpirationStatus({createdAt: Date.now() - 10 * 60 * 1000}, 30 * 60 * 1000))
-		.toBe('OK');
+	test('Get invalid session', async () => {
+		expect(await libSession.getSessionByID(-1)).toBe('NO_SESSION');
+		expect(await libSession.getSessionByUUID(-1)).toBe('NO_SESSION');
+	});
+
+
+	test('Get created session', async () => {
+		expect(await libSession.getSessionByID(createdSession.id))
+			.toMatchObject(session);
+		expect(await libSession.getSessionByUUID(createdSession.uuid))
+			.toMatchObject(session);
+	});
 });

@@ -1,12 +1,12 @@
-const libApplication = require('../../lib/application');
-const libSession = require('../../lib/user/session');
+const libApplication = require('../lib/application');
+const libSession = require('../lib/user/session');
 
-const testLibApplication = require('../testLib/application');
-const testLibSession = require('../testLib/user/session');
+const testLibApplication = require('./testLib/application');
+const testLibSession = require('./testLib/user/session');
 
 
 describe('With test sessions', () => {
-	let session, createdApplication1, createdApplication2;
+	let createdSession, createdApplication1, createdApplication2;
 
 	const username1 = 'user1';
 	const email1 = username1 + '@metropolia.fi';
@@ -37,22 +37,22 @@ describe('With test sessions', () => {
 		freeForm: 'free text',
 		fileName: 'cv2.txt',
 		filePath: 'test2'
-	}
+	};
 
 
 	beforeAll(async () => {
-		session = await libSession.createSession(username1, '::1');
+		createdSession = await libSession.createSession(username1, '::1');
 		createdApplication1 = await testLibApplication.createApplication(application1);
 		createdApplication2 = await testLibApplication.createApplication(application2);
 	});
 
 
 	afterAll(async () => {
-		await testLibSession.deleteSession(session.id);
-		await testLibApplication.deleteApplication(createdApplication1.id);
-		await testLibApplication.deleteAttachment(createdApplication1.filePath);
-		await testLibApplication.deleteApplication(createdApplication2.id);
-		await testLibApplication.deleteAttachment(createdApplication2.filePath);
+		await testLibSession.deleteSession(createdSession);
+		await testLibApplication.deleteApplication(createdApplication1);
+		await testLibApplication.deleteAttachment(createdApplication1);
+		await testLibApplication.deleteApplication(createdApplication2);
+		await testLibApplication.deleteAttachment(createdApplication2);
 	});
 
 
@@ -64,13 +64,12 @@ describe('With test sessions', () => {
 
 	test('Retrieve user applications', async () => {
 		expect(await libApplication.getUserApplications(email1))
-			.toEqual([
+			.toMatchObject([
 				{
 					"accepted": 0,
 					"backupEmail": "test1@example.com",
 					"fileName": "cv1.txt",
 					"filePath": "test1",
-					"id": createdApplication1.id,
 					"phone": "+358401234567"
 				},
 				{
@@ -78,7 +77,6 @@ describe('With test sessions', () => {
 					"backupEmail": "test2@example.com",
 					"fileName": "cv2.txt",
 					"filePath": "test2",
-					"id": createdApplication2.id,
 					"phone": "+358401234567"
 				}
 			]);
@@ -114,10 +112,10 @@ describe('With test sessions', () => {
 			.toBe('NO_APPLICATION');
 		expect(await libApplication.getUserApplications(email1))
 			.toHaveLength(applicationCount);
-	})
+	});
 
 
-	test('Delete other user\'s application', async () => {
+	test('Delete another user\'s application', async () => {
 		const applicationCount = (await libApplication.getUserApplications(email1)).length;
 
 		expect(await libApplication.deleteUserApplication(email2, createdApplication1.id))
@@ -130,7 +128,7 @@ describe('With test sessions', () => {
 	test('Delete accepted application', async () => {
 		const applicationCount = (await libApplication.getUserApplications(email1)).length;
 
-		await testLibApplication.setApplicationAcceptedStatus(createdApplication1.id, 1);
+		await testLibApplication.setApplicationAcceptedStatus(createdApplication1, 1);
 		expect(await libApplication.deleteUserApplication(email1, createdApplication1.id))
 			.toBe('ALREADY_ACCEPTED');
 		expect(await libApplication.getUserApplications(email1))
@@ -141,7 +139,7 @@ describe('With test sessions', () => {
 	test('Delete application', async () => {
 		const applicationCount = (await libApplication.getUserApplications(email1)).length;
 
-		await testLibApplication.setApplicationAcceptedStatus(createdApplication1.id, -1);
+		await testLibApplication.setApplicationAcceptedStatus(createdApplication1, -1);
 		expect(await libApplication.deleteUserApplication(email1, createdApplication1.id))
 			.toBe('OK');
 		expect(await libApplication.getUserApplications(email1))

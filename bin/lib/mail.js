@@ -29,4 +29,4 @@ async function sendMail(email, subject, template, params={}) {
 }
 
 
-module.exports = sendMail
+module.exports = sendMail;
