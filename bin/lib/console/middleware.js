@@ -53,7 +53,7 @@ async function redirectIfNotAuthorized(req, res, next) {
 
 async function redirectIfNotAdmin(req, res, next) {
 
-	switch (libAuth.checkAdminStatus(req.user)) {
+	switch (libAuth.getPrivileges(req.user)) {
 		case 'NOT_ADMIN':
 			res.redirect(303, '/console/');
 			break;

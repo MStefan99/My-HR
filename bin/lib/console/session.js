@@ -58,7 +58,7 @@ class Session {
 	}
 
 
-	async getSessionByUUID(sessionUUID) {
+	static async getSessionByUUID(sessionUUID) {
 		const session = new Session();
 
 		const db = await openDB();

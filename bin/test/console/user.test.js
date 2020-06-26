@@ -16,14 +16,15 @@ describe('With test user', () => {
 	beforeAll(async () => {
 		await testLibUser.deleteUserWithUsername(username);
 		await testLibUser.deleteUserWithUsername(adminUsername);
+
 		user = await libUser.createUser(username);
 		admin = await libUser.createUser(adminUsername, 1);
 	});
 
 
 	afterAll(async () => {
-		await testLibUser.deleteUserWithUsername(username);
-		await testLibUser.deleteUserWithUsername(adminUsername);
+		await user.delete();
+		await admin.delete();
 	});
 
 
@@ -88,7 +89,7 @@ describe('With test user', () => {
 	});
 
 
-	test('Set user 2FA secret', async () => {
+	test('Set 2FA secret', async () => {
 		await user.setSecret('test');
 		expect(user).toHaveProperty('secret', 'test');
 		expect(await libUser.getUserByID(user.id))
@@ -96,11 +97,21 @@ describe('With test user', () => {
 	});
 
 
-	test('Update user password', async () => {
+	test('Set null password', async () => {
+		expect(await user.updatePassword(null))
+			.toBe('NO_PASSWORD');
+		expect(user.passwordHash).toBeNull();
+	});
+
+
+	test('Set short password', async () => {
 		expect(await user.updatePassword('a'))
 			.toBe('TOO_SHORT');
 		expect(user.passwordHash).toBeNull();
+	});
 
+
+	test('Update password', async () => {
 		await user.updatePassword('testPassword');
 		const retrievedUser = await libUser.getUserByID(user.id);
 

@@ -2,14 +2,16 @@ function checkAuthStatus(session, user, userAgent, ip, age) {
 	if (!session) {
 		return 'NO_SESSION';
 	} else if (session.ua !== userAgent) {
-		return 'UA_CHANGED';
+		return 'WRONG_UA';
 	} else if (session.ip !== ip) {
 		return 'WRONG_IP';
 	} else if (Date.now() - session.time > age) {
 		return 'EXPIRED';
+	} else if (session.userID !== user.id) {
+		return 'ID_MISMATCH'
 	} else if (!user.passwordHash) {
 		return 'NO_PASSWORD';
-	} else if (!req.user.secret) {
+	} else if (!user.secret) {
 		return 'NO_2FA';
 	} else {
 		return 'OK';
@@ -17,16 +19,16 @@ function checkAuthStatus(session, user, userAgent, ip, age) {
 }
 
 
-function checkAdminStatus(user) {
-	if (!user.admin) {
-		return 'NOT_ADMIN';
+function getPrivileges(user) {
+	if (user.admin) {
+		return 'ADMIN';
 	} else {
-		return 'OK';
+		return 'USER';
 	}
 }
 
 
 module.exports = {
 	checkAuthStatus: checkAuthStatus,
-	checkAdminStatus: checkAdminStatus
+	getPrivileges: getPrivileges
 };

@@ -128,7 +128,9 @@ class User {
 
 
 	async updatePassword(password) {
-		if (password.length < 8) {
+		if (!password) {
+			return 'NO_PASSWORD'
+		} else if (password.length < 8) {
 			return 'TOO_SHORT';
 		} else {
 			const db = await openDB();
