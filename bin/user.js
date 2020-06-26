@@ -55,7 +55,7 @@ router.use(middleware.redirectIfNotAuthorized);
 
 
 router.post('/join', upload.single('cv'), async (req, res) => {
-	await libApplication.saveNewApplication({
+	await libApplication.createApplication({
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
 		email: req.session.email,

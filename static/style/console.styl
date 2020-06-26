@@ -1,20 +1,12 @@
 primary-color = #3795e2
 primary-color-light = #98beff
 secondary-color = #21dea9
+simply-red = #a00
+almost-green = #0a0
 just-gray = #ddd
 pretty-gray = #999
 very-gray = #555
-simply-red = #a00
-almost-green = #0a0
-
-
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button
-	-webkit-appearance none
-	margin 0
-
-input[type=number]
-	-moz-appearance textfield
+shadow-color = #00000022
 
 
 html
@@ -27,6 +19,9 @@ html
 		margin 0
 		background #eaeaea
 
+		.hidden
+			display none !important
+
 		noscript
 			color simply-red
 			font-weight bold
@@ -38,10 +33,12 @@ html
 			align-items center
 			justify-content space-between
 			background linear-gradient(90deg, primary-color 0%, secondary-color 100%)
+			box-shadow 0 .5vh 2vh shadow-color
 
 			h1
 				font-size 2rem
 				margin 0 1vw
+				text-shadow 0 .5vh 1.5vh shadow-color
 
 				a:hover
 					color just-gray
@@ -70,6 +67,7 @@ html
 					margin .5vh .5vw
 					padding .5em 1em
 					border-radius .5em
+					box-shadow 0 .5vh 1vh shadow-color
 
 					&:hover
 						background #444
@@ -82,6 +80,7 @@ html
 			margin 5vh 5vw
 			padding 3vh 3vw
 			background white
+			box-shadow 0 .5vh 2vw shadow-color
 
 			h1 a, h2 a, h3 a
 				color inherit
@@ -180,6 +179,7 @@ html
 					display flex
 					flex-flow row wrap
 					justify-content space-between
+					margin-bottom 1em
 
 					.tab
 						border-top 1px solid black
@@ -192,6 +192,8 @@ html
 
 						&.selected
 							background white
+							z-index 1
+							box-shadow 0 .5vh 1vh .1vw shadow-color
 
 				#status-icon
 					margin-left .25em
@@ -250,6 +252,7 @@ html
 				table
 					width 100%
 					margin 1vh 0
+					box-shadow 0 .2vh 1vh .2vw shadow-color
 
 					th, td
 						padding 1vh 1vw

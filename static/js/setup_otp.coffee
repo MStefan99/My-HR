@@ -19,10 +19,3 @@ addEventListener('load', ->
 	secretLabel.value = secret.secret
 	formElement.appendChild(secretLabel)
 )
-
-
-'keyup keydown change paste'.split(' ').forEach((event) ->
-	otpElement.addEventListener(event, ->
-		otpElement.value = otpElement.value.replace(/\D/, '');
-	)
-)

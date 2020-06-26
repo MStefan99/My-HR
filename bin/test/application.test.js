@@ -6,16 +6,14 @@ const testLibSession = require('./testLib/user/session');
 
 
 describe('With test sessions', () => {
-	let createdSession, createdApplication1, createdApplication2;
+	let session1,
+		session2,
+		application1,
+		application2;
 
-	const username1 = 'user1';
-	const email1 = username1 + '@metropolia.fi';
-	const username2 = 'user2';
-	const email2 = username2 + '@metropolia.fi';
-	const application1 = {
+	const applicationData1 = {
 		firstName: 'Test',
-		lastName: username1,
-		email: email1,
+		lastName: 'User',
 		backupEmail: 'test1@example.com',
 		phone: '+358401234567',
 		backupPhone: '+358409876543',
@@ -25,10 +23,9 @@ describe('With test sessions', () => {
 		fileName: 'cv1.txt',
 		filePath: 'test1'
 	};
-	const application2 = {
+	const applicationData2 = {
 		firstName: 'Test',
-		lastName: username1,
-		email: email1,
+		lastName: 'User',
 		backupEmail: 'test2@example.com',
 		phone: '+358401234567',
 		backupPhone: '+358409876543',
@@ -41,108 +38,96 @@ describe('With test sessions', () => {
 
 
 	beforeAll(async () => {
-		createdSession = await libSession.createSession(username1, '::1');
-		createdApplication1 = await testLibApplication.createApplication(application1);
-		createdApplication2 = await testLibApplication.createApplication(application2);
+		await testLibApplication.deleteApplicationWithFile('test1');
+		await testLibApplication.deleteApplicationWithFile('test2');
+
+		session1 = await libSession.createSession('user1', '::1');
+		session2 = await libSession.createSession('user2', '::2');
+
+		application1 = await testLibApplication.createApplication(session1, applicationData1);
+		application2 = await testLibApplication.createApplication(session1, applicationData2);
 	});
 
 
 	afterAll(async () => {
-		await testLibSession.deleteSession(createdSession);
-		await testLibApplication.deleteApplication(createdApplication1);
-		await testLibApplication.deleteAttachment(createdApplication1);
-		await testLibApplication.deleteApplication(createdApplication2);
-		await testLibApplication.deleteAttachment(createdApplication2);
+		await testLibSession.deleteSession(session1);
+		await testLibSession.deleteSession(session2);
+		await testLibApplication.deleteApplication(application1);
+		await testLibApplication.deleteAttachment(application1);
+		await testLibApplication.deleteApplication(application2);
+		await testLibApplication.deleteAttachment(application2);
 	});
 
 
-	test('Check created application', async () => {
-		expect(createdApplication1).toMatchObject(application1);
-		expect(createdApplication2).toMatchObject(application2);
+	test('Check created objects', async () => {
+		expect(application1).toMatchObject(applicationData1);
+		expect(application2).toMatchObject(applicationData2);
 	});
 
 
-	test('Retrieve user applications', async () => {
-		expect(await libApplication.getUserApplications(email1))
-			.toMatchObject([
-				{
-					"accepted": 0,
-					"backupEmail": "test1@example.com",
-					"fileName": "cv1.txt",
-					"filePath": "test1",
-					"phone": "+358401234567"
-				},
-				{
-					"accepted": 0,
-					"backupEmail": "test2@example.com",
-					"fileName": "cv2.txt",
-					"filePath": "test2",
-					"phone": "+358401234567"
-				}
-			]);
-		expect(await libApplication.getUserApplications(email2))
+	test('Check created applications', async () => {
+		const applications = await libApplication.getAllApplications();
+		expect(applications).toContainEqual(application1);
+		expect(applications).toContainEqual(application2);
+	});
+
+
+	test('Retrieve session applications', async () => {
+		expect(await libApplication.getApplicationsBySession(session1))
+			.toMatchObject([applicationData1, applicationData2]);
+		expect(await libApplication.getApplicationsBySession(session2))
 			.toHaveLength(0);
 	});
 
 
 	test('Retrieve invalid attachment', async () => {
-		expect(await libApplication.getUserAttachment(email1, ''))
+		expect(await libApplication.getAttachment(null, session1))
 			.toBe('NO_APPLICATION');
-	}) ;
+	});
 
 
 	test('Retrieve another user\'s attachment', async () => {
-		expect(await libApplication.getUserAttachment(email2, 'test2'))
+		expect(await libApplication.getAttachment('test2', session2))
 			.toBe('NOT_ALLOWED');
 	});
 
 
 	test('Retrieve user attachment', async () => {
-		expect(await libApplication.getUserAttachment(email1, 'test1'))
+		expect(await libApplication.getAttachment('test1', session1))
 			.toMatchObject({fileName: 'cv1.txt', filePath: 'test1'});
-		expect(await libApplication.getUserAttachment(email1, 'test2'))
+		expect(await libApplication.getAttachment('test2', session1))
 			.toMatchObject({fileName: 'cv2.txt', filePath: 'test2'});
 	});
 
 
-	test('Delete invalid application', async () => {
-		const applicationCount = (await libApplication.getUserApplications(email1)).length;
-
-		expect(await libApplication.deleteUserApplication(email1, 0))
-			.toBe('NO_APPLICATION');
-		expect(await libApplication.getUserApplications(email1))
-			.toHaveLength(applicationCount);
-	});
-
-
 	test('Delete another user\'s application', async () => {
-		const applicationCount = (await libApplication.getUserApplications(email1)).length;
+		const applications = await libApplication.getApplicationsBySession(session1);
 
-		expect(await libApplication.deleteUserApplication(email2, createdApplication1.id))
+		expect(await applications[1].delete(session2))
 			.toBe('NOT_ALLOWED');
-		expect(await libApplication.getUserApplications(email1))
-			.toHaveLength(applicationCount);
+		expect(await libApplication.getApplicationsBySession(session1))
+			.toContainEqual(applications[1]);
 	});
 
 
 	test('Delete accepted application', async () => {
-		const applicationCount = (await libApplication.getUserApplications(email1)).length;
+		const applications = await libApplication.getApplicationsBySession(session1);
 
-		await testLibApplication.setApplicationAcceptedStatus(createdApplication1, 1);
-		expect(await libApplication.deleteUserApplication(email1, createdApplication1.id))
+		await testLibApplication.setApplicationAcceptedStatus(applications[1], 1);
+		expect(await applications[1].delete(session1))
 			.toBe('ALREADY_ACCEPTED');
-		expect(await libApplication.getUserApplications(email1))
-			.toHaveLength(applicationCount);
+		expect(await libApplication.getApplicationsBySession(session1))
+			.toContainEqual(applications[1]);
 	});
 
 
 	test('Delete application', async () => {
-		const applicationCount = (await libApplication.getUserApplications(email1)).length;
+		const applications = await libApplication.getApplicationsBySession(session1);
 
-		await testLibApplication.setApplicationAcceptedStatus(createdApplication1, -1);
-		expect(await libApplication.deleteUserApplication(email1, createdApplication1.id))
+		await testLibApplication.setApplicationAcceptedStatus(applications[1], -1);
+		expect(await applications[1].delete(session1))
 			.toBe('OK');
-		expect(await libApplication.getUserApplications(email1))
-			.toHaveLength(applicationCount - 1);
+		expect(await libApplication.getApplicationsBySession(session1))
+			.not.toContainEqual(applications[1]);
 	});
 });

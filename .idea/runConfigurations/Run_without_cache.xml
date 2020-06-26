@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run without cache" type="NodeJSConfigurationType" path-to-js-file="app.js" working-dir="$PROJECT_DIR$">
+    <envs>
+      <env name="NO_CACHE" value="true" />
+    </envs>
+    <method v="2" />
+  </configuration>
+</component>

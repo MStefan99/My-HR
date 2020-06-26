@@ -28,7 +28,7 @@ addEventListener('load', ->
 		for cell in oldCells
 			remove(cell)
 
-	applicationCountElement.innerHTML = applications.length + ' applications received so far in all teams.'
+	applicationCountElement.innerHTML = "Total: #{applications.length} applications in all teams"
 	for application in applications
 		do (application) ->
 			tableRow = document.createElement('tr')

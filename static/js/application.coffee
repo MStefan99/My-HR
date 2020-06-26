@@ -24,26 +24,27 @@ application = {}
 
 addEventListener('load', ->
 	params = new URLSearchParams(window.location.search)
-
 	res = await fetch('/console/get-application/' + params.get('id'))
 	application = await res.json()
+
+	document.title = application.firstName + '\'s application - My HR'
 	updateStar(application.starred)
+
 	if application.accepted
 		acceptButton.classList.add('disabled')
 		rejectButton.classList.add('disabled')
-		acceptButton.title = rejectButton.title =
-			(if application.accepted == 1 then 'This application is already accepted' else 'This application is already rejected')
+		switch application.accepted
+			when 1
+				statusIcon.src = '/img/checkmark.svg'
+				acceptButton.title = rejectButton.title = 'This application is already accepted'
+			when -1
+				statusIcon.src = '/img/cross.svg'
+				acceptButton.title = rejectButton.title = 'This application is already rejected'
 	else
 		acceptButton.addEventListener('click', accept)
 		rejectButton.addEventListener('click', reject)
-
-	switch application.accepted
-		when 0 then statusIcon.src = '/img/progress.svg'
-		when 1 then statusIcon.src = '/img/checkmark.svg'
-		when -1 then statusIcon.src = '/img/cross.svg'
+		statusIcon.src = '/img/progress.svg'
 	statusIcon.alt = 'Status icon'
-
-	document.title = application.firstName + '\'s application - My HR'
 
 	firstNameElement.innerHTML = application.firstName
 	lastNameElement.innerHTML = application.lastName
@@ -59,7 +60,6 @@ addEventListener('load', ->
 		backupPhoneElement.href = 'tel:' + application.backupPhone
 	else
 		backupPhoneElement.innerHTML = '[Not provided]'
-
 	links = application.links.replace(/(http:\/\/|https:\/\/)?(.*?\..*?)(\s|$)/g, '<a href="https://$2">$&</a>')
 	linksElement.innerHTML = links or '[Empty]'
 	freeFormElement.innerHTML = application.freeForm or '[Empty]'
@@ -81,7 +81,7 @@ updateStar = (starred) ->
 
 
 star = ->
-	res = await fetch("/console/stars?applicationId=#{applicationId}", {
+	res = await fetch("/console/stars?applicationId=#{application.id}", {
 		method: 'post'
 	})
 	if res.ok
@@ -89,7 +89,7 @@ star = ->
 
 
 unstar = ->
-	res = await fetch("/console/stars?applicationId=#{applicationId}", {
+	res = await fetch("/console/stars?applicationId=#{application.id}", {
 		method: 'delete'
 	})
 	if res.ok
@@ -112,7 +112,8 @@ accept = ->
 			\n\nIf you choose to continue, this application will be marked as accepted and
 			#{firstNameElement.innerHTML} will receive a confirmation email immediately.
 			\nIf you are still unsure about this application, it is recommended that you star it and
-			return later for a final decision.")
+			return later for a final decision.
+			\n\nAre you ABSOLUTELY sure you want to continue?")
 		fetch('/console/applications/accept/?id=' + application.id, {
 			method: 'post'
 		})
@@ -131,7 +132,8 @@ reject = ->
 			\n\nIf you choose to continue, this application will be marked as rejected and
 			#{firstNameElement.innerHTML} will receive a confirmation email immediately.
 			\nIf you are still unsure about this application, it is recommended that you leave this
-			application for a final decision.")
+			application for a final decision.
+			\n\nAre you ABSOLUTELY sure you want to continue?")
 		fetch('/console/applications/reject/?id=' + application.id, {
 			method: 'post'
 		})

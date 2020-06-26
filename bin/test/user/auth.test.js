@@ -5,19 +5,19 @@ const testLibSession = require('../testLib/user/session');
 
 
 describe('With test session', () => {
-	let createdSession;
+	let session;
 
 	const username = 'user1';
 	const ip = '::1';
 
 
 	beforeAll(async () => {
-		createdSession = await libSession.createSession(username, ip);
+		session = await libSession.createSession(username, ip);
 	});
 
 
 	afterAll(async () => {
-		await testLibSession.deleteSession(createdSession);
+		await testLibSession.deleteSession(session);
 	});
 
 
@@ -27,17 +27,17 @@ describe('With test session', () => {
 
 
 	test('Deny user with wrong IP', () => {
-		expect(libAuth.checkAuthStatus(createdSession, '::2')).toBe('WRONG_IP');
+		expect(libAuth.checkAuthStatus(session, '::2')).toBe('WRONG_IP');
 	});
 
 
 	test('Allow user with session', () => {
-		expect(libAuth.checkAuthStatus(createdSession, '::1')).toBe('OK');
+		expect(libAuth.checkAuthStatus(session, '::1')).toBe('OK');
 	});
 
 
 	test('Deny expired session', () => {
-		const sessionCopy = Object.assign({}, createdSession);
+		const sessionCopy = Object.assign({}, session);
 		sessionCopy.createdAt = Date.now() - 60 * 60 * 1000;  // 1 hour
 		expect(libAuth.checkExpirationStatus(sessionCopy, 30 * 60 * 1000))  // 30 minutes
 			.toBe('EXPIRED');
@@ -45,7 +45,7 @@ describe('With test session', () => {
 
 
 	test('Allow active session', () => {
-		const sessionCopy = Object.assign({}, createdSession);
+		const sessionCopy = Object.assign({}, session);
 		sessionCopy.createdAt = Date.now() - 10 * 60 * 1000;  // 10 minutes
 		expect(libAuth.checkExpirationStatus(sessionCopy, 30 * 60 * 1000))  // 30 minutes
 			.toBe('OK');

@@ -352,7 +352,7 @@ router.delete('/users', async (req, res) => {
 		const db = await openDB();
 		await db.run(`delete
                       from console_users
-                      where username=$username`, {$username: req.query.username});
+                      where username=$username`, {$username: req.query.username});  //TODO: replace with UUID
 		await db.close();
 		res.end();
 	} else {

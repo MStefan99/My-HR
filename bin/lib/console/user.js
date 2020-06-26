@@ -6,99 +6,179 @@ const openDB = require('../db');
 const hashSecret = 'Your HR secret key';
 
 
-async function getUserByID(userID) {
-	const db = await openDB();
-	const user = await db.get(`select id,
-                                      username,
-                                      password_hash as passwordHash,
-                                      uuid,
-                                      setup_code,
-                                      admin,
-                                      secret
-                               from console_users
-                               where id=$id`, {$id: userID});
-	await db.close();
-	return user;
-}
+class User {
+	id;
+	username;
+	admin;
+	setupCode;
+	passwordHash = null;
+	secret = null;
 
 
-async function getUserByUUID(userUUID) {
-	const db = await openDB();
-	const user = await db.get(`select id,
-                                      username,
-                                      password_hash as passwordHash,
-                                      uuid,
-                                      setup_code,
-                                      admin,
-                                      secret
-                               from console_users
-                               where uuid=$uuid`, {$uuid: userUUID});
-	await db.close();
-	return user;
-}
+	static async createUser(username, admin) {
+		const user = new User();
+
+		user.username = username;
+		user.uuid = uuid.v4();
+		user.setupCode = uuid.v4();
+		user.admin = !!admin;
+
+		const db = await openDB();
+		try {
+			await db.run(`insert into console_users(username, admin, uuid, setup_code)
+                          values ($username, $admin, $uuid, $code)`, {
+				$username: user.username,
+				$uuid: user.uuid,
+				$admin: user.admin ? 1 : 0,
+				$code: user.setupCode
+			});
+		} catch (e) {
+			await db.close();
+			return 'DUPLICATE_USERNAME';
+		}
+
+		user.id = (await db.get(`select last_insert_rowid() as id`)).id;
+		await db.close();
+		return user;
+	}
 
 
-async function createNewUser(username, isAdmin) {
-	const db = await openDB();
+	static async getUserByID(userID) {
+		const user = new User();
 
-	const userUUID = uuid.v4();
-	const setupCode = uuid.v4();
-	await db.run(`insert into console_users(username, admin, uuid, setup_code)
-                  values ($username, $admin, $uuid, $code)`, {
-		$username: username,
-		$admin: isAdmin ? 1 : 0,
-		$uuid: userUUID,
-		$code: setupCode
-	}).catch(() => {
-		return 'DUPLICATE_USERNAME';
-	});
+		const db = await openDB();
+		const userData = await db.get(`select id,
+                                              username,
+                                              password_hash as passwordHash,
+                                              uuid,
+                                              setup_code    as setupCode,
+                                              admin,
+                                              secret
+                                       from console_users
+                                       where id=$id`, {$id: userID});
+		await db.close();
 
-	const user = {username: username, uuid: userUUID, admin: isAdmin, setupCode: setupCode};
-	user.id = (await db.get(`select last_insert_rowid() as id`)).id;
-	await db.close();
-
-	return user;
-}
-
-
-async function verifyUserPassword(user, password) {
-	const hash = crypto.createHmac('sha512', hashSecret);
-	hash.update(password);
-	return user.passwordHash === hash.digest('hex');
-}
+		if (!userData) {
+			return 'NO_USER'
+		} else {
+			Object.assign(user, userData);
+			user.admin = !!userData.admin;
+			return user;
+		}
+	}
 
 
-async function updateUserPassword(user, password) {
-	const db = await openDB();
-	const hash = crypto.createHmac('sha512', hashSecret);
-	hash.update(password);
+	static async getUserByUUID(userUUID) {
+		const user = new User();
 
-	await db.run(`update console_users
-                  set password_hash=$hash,
-                      setup_code=null
-                  where id=$id`, {
-		$id: user.id,
-		$hash: hash.digest('hex'),
-	});
-	await db.close();
-}
+		const db = await openDB();
+		const userData = await db.get(`select id,
+                                              username,
+                                              password_hash as passwordHash,
+                                              uuid,
+                                              setup_code    as setupCode,
+                                              admin,
+                                              secret
+                                       from console_users
+                                       where uuid=$uuid`, {$uuid: userUUID});
+		await db.close();
+
+		if (!userData) {
+			return 'NO_USER'
+		} else {
+			Object.assign(user, userData);
+			user.admin = !!userData.admin;
+			return user;
+		}
+	}
 
 
-async function updateUserSecret(user, secret) {
-	const db = await openDB();
+	static async getAllUsers() {
+		const users = [];
 
-	await db.run(`update console_users
+		const db = await openDB();
+		const allUserData = await db.all(`select id,
+                                                 username,
+                                                 password_hash as passwordHash,
+                                                 uuid,
+                                                 setup_code    as setupCode,
+                                                 admin,
+                                                 secret
+                                          from console_users`);
+		await db.close();
+
+		for (const userData of allUserData) {
+			const user = new User();
+
+			Object.assign(user, userData);
+			user.admin = !!userData.admin;
+			users.push(user)
+		}
+		return users;
+	}
+
+
+	verifyPassword(password) {
+		const hash = crypto.createHmac('sha512', hashSecret);
+		hash.update(password);
+		return this.passwordHash === hash.digest('hex');
+	}
+
+
+	async updatePassword(password) {
+		if (password.length < 8) {
+			return 'TOO_SHORT';
+		} else {
+			const db = await openDB();
+
+			const hash = crypto.createHmac('sha512', hashSecret);
+			hash.update(password);
+			this.passwordHash = hash.digest('hex');
+
+			await db.run(`update console_users
+                          set password_hash=$hash,
+                              setup_code=null
+                          where id=$id`, {
+				$id: this.id,
+				$hash: this.passwordHash,
+			});
+			await db.close();
+		}
+	}
+
+
+	async setSecret(secret) {
+		const db = await openDB();
+		this.secret = secret;
+
+		await db.run(`update console_users
                       set secret=$secret
-                      where id=$id`, {$secret: secret, $id: user.id});
-	await db.close();
+                      where id=$id`, {$secret: secret, $id: this.id});
+		await db.close();
+	}
+
+
+	async deleteAllSessions() {
+		const db = await openDB();
+		await db.run(`delete
+                      from console_sessions
+                      where user_id=$id`, {$id: this.id});
+		await db.close();
+	}
+
+
+	async delete() {
+		if (this.username === 'admin') {
+			return 'CANNOT_DELETE_ADMIN';
+		} else {
+			const db = await openDB();
+			await db.run(`delete
+                          from console_users
+                          where id=$id`, {$id: this.id});
+			await db.close();
+		}
+	}
 }
 
 
-module.exports = {
-	createNewUser: createNewUser,
-	getUserByID: getUserByID,
-	getUserByUUID: getUserByUUID,
-	verifyUserPassword: verifyUserPassword,
-	updateUserPassword: updateUserPassword,
-	updateUserSecret: updateUserSecret
-};
+module.exports = User;
