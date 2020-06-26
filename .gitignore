@@ -205,3 +205,4 @@ static/js/*.map
 setup/ssl
 ssl
 uploads
+package-lock.json
