@@ -21,7 +21,8 @@ describe('With test sessions', () => {
 		links: 'example.com',
 		freeForm: 'free text',
 		fileName: 'cv1.txt',
-		filePath: 'test1'
+		filePath: 'test1',
+		accepted: 0
 	};
 	const applicationData2 = {
 		firstName: 'Test',
@@ -33,7 +34,8 @@ describe('With test sessions', () => {
 		links: 'example.com',
 		freeForm: 'free text',
 		fileName: 'cv2.txt',
-		filePath: 'test2'
+		filePath: 'test2',
+		accepted: 0
 	};
 
 
@@ -62,19 +64,28 @@ describe('With test sessions', () => {
 	test('Check created objects', async () => {
 		expect(application1).toMatchObject(applicationData1);
 		expect(application2).toMatchObject(applicationData2);
+
+		expect(application1.email).toEqual(session1.email);
+		expect(application2.email).toEqual(session1.email);
+
+		expect(application1.id).toBeDefined();
+		expect(application2.id).toBeDefined();
 	});
 
 
-	test('Check created applications', async () => {
+	test('Get all applications', async () => {
 		const applications = await libApplication.getAllApplications();
 		expect(applications).toContainEqual(application1);
 		expect(applications).toContainEqual(application2);
+
 	});
 
 
-	test('Retrieve session applications', async () => {
+	test('Get session applications', async () => {
 		expect(await libApplication.getApplicationsBySession(session1))
-			.toMatchObject([applicationData1, applicationData2]);
+			.toContainEqual(application1);
+		expect(await libApplication.getApplicationsBySession(session1))
+			.toContainEqual(application2);
 		expect(await libApplication.getApplicationsBySession(session2))
 			.toHaveLength(0);
 	});

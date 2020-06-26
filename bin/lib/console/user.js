@@ -2,6 +2,8 @@ const uuid = require('uuid');
 const crypto = require('crypto');
 
 const openDB = require('../db');
+const libSession = require('./session');
+
 
 const hashSecret = 'Your HR secret key';
 
@@ -155,6 +157,29 @@ class User {
                       set secret=$secret
                       where id=$id`, {$secret: secret, $id: this.id});
 		await db.close();
+	}
+
+
+	async getSessions() {
+		const sessions = [];
+
+		const db = await openDB();
+		const allSessionData = await db.all(`select id,
+                                                    user_id as userID,
+                                                    uuid,
+                                                    ip,
+                                                    ua,
+                                                    time
+                                             from console_sessions
+                                             where user_id=$id`, {$id: this.id});
+		await db.close();
+
+		for (const sessionData of allSessionData) {
+			const session = new libSession();
+			Object.assign(session, sessionData);
+			sessions.push(session);
+		}
+		return sessions;
 	}
 
 

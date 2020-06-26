@@ -4,39 +4,46 @@ const testLibSession = require('../testLib/user/session');
 
 
 describe('With test session', () => {
-	let createdSession;
+	let session;
 
 	const username = 'user1';
 	const email = username + '@metropolia.fi';
 	const ip = '::1';
-	const session = {email: email, ip: ip};
+	const sessionData = {email: email, ip: ip};
 
 
 	beforeAll(async () => {
-		createdSession = await libSession.createSession(username, ip);
+		session = await libSession.createSession(username, ip);
 	});
 
 
 	afterAll(async () => {
-		await testLibSession.deleteSession(createdSession);
+		await testLibSession.deleteSession(session);
 	});
 
 
-	test('Check created session', async () => {
-		expect(createdSession).toMatchObject(session);
+	test('Check created object', async () => {
+		expect(session).toMatchObject(sessionData);
+		expect(session.id).toBeDefined();
+		expect(session.uuid).toBeDefined();
+		expect(session.createdAt).toBeDefined();
+	});
+
+
+	test('Get session by id', async () => {
+		expect(await libSession.getSessionByID(session.id))
+			.toEqual(session);
+	});
+
+
+	test('Get session by uuid', async () => {
+		expect(await libSession.getSessionByUUID(session.uuid))
+			.toEqual(session);
 	});
 
 
 	test('Get invalid session', async () => {
 		expect(await libSession.getSessionByID(-1)).toBe('NO_SESSION');
 		expect(await libSession.getSessionByUUID(-1)).toBe('NO_SESSION');
-	});
-
-
-	test('Get created session', async () => {
-		expect(await libSession.getSessionByID(createdSession.id))
-			.toMatchObject(session);
-		expect(await libSession.getSessionByUUID(createdSession.uuid))
-			.toMatchObject(session);
 	});
 });

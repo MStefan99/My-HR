@@ -15,7 +15,7 @@ async function loadSession(req, res, next) {
 	if (req.query.sessionId) {
 		res.cookie('SID', req.query.sessionId, cookieOptions);
 	}
-	req.session = await libSession.getSession(id)
+	req.session = await libSession.getSessionByID(id);
 	next();
 }
 
@@ -67,4 +67,4 @@ module.exports = {
 	getSession: loadSession,
 	redirectIfExpired: redirectIfExpired,
 	redirectIfNotAuthorized: redirectIfNotAuthorized
-}
+};

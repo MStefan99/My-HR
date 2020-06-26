@@ -30,13 +30,52 @@ describe('With test user', () => {
 	test('Check created objects', () => {
 		expect(user).toMatchObject(userData);
 		expect(admin).toMatchObject(adminData);
+
+		expect(user.id).toBeDefined();
+		expect(user.id).toBeDefined();
+
+		expect(user.uuid).toBeDefined();
+		expect(user.uuid).toBeDefined();
+
+		expect(user.setupCode).toBeDefined();
+		expect(user.setupCode).toBeDefined();
+
+		expect(user.secret).toBeNull();
+		expect(user.secret).toBeNull();
+
+		expect(user.passwordHash).toBeNull();
+		expect(user.passwordHash).toBeNull();
 	});
 
 
-	test('Check created users', async () => {
+	test('Get all users', async () => {
 		const users = await libUser.getAllUsers();
 		expect(users).toContainEqual(user);
 		expect(users).toContainEqual(admin);
+	});
+
+
+	test('Get user by ID', async () => {
+		expect(await libUser.getUserByID(user.id))
+			.toEqual(user);
+		expect(await libUser.getUserByID(admin.id))
+			.toEqual(admin);
+	});
+
+
+	test('Get user by UUID', async () => {
+		expect(await libUser.getUserByUUID(user.uuid))
+			.toEqual(user);
+		expect(await libUser.getUserByUUID(admin.uuid))
+			.toEqual(admin);
+	});
+
+
+	test('Get invalid users', async () => {
+		expect(await libUser.getUserByID(0))
+			.toBe('NO_USER');
+		expect(await libUser.getUserByUUID(0))
+			.toBe('NO_USER');
 	});
 
 
@@ -49,32 +88,11 @@ describe('With test user', () => {
 	});
 
 
-	test('Retrieve user by ID', async () => {
-		const retrievedTestUser = await libUser.getUserByID(user.id);
-		const retrievedAdminUser = await libUser.getUserByID(admin.id);
-		expect(retrievedTestUser).toEqual(user);
-		expect(retrievedAdminUser).toEqual(admin);
-	});
-
-
-	test('Retrieve user by UUID', async () => {
-		const retrievedTestUser = await libUser.getUserByUUID(user.uuid);
-		const retrievedAdminUser = await libUser.getUserByUUID(admin.uuid);
-		expect(retrievedTestUser).toEqual(user);
-		expect(retrievedAdminUser).toEqual(admin);
-	});
-
-
-	test('Retrieve invalid users', async () => {
-		expect(await libUser.getUserByID(0)).toBe('NO_USER');
-		expect(await libUser.getUserByUUID(0)).toBe('NO_USER');
-	});
-
-
 	test('Set user 2FA secret', async () => {
 		await user.setSecret('test');
 		expect(user).toHaveProperty('secret', 'test');
-		expect(await libUser.getUserByID(user.id)).toHaveProperty('secret', 'test');
+		expect(await libUser.getUserByID(user.id))
+			.toHaveProperty('secret', 'test');
 	});
 
 

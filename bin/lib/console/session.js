@@ -10,20 +10,20 @@ class Session {
 	ip;
 	ua;
 	time;
-	
 
-	static async createSession(userID, ua, ip) {
+
+	static async createSession(user, ua, ip) {
 		const session = new Session();
 
 		session.uuid = uuid.v4();
 		session.time = Date.now();
-		session.userID = userID;
+		session.userID = user.id;
 		session.ua = ua;
 		session.ip = ip;
 
 		const db = await openDB();
 		await db.run(`insert into console_sessions(user_id, uuid, ip, ua, time)
-                  values ($id, $uuid, $ip, $ua, $time)`, {
+                      values ($id, $uuid, $ip, $ua, $time)`, {
 			$id: session.userID, $uuid: session.uuid, $ip: session.ip,
 			$ua: session.ua, $time: session.time
 		});
@@ -40,13 +40,13 @@ class Session {
 
 		const db = await openDB();
 		const sessionData = await db.get(`select id,
-                                         user_id as userID,
-                                         uuid,
-                                         ip,
-                                         ua,
-                                         time
-                                  from console_sessions
-                                  where id=$id`, {$id: sessionID});
+                                                 user_id as userID,
+                                                 uuid,
+                                                 ip,
+                                                 ua,
+                                                 time
+                                          from console_sessions
+                                          where id=$id`, {$id: sessionID});
 		await db.close();
 
 		if (!sessionData) {
@@ -63,13 +63,13 @@ class Session {
 
 		const db = await openDB();
 		const sessionData = await db.get(`select id,
-                                         user_id as userID,
-                                         uuid,
-                                         ip,
-                                         ua,
-                                         time
-                                  from console_sessions
-                                  where uuid=$uuid`, {$uuid: sessionUUID});
+                                                 user_id as userID,
+                                                 uuid,
+                                                 ip,
+                                                 ua,
+                                                 time
+                                          from console_sessions
+                                          where uuid=$uuid`, {$uuid: sessionUUID});
 		await db.close();
 
 		if (!sessionData) {
@@ -84,8 +84,8 @@ class Session {
 	async delete() {
 		const db = await openDB();
 		await db.run(`delete
-                  from console_sessions
-                  where id=$id`, {$id: this.id});
+                      from console_sessions
+                      where id=$id`, {$id: this.id});
 		await db.close();
 	}
 }

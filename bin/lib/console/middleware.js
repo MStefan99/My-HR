@@ -3,6 +3,9 @@ const libUser = require('./user');
 const libAuth = require('./auth');
 
 
+const sessionLength = 1000 * 60 * 60 * 12;  // 12-hour sessions
+
+
 async function getSession(req, res, next) {
 	if (req.cookies.CSID) {
 		req.session = libSession.getSessionByUUID(req.cookies.CSID);
@@ -22,7 +25,11 @@ async function getUser(req, res, next) {
 
 
 async function redirectIfNotAuthorized(req, res, next) {
-	switch (libAuth.checkAuthStatus()) {
+	switch (libAuth.checkAuthStatus(req.session,
+		req.user,
+		req.headers['user-agent'],
+		req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+		sessionLength)) {
 		case 'NO_SESSION':
 			res.redirect(303, '/console/login/');
 			break;
@@ -46,7 +53,7 @@ async function redirectIfNotAuthorized(req, res, next) {
 
 async function redirectIfNotAdmin(req, res, next) {
 
-	switch (libAuth.checkAdminStatus()) {
+	switch (libAuth.checkAdminStatus(req.user)) {
 		case 'NOT_ADMIN':
 			res.redirect(303, '/console/');
 			break;
