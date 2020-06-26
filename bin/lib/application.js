@@ -1,7 +1,8 @@
-const openDB = require('./db');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
+
+const openDB = require('./db');
 unlink = util.promisify(fs.unlink);
 
 
@@ -52,6 +53,7 @@ class Application {
 
 		Object.assign(application, applicationData);
 		application.email = session.email;
+		application.accepted = 0;
 		application.id = (await db.get(`select last_insert_rowid() as id`)).id;
 		await db.close();
 		return application;
@@ -125,47 +127,55 @@ class Application {
 		switch (type) {
 			case 'all':
 			default:
-				allApplicationData = await getAllApplications();
-				break;
-			case 'stars':
-				allApplicationData = await db.all(`select a.id,
-                                                          first_name as firstName,
-                                                          last_name  as lastName,
-                                                          team,
-                                                          free_form  as freeForm,
-                                                          accepted
-                                                   from applications a
-                                                            left join
-                                                        console_stars cs on a.id=cs.application_id
-                                                   where cs.user_id=$id
-                                                   order by cs.id desc`, {$id: req.user.id});
+				allApplicationData = await this.getAllApplications();
 				break;
 			case 'accepted':
 				allApplicationData = await db.all(`select id,
-                                                          first_name as firstName,
-                                                          last_name  as lastName,
+                                                          first_name   as firstName,
+                                                          last_name    as lastName,
+                                                          email,
+                                                          backup_email as backupEmail,
+                                                          phone,
+                                                          backup_phone as backupPhone,
                                                           team,
-                                                          free_form  as freeForm,
+                                                          links,
+                                                          free_form    as freeForm,
+                                                          file_name    as fileName,
+                                                          file_path    as filePath,
                                                           accepted
                                                    from applications
                                                    where accepted=1`);
 				break;
 			case 'rejected':
 				allApplicationData = await db.all(`select id,
-                                                          first_name as firstName,
-                                                          last_name  as lastName,
+                                                          first_name   as firstName,
+                                                          last_name    as lastName,
+                                                          email,
+                                                          backup_email as backupEmail,
+                                                          phone,
+                                                          backup_phone as backupPhone,
                                                           team,
-                                                          free_form  as freeForm,
+                                                          links,
+                                                          free_form    as freeForm,
+                                                          file_name    as fileName,
+                                                          file_path    as filePath,
                                                           accepted
                                                    from applications
                                                    where accepted=-1`);
 				break;
 			case 'pending':
 				allApplicationData = await db.all(`select id,
-                                                          first_name as firstName,
-                                                          last_name  as lastName,
+                                                          first_name   as firstName,
+                                                          last_name    as lastName,
+                                                          email,
+                                                          backup_email as backupEmail,
+                                                          phone,
+                                                          backup_phone as backupPhone,
                                                           team,
-                                                          free_form  as freeForm,
+                                                          links,
+                                                          free_form    as freeForm,
+                                                          file_name    as fileName,
+                                                          file_path    as filePath,
                                                           accepted
                                                    from applications
                                                    where accepted=0`);
@@ -237,20 +247,7 @@ class Application {
 	}
 
 
-	async isStarredByUser(user) {
-		const db = await openDB();
-
-		const starred = await db.get(`select 1
-                                      from console_stars
-                                      where user_id=$uid
-                                        and application_id=$aid`,
-			{$aid: application.id, $uid: user.id});
-		await db.close();
-		return !!starred;
-	}
-
-
-	async delete(session) {
+	async deleteFromSession(session) {
 		if (session.email !== this.email) {
 			return 'NOT_ALLOWED';
 		} else if (this.accepted === 1) {
@@ -269,12 +266,40 @@ class Application {
 
 
 	async accept() {
-
+		switch (this.accepted) {
+			case -1:
+				return 'ALREADY_REJECTED';
+			case 1:
+				return 'ALREADY_ACCEPTED';
+			case 0:
+				this.accepted = 1;
+				const db = await openDB();
+				await db.run(`update applications
+                              set accepted=1
+                              where id=$id`,
+					{$id: this.id});
+				await db.close();
+				return 'OK';
+		}
 	}
 
 
 	async reject() {
-
+		switch (this.accepted) {
+			case -1:
+				return 'ALREADY_REJECTED';
+			case 1:
+				return 'ALREADY_ACCEPTED';
+			case 0:
+				this.accepted = -1;
+				const db = await openDB();
+				await db.run(`update applications
+                              set accepted= -1
+                              where id=$id`,
+					{$id: this.id});
+				await db.close();
+				return 'OK';
+		}
 	}
 }
 

@@ -9,7 +9,7 @@ const writeFile = util.promisify(fs.writeFile);
 const unlink = util.promisify(fs.unlink);
 
 
-async function createApplication(session, applicationData) {
+async function createApplicationWithFile(session, applicationData) {
 	const location = path.join(__dirname, '..', '..', '..', 'uploads', applicationData.filePath);
 	await writeFile(location, 'test file used in testing');
 	return await libApplication.createApplication(session, applicationData);
@@ -31,7 +31,7 @@ async function setApplicationAcceptedStatus(application, status) {
 }
 
 
-async function deleteApplication(application) {
+async function deleteApplicationWithFile(application) {
 	if (application) {
 		const db = await openDB();
 
@@ -48,18 +48,7 @@ async function deleteApplication(application) {
 }
 
 
-async function deleteAttachment(application) {
-	if (application) {
-		const location = path.join(__dirname, '..', '..', '..', 'uploads', application.filePath);
-		await unlink(location).catch(() => {
-		});
-	} else {
-		throw new Error('No application!');
-	}
-}
-
-
-async function deleteApplicationWithFile(filePath) {
+async function deleteApplicationWithFilePath(filePath) {
 	const db = await openDB();
 
 	await db.run(`delete
@@ -70,9 +59,8 @@ async function deleteApplicationWithFile(filePath) {
 
 
 module.exports = {
-	createApplication: createApplication,
+	createApplicationWithFile: createApplicationWithFile,
 	setApplicationAcceptedStatus: setApplicationAcceptedStatus,
-	deleteApplication: deleteApplication,
-	deleteAttachment: deleteAttachment,
-	deleteApplicationWithFile: deleteApplicationWithFile
+	deleteApplicationWithFile: deleteApplicationWithFile,
+	deleteApplicationWithFilePath: deleteApplicationWithFilePath
 };

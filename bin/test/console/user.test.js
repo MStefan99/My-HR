@@ -1,13 +1,17 @@
 const libUser = require('../../lib/console/user');
+const libSession = require('../../lib/user/session');
+const libApplication = require('../../lib/application');
 
 const testLibUser = require('../testLib/console/user');
+const testLibSession = require('../testLib/user/session');
+const testLibApplication = require('../testLib/application');
 
 
 describe('With test user', () => {
 	let user, admin;
 
-	const username = 'test';
-	const adminUsername = 'testAdmin';
+	const username = 'testCU';
+	const adminUsername = 'testAdminCU';
 
 	const userData = {username: username, admin: false, secret: null, passwordHash: null};
 	const adminData = {username: adminUsername, admin: true, secret: null, passwordHash: null};
@@ -91,9 +95,9 @@ describe('With test user', () => {
 
 	test('Set 2FA secret', async () => {
 		await user.setSecret('test');
-		expect(user).toHaveProperty('secret', 'test');
-		expect(await libUser.getUserByID(user.id))
-			.toHaveProperty('secret', 'test');
+		expect(user.secret).toBe('test');
+		expect((await libUser.getUserByID(user.id)).secret)
+			.toBe('test');
 	});
 
 
@@ -120,6 +124,84 @@ describe('With test user', () => {
 
 		expect(user.verifyPassword('testPassword')).toBeTruthy();
 		expect(retrievedUser.verifyPassword('testPassword')).toBeTruthy();
+	});
+
+
+	describe('With test session and application', () => {
+		let session, application;
+
+		const applicationData = {
+			firstName: 'Test',
+			lastName: 'User',
+			backupEmail: 'test1@example.com',
+			phone: '+358401234567',
+			backupPhone: '+358409876543',
+			team: 'Test',
+			links: 'example.com',
+			freeForm: 'free text',
+			fileName: 'cv1.txt',
+			filePath: 'testCU'
+		};
+
+
+		beforeAll(async () => {
+			await testLibApplication.deleteApplicationWithFilePath(applicationData.filePath);
+
+			session = await libSession.createSession('testA1', '::1');
+			application = await testLibApplication.createApplicationWithFile(session, applicationData);
+		});
+
+
+		afterAll(async () => {
+			await testLibApplication.deleteApplicationWithFile(application);
+			await testLibSession.deleteSession(session);
+		});
+
+
+		test('Star application', async () => {
+			expect(await user.getStarredApplications())
+				.toHaveLength(0);
+			expect(await user.hasStarredApplication(application))
+				.toBe(false);
+
+			expect(await user.starApplication(application))
+				.toBe('OK');
+			expect(await user.getStarredApplications())
+				.toContainEqual(application);
+			expect(await user.hasStarredApplication(application))
+				.toBe(true);
+		});
+
+
+		test('Star starred application', async () => {
+			expect(await user.starApplication(application))
+				.toBe('ALREADY_STARRED');
+			expect(await user.getStarredApplications())
+				.toContainEqual(application);
+		});
+
+
+		test('Unstar application', async () => {
+			expect(await user.getStarredApplications())
+				.toContainEqual(application);
+			expect(await user.hasStarredApplication(application))
+				.toBe(true);
+
+			expect(await user.unstarApplication(application))
+				.toBe('OK');
+			expect(await user.getStarredApplications())
+				.toHaveLength(0);
+			expect(await user.hasStarredApplication(application))
+				.toBe(false);
+		});
+
+
+		test('Unstar not-starred application', async () => {
+			expect(await user.unstarApplication(application))
+				.toBe('NOT_STARRED');
+			expect(await user.getStarredApplications())
+				.toHaveLength(0);
+		});
 	});
 
 

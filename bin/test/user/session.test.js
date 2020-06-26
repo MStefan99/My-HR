@@ -6,7 +6,7 @@ const testLibSession = require('../testLib/user/session');
 describe('With test session', () => {
 	let session;
 
-	const username = 'user1';
+	const username = 'testUS';
 	const email = username + '@metropolia.fi';
 	const ip = '::1';
 	const sessionData = {email: email, ip: ip};

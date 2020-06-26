@@ -7,7 +7,7 @@ const testLibUser = require('../testLib/console/user');
 describe('With test session and user', () => {
 	let session1, session2, user;
 
-	const username = 'test';
+	const username = 'testCS';
 	const ua1 = 'ua1';
 	const ua2 = 'ua2';
 	const ip1 = '::1';

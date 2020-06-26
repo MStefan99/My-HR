@@ -3,6 +3,7 @@ const crypto = require('crypto');
 
 const openDB = require('../db');
 const libSession = require('./session');
+const libApplication = require('../application');
 
 
 const hashSecret = 'Your HR secret key';
@@ -182,6 +183,97 @@ class User {
 			sessions.push(session);
 		}
 		return sessions;
+	}
+
+
+	async getStarredApplications() {
+		const applications = [];
+
+		const db = await openDB();
+		const allApplicationData = await db.all(`select a.id,
+                                                        first_name   as firstName,
+                                                        last_name    as lastName,
+                                                        email,
+                                                        backup_email as backupEmail,
+                                                        phone,
+                                                        backup_phone as backupPhone,
+                                                        team,
+                                                        links,
+                                                        free_form    as freeForm,
+                                                        file_name    as fileName,
+                                                        file_path    as filePath,
+                                                        accepted
+                                                 from applications a
+                                                          left join
+                                                      console_stars cs on a.id=cs.application_id
+                                                 where cs.user_id=$id
+                                                 order by cs.id desc`, {$id: this.id});
+
+		await db.close();
+
+		for (const applicationData of allApplicationData) {
+			const application = new libApplication();
+
+			Object.assign(application, applicationData);
+			applications.push(application)
+		}
+		return applications;
+	}
+
+
+	async hasStarredApplication(application) {
+		const db = await openDB();
+
+		const starred = await db.get(`select 1
+                                      from console_stars
+                                      where user_id=$uid
+                                        and application_id=$aid`,
+			{$aid: application.id, $uid: this.id});
+		await db.close();
+		return !!starred;
+	}
+
+
+	async starApplication(application) {
+		const db = await openDB();
+		const starred = !!(await db.get(`select 1
+                                         from console_stars
+                                         where user_id=$uid
+                                           and application_id=$aid`,
+			{$uid: this.id, $aid: application.id}));
+		if (starred) {
+			await db.close();
+			return 'ALREADY_STARRED';
+		} else {
+			await db.run(`insert into console_stars(user_id, application_id)
+                          values ($uid, $aid)`,
+				{$uid: this.id, $aid: application.id});
+			await db.close();
+			return 'OK';
+		}
+	}
+
+
+	async unstarApplication(application) {
+		const db = await openDB();
+
+		const starred = !!(await db.get(`select 1
+                                         from console_stars
+                                         where user_id=$uid
+                                           and application_id=$aid`,
+			{$uid: this.id, $aid: application.id}));
+		if (!starred) {
+			await db.close();
+			return 'NOT_STARRED';
+		} else {
+			await db.run(`delete
+                          from console_stars
+                          where user_id=$uid
+                            and application_id=$aid`,
+				{$uid: this.id, $aid: application.id});
+			await db.close();
+			return 'OK';
+		}
 	}
 
 

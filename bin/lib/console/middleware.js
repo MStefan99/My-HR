@@ -36,7 +36,8 @@ async function redirectIfNotAuthorized(req, res, next) {
 		case 'UA_CHANGED':
 		case 'WRONG_IP':
 		case 'EXPIRED':
-			res.redirect('/console/logout/');
+			req.session.delete();
+			res.redirect(303, '/console/login/');
 			break;
 		case 'NO_PASSWORD' :
 			res.redirect(303, '/console/register/');
@@ -54,10 +55,10 @@ async function redirectIfNotAuthorized(req, res, next) {
 async function redirectIfNotAdmin(req, res, next) {
 
 	switch (libAuth.getPrivileges(req.user)) {
-		case 'NOT_ADMIN':
+		case 'USER':
 			res.redirect(303, '/console/');
 			break;
-		case 'OK':
+		case 'ADMIN':
 			next();
 			break;
 	}

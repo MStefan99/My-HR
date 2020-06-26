@@ -16,8 +16,8 @@ describe('With test session and user', () => {
 	const ua2 = 'ua2';
 	const ip2 = '::2';
 	const age = 1000 * 60 * 60 * 12;
-	const username = 'test';
-	const adminUsername = 'testAdmin';
+	const username = 'testCA';
+	const adminUsername = 'testAdminCA';
 
 
 	beforeAll(async () => {
@@ -33,7 +33,10 @@ describe('With test session and user', () => {
 
 
 	afterAll(async () => {
+		adminSession.delete();
 		session.delete();
+
+		admin.delete();
 		user.delete();
 	});
 
