@@ -5,15 +5,15 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const sendMail = require('./lib/mail');
 
-const middleware = require('./lib/user/middleware');
-const libApplication = require('./lib/application');
 const libSetup = require('./lib/user/setup');
+const middleware = require('./lib/user/middleware');
 const libSession = require('./lib/user/session');
+const libApplication = require('./lib/application');
 
 
 const router = express.Router();
 const upload = multer({dest: 'uploads/'});
-const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=86400'  // 1 day in seconds
+const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=86400';  // 1 day in seconds
 
 
 router.use(bodyParser.urlencoded({extended: true}));
@@ -55,10 +55,9 @@ router.use(middleware.redirectIfNotAuthorized);
 
 
 router.post('/join', upload.single('cv'), async (req, res) => {
-	await libApplication.createApplication({
+	await libApplication.createApplication(req.session, {
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
-		email: req.session.email,
 		backupEmail: req.body.backupEmail,
 		phone: req.body.phone,
 		backupPhone: req.body.backupPhone,
@@ -91,28 +90,48 @@ router.get('/manage', (req, res) => {
 
 
 router.get('/applications', async (req, res) => {
-	res.json(await libApplication.getUserApplications(req.session.email));
+	const applications = await libApplication.getApplicationsBySession(req.session);
+	res.json(applications);
 });
 
 
 router.get('/download/:path', async (req, res) => {
 	res.set('Cache-control', publicCache);
-	const file = await libApplication.getUserAttachment(req.session.email, req.params.path);
-	if (file) {
-		res.download(path.join(__dirname, '..', '/uploads/', req.params.path), file.fileName);
-	} else {
-		res.render('user/status', {
-			title: 'No such file', info: 'The file requested was not found in the system. ' +
-				'Please check the address and try again.'
-		});
+	const attachment = await libApplication.getAttachment(req.params.path, req.session);
+	switch (attachment) {
+		case "NO_APPLICATION":
+			res.status(404).render('user/status', {
+				title: 'No such file', info: 'The file requested was not found in the system. ' +
+					'Please check the address and try again.'
+			});
+			break;
+		case "NOT_ALLOWED":
+			res.status(403).render('user/status', {
+				title: 'Not allowed', info: 'The file requested was submitted by another user ' +
+					'and you are not allowed to view or download it. If you think this is a ' +
+					'mistake, please check if the address you\'ve entered is correct'
+			});
+			break;
+		default:
+			res.download(path.join(__dirname, '..', '/uploads/', req.params.path), attachment.fileName);
+			break;
 	}
 });
 
 
 router.delete('/applications/:id', async (req, res) => {
 	const application = await libApplication.getApplicationByID(req.params.id);
-	await libApplication.deleteUserApplication(application, req.params.id);
-	res.end();
+	switch (await application.delete(req.session)) {
+		case "OK":
+			res.send('OK');
+			break;
+		case "ALREADY_ACCEPTED":
+			res.status(400).send('ALREADY_ACCEPTED');
+			break;
+		case "NOT_ALLOWED":
+			res.status(403).send('NOT_ALLOWED');
+			break;
+	}
 });
 
 

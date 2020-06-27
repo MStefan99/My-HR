@@ -9,13 +9,13 @@ const cookieOptions = {
 };
 
 
-async function loadSession(req, res, next) {
-	const id = req.query.sessionId || req.cookies.SID;
+async function getSession(req, res, next) {
+	const uuid = req.query.sessionID || req.cookies.SID;
 
 	if (req.query.sessionId) {
-		res.cookie('SID', req.query.sessionId, cookieOptions);
+		res.cookie('SID', req.query.sessionID, cookieOptions);
 	}
-	req.session = await libSession.getSessionByID(id);
+	req.session = await libSession.getSessionByUUID(uuid);
 	next();
 }
 
@@ -64,7 +64,7 @@ function redirectIfExpired(req, res, next) {
 
 
 module.exports = {
-	getSession: loadSession,
+	getSession: getSession,
 	redirectIfExpired: redirectIfExpired,
 	redirectIfNotAuthorized: redirectIfNotAuthorized
 };

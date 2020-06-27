@@ -1,5 +1,5 @@
 function checkAuthStatus(session, user, userAgent, ip, age) {
-	if (!session) {
+	if (!session || session === 'NO_SESSION') {
 		return 'NO_SESSION';
 	} else if (session.ua !== userAgent) {
 		return 'WRONG_UA';

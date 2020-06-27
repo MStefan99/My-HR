@@ -44,6 +44,8 @@ describe('With test session and user', () => {
 	test('Not logged in', () => {
 		expect(libAuth.checkAuthStatus(null, null))
 			.toBe('NO_SESSION');
+		expect(libAuth.checkAuthStatus('NO_SESSION', null))
+			.toBe('NO_SESSION');
 	});
 
 
@@ -121,11 +123,13 @@ describe('With test session and user', () => {
 
 
 	test('Check user rights', () => {
-		expect(libAuth.getPrivileges(user)).toBe('USER');
+		expect(libAuth.getPrivileges(user))
+			.toBe('USER');
 	});
 
 
 	test('Check admin rights', () => {
-		expect(libAuth.getPrivileges(admin)).toBe('ADMIN');
+		expect(libAuth.getPrivileges(admin))
+			.toBe('ADMIN');
 	});
 });

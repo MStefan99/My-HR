@@ -1,5 +1,5 @@
 function checkAuthStatus(session, ip) {
-	if (!session) {
+	if (!session || session === 'NO_SESSION') {
 		return 'NO_SESSION';
 	} else if (session.ip !== ip) {
 		return 'WRONG_IP';

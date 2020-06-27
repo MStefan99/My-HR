@@ -22,17 +22,22 @@ describe('With test session', () => {
 
 
 	test('Deny user with no session', () => {
-		expect(libAuth.checkAuthStatus(null, null)).toBe('NO_SESSION');
+		expect(libAuth.checkAuthStatus(null, null))
+			.toBe('NO_SESSION');
+		expect(libAuth.checkAuthStatus('NO_SESSION', null))
+			.toBe('NO_SESSION');
 	});
 
 
 	test('Deny user with wrong IP', () => {
-		expect(libAuth.checkAuthStatus(session, '::2')).toBe('WRONG_IP');
+		expect(libAuth.checkAuthStatus(session, '::2'))
+			.toBe('WRONG_IP');
 	});
 
 
 	test('Allow user with session', () => {
-		expect(libAuth.checkAuthStatus(session, '::1')).toBe('OK');
+		expect(libAuth.checkAuthStatus(session, '::1'))
+			.toBe('OK');
 	});
 
 

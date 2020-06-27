@@ -60,8 +60,12 @@ router.get('/setup-otp', (req, res) => {
 
 
 router.get('/get-otp', async (req, res) => {
-	const secret = lib2FA.generateSecret(req.user);
-	res.json(secret);
+	if (!req.user) {
+		res.status(400).end();
+	} else {
+		const secret = lib2FA.generateSecret(req.user);
+		res.json(secret);
+	}
 });
 
 

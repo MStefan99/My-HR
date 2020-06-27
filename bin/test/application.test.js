@@ -49,8 +49,10 @@ describe('With test sessions and applications', () => {
 		session1 = await libSession.createSession('testA1', '::1');
 		session2 = await libSession.createSession('testA2', '::2');
 
-		application1 = await testLibApplication.createApplicationWithFile(session1, applicationData1);
-		application2 = await testLibApplication.createApplicationWithFile(session1, applicationData2);
+		application1 = await testLibApplication
+			.createApplicationWithFile(session1, applicationData1);
+		application2 = await testLibApplication
+			.createApplicationWithFile(session1, applicationData2);
 	});
 
 
@@ -187,7 +189,7 @@ describe('With test sessions and applications', () => {
 	test('Delete another user\'s application', async () => {
 		const applications = await libApplication.getApplicationsBySession(session1);
 
-		expect(await applications[1].deleteFromSession(session2))
+		expect(await applications[1].delete(session2))
 			.toBe('NOT_ALLOWED');
 		expect(await libApplication.getApplicationsBySession(session1))
 			.toContainEqual(applications[1]);
@@ -195,7 +197,7 @@ describe('With test sessions and applications', () => {
 
 
 	test('Delete accepted application', async () => {
-		expect(await application1.deleteFromSession(session1))
+		expect(await application1.delete(session1))
 			.toBe('ALREADY_ACCEPTED');
 		expect(await libApplication.getApplicationsBySession(session1))
 			.toContainEqual(application1);
@@ -205,7 +207,7 @@ describe('With test sessions and applications', () => {
 	test('Delete application', async () => {
 		await testLibApplication.setApplicationAcceptedStatus(application1, -1);
 
-		expect(await application1.deleteFromSession(session1))
+		expect(await application1.delete(session1))
 			.toBe('OK');
 		expect(await libApplication.getApplicationsBySession(session1))
 			.not.toContainEqual(application1);

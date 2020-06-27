@@ -247,7 +247,7 @@ class Application {
 	}
 
 
-	async deleteFromSession(session) {
+	async delete(session) {
 		if (session.email !== this.email) {
 			return 'NOT_ALLOWED';
 		} else if (this.accepted === 1) {

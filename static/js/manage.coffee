@@ -52,11 +52,18 @@ update = ->
 							If you choose to continue, we will delete all data associated with
 							this application and will no longer be able to offer you a
 							Mine Eclipse position. Do you still wish to continue?')
-						await fetch('/applications/' + application.id, {
+						res = await fetch('/applications/' + application.id, {
 							method: 'delete'
 						})
-						update()
-						alert('Your application was successfully deleted')
+						if res.ok
+							update()
+							alert('Your application was successfully deleted')
+						else
+							switch await res.text()
+								when 'ALREADY_ACCEPTED'
+									alert('Your application was already accepted and cannot be removed.')
+								when 'NOT_ALLOWED'
+									alert('This application was submitted by another user and you cannot remove it.')
 				)
 			else
 				removeLink.innerHTML = 'Accepted'

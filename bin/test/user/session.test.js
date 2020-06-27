@@ -43,7 +43,9 @@ describe('With test session', () => {
 
 
 	test('Get invalid session', async () => {
-		expect(await libSession.getSessionByID(-1)).toBe('NO_SESSION');
-		expect(await libSession.getSessionByUUID(-1)).toBe('NO_SESSION');
+		expect(await libSession.getSessionByID(-1))
+			.toBe('NO_SESSION');
+		expect(await libSession.getSessionByUUID(-1))
+			.toBe('NO_SESSION');
 	});
 });
