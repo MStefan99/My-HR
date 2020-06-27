@@ -89,6 +89,35 @@ class Application {
 	}
 
 
+	static async getApplicationByFilePath(filePath) {
+		const application = new Application();
+
+		const db = await openDB();
+		const applicationData = await db.get(`select id,
+                                                     first_name   as firstName,
+                                                     last_name    as lastName,
+                                                     email,
+                                                     backup_email as backupEmail,
+                                                     phone,
+                                                     backup_phone as backupPhone,
+                                                     team,
+                                                     links,
+                                                     free_form    as freeForm,
+                                                     file_name    as fileName,
+                                                     file_path    as filePath,
+                                                     accepted
+                                              from applications
+                                              where file_path=$path`, {$path: filePath});
+		await db.close();
+		if (!applicationData) {
+			return 'NO_APPLICATION';
+		} else {
+			Object.assign(application, applicationData);
+			return application;
+		}
+	}
+
+
 	static async getAllApplications() {
 		const applications = [];
 
@@ -224,33 +253,8 @@ class Application {
 	}
 
 
-	static async getAttachment(path, session) {
-		const db = await openDB();
-
-		const application = await db.get(`select email,
-                                                 file_name as fileName,
-                                                 file_path as filePath
-                                          from applications
-                                          where file_path=$path`, {$path: path});
-
-		await db.close();
-		if (!application) {
-			return 'NO_APPLICATION';
-		} else if (session.email !== application.email) {
-			return 'NOT_ALLOWED';
-		} else {
-			return {
-				fileName: application.fileName,
-				filePath: application.filePath
-			};
-		}
-	}
-
-
-	async delete(session) {
-		if (session.email !== this.email) {
-			return 'NOT_ALLOWED';
-		} else if (this.accepted === 1) {
+	async delete() {
+		if (this.accepted === 1) {
 			return 'ALREADY_ACCEPTED';
 		} else {
 			const db = await openDB();

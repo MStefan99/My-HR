@@ -16,7 +16,7 @@ update = ->
 	for row in applicationRows
 		remove(row)
 
-	res = await fetch('/applications')
+	res = await fetch('/applications/')
 	applications = await res.json()
 
 	for application in applications

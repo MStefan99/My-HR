@@ -96,6 +96,31 @@ class User {
 	}
 
 
+	static async getUserByUsername(username) {
+		const user = new User();
+
+		const db = await openDB();
+		const userData = await db.get(`select id,
+                                              username,
+                                              password_hash as passwordHash,
+                                              uuid,
+                                              setup_code    as setupCode,
+                                              admin,
+                                              secret
+                                       from console_users
+                                       where username=$username`, {$username: username});
+		await db.close();
+
+		if (!userData) {
+			return 'NO_USER'
+		} else {
+			Object.assign(user, userData);
+			user.admin = !!userData.admin;
+			return user;
+		}
+	}
+
+
 	static async getAllUsers() {
 		const users = [];
 
@@ -148,6 +173,7 @@ class User {
 				$hash: this.passwordHash,
 			});
 			await db.close();
+			return 'OK';
 		}
 	}
 
@@ -160,6 +186,7 @@ class User {
                       set secret=$secret
                       where id=$id`, {$secret: secret, $id: this.id});
 		await db.close();
+		return 'OK';
 	}
 
 
@@ -283,6 +310,7 @@ class User {
                       from console_sessions
                       where user_id=$id`, {$id: this.id});
 		await db.close();
+		return 'OK';
 	}
 
 
@@ -295,6 +323,7 @@ class User {
                           from console_users
                           where id=$id`, {$id: this.id});
 			await db.close();
+			return 'OK';
 		}
 	}
 }

@@ -76,10 +76,20 @@ describe('With test user', () => {
 	});
 
 
+	test('Get user by UUID', async () => {
+		expect(await libUser.getUserByUsername(username))
+			.toEqual(user);
+		expect(await libUser.getUserByUsername(adminUsername))
+			.toEqual(admin);
+	});
+
+
 	test('Get invalid users', async () => {
 		expect(await libUser.getUserByID(0))
 			.toBe('NO_USER');
 		expect(await libUser.getUserByUUID(0))
+			.toBe('NO_USER');
+		expect(await libUser.getUserByUsername(null))
 			.toBe('NO_USER');
 	});
 
@@ -94,7 +104,7 @@ describe('With test user', () => {
 
 
 	test('Set 2FA secret', async () => {
-		await user.setSecret('test');
+		expect(await user.setSecret('test')).toBe('OK');
 		expect(user.secret).toBe('test');
 		expect((await libUser.getUserByID(user.id)).secret)
 			.toBe('test');
@@ -116,14 +126,17 @@ describe('With test user', () => {
 
 
 	test('Update password', async () => {
-		await user.updatePassword('testPassword');
+		expect(await user.updatePassword('testPassword'))
+			.toBe('OK');
 		const retrievedUser = await libUser.getUserByID(user.id);
 
 		expect(user.passwordHash).not.toBeNull();
 		expect(retrievedUser.passwordHash).not.toBeNull();
 
-		expect(user.verifyPassword('testPassword')).toBeTruthy();
-		expect(retrievedUser.verifyPassword('testPassword')).toBeTruthy();
+		expect(user.verifyPassword('testPassword'))
+			.toBeTruthy();
+		expect(retrievedUser.verifyPassword('testPassword'))
+			.toBeTruthy();
 	});
 
 
@@ -214,7 +227,7 @@ describe('With test user', () => {
 
 
 	test('Delete user', async () => {
-		await admin.delete();
+		expect(await admin.delete()).toBe('OK');
 		expect(await libUser.getAllUsers())
 			.not.toContainEqual(admin);
 	});

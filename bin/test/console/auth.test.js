@@ -98,7 +98,7 @@ describe('With test session and user', () => {
 
 
 	test('2FA not set up', () => {
-		const userCopy = Object.assign({} ,user);
+		const userCopy = Object.assign({}, user);
 		userCopy.passwordHash = 'hash';
 
 		expect(libAuth.checkAuthStatus(session,
@@ -110,7 +110,7 @@ describe('With test session and user', () => {
 
 
 	test('User registered', () => {
-		const userCopy = Object.assign({} ,user);
+		const userCopy = Object.assign({}, user);
 		userCopy.passwordHash = 'hash';
 		userCopy.secret = 'secret';
 

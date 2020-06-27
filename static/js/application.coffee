@@ -81,7 +81,7 @@ updateStar = (starred) ->
 
 
 star = ->
-	res = await fetch("/console/stars?applicationId=#{application.id}", {
+	res = await fetch("/console/stars/?applicationID=#{application.id}", {
 		method: 'post'
 	})
 	if res.ok
@@ -89,7 +89,7 @@ star = ->
 
 
 unstar = ->
-	res = await fetch("/console/stars?applicationId=#{application.id}", {
+	res = await fetch("/console/stars/?applicationID=#{application.id}", {
 		method: 'delete'
 	})
 	if res.ok
@@ -114,7 +114,7 @@ accept = ->
 			\nIf you are still unsure about this application, it is recommended that you star it and
 			return later for a final decision.
 			\n\nAre you ABSOLUTELY sure you want to continue?")
-		fetch('/console/applications/accept/?id=' + application.id, {
+		fetch('/console/applications/accept/?applicationID=' + application.id, {
 			method: 'post'
 		})
 		acceptButton.classList.add('disabled')
@@ -134,7 +134,7 @@ reject = ->
 			\nIf you are still unsure about this application, it is recommended that you leave this
 			application for a final decision.
 			\n\nAre you ABSOLUTELY sure you want to continue?")
-		fetch('/console/applications/reject/?id=' + application.id, {
+		fetch('/console/applications/reject/?applicationID=' + application.id, {
 			method: 'post'
 		})
 		acceptButton.classList.add('disabled')

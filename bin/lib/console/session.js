@@ -87,6 +87,7 @@ class Session {
                       from console_sessions
                       where id=$id`, {$id: this.id});
 		await db.close();
+		return 'OK';
 	}
 }
 

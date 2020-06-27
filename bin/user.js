@@ -30,13 +30,13 @@ router.get('/', (req, res) => {
 
 
 router.post('/register', async (req, res) => {
-	const user = await libSession.createSession(req.body.username,
+	const session = await libSession.createSession(req.body.username,
 		req.headers['x-forwarded-for'] || req.connection.remoteAddress);
 
-	await sendMail(user.email,
+	await sendMail(session.email,
 		'Complete your application for Mine Eclipse',
 		'registered.html',
-		{sid: user.id});
+		{uuid: session.uuid});
 	res.redirect(303, '/registered/');
 });
 
@@ -97,40 +97,41 @@ router.get('/applications', async (req, res) => {
 
 router.get('/download/:path', async (req, res) => {
 	res.set('Cache-control', publicCache);
-	const attachment = await libApplication.getAttachment(req.params.path, req.session);
-	switch (attachment) {
-		case "NO_APPLICATION":
-			res.status(404).render('user/status', {
-				title: 'No such file', info: 'The file requested was not found in the system. ' +
-					'Please check the address and try again.'
-			});
-			break;
-		case "NOT_ALLOWED":
-			res.status(403).render('user/status', {
-				title: 'Not allowed', info: 'The file requested was submitted by another user ' +
-					'and you are not allowed to view or download it. If you think this is a ' +
-					'mistake, please check if the address you\'ve entered is correct'
-			});
-			break;
-		default:
-			res.download(path.join(__dirname, '..', '/uploads/', req.params.path), attachment.fileName);
-			break;
+	const application = await libApplication.getApplicationByFilePath(req.params.path);
+
+	if (application === 'NO_APPLICATION') {
+		res.status(404).render('user/status', {
+			title: 'No such file', info: 'The file requested was not found in the system. ' +
+				'Please check the address and try again.'
+		});
+	} else if (req.session.email !== application.email) {
+		res.status(403).render('user/status', {
+			title: 'Not allowed', info: 'The file requested was submitted by another user ' +
+				'and you are not allowed to view or download it. If you think this is a ' +
+				'mistake, please check if the address you\'ve entered is correct'
+		});
+	} else {
+		res.download(path.join(__dirname, '..', '/uploads/', req.params.path), application.fileName);
 	}
 });
 
 
 router.delete('/applications/:id', async (req, res) => {
 	const application = await libApplication.getApplicationByID(req.params.id);
-	switch (await application.delete(req.session)) {
-		case "OK":
-			res.send('OK');
-			break;
-		case "ALREADY_ACCEPTED":
-			res.status(400).send('ALREADY_ACCEPTED');
-			break;
-		case "NOT_ALLOWED":
-			res.status(403).send('NOT_ALLOWED');
-			break;
+
+	if (application === 'NO_APPLICATION') {
+		res.status(400).send('NO_APPLICATION');
+	} else if (req.session.email !== application.email) {
+		res.status(403).send('NOT_ALLOWED');
+	} else {
+		switch (await application.delete()) {
+			case 'OK':
+				res.send('OK');
+				break;
+			case 'ALREADY_ACCEPTED':
+				res.status(400).send('ALREADY_ACCEPTED');
+				break;
+		}
 	}
 });
 

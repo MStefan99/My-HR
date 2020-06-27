@@ -24,7 +24,7 @@ clear = ->
 update = ->
 	clear()
 
-	res = await fetch('/console/get-users')
+	res = await fetch('/console/get-users/')
 	users = await res.json()
 
 	for user in users
@@ -55,7 +55,7 @@ update = ->
 			removeLink.innerHTML = 'Remove'
 			if user.username != 'admin'
 				removeLink.addEventListener('click', ->
-					await fetch("/console/users?username=#{user.username}", {
+					await fetch("/console/users/?username=#{user.username}", {
 						method: 'delete'
 					});
 					update()
@@ -65,7 +65,7 @@ update = ->
 submitButton.addEventListener('click', ->
 	username = usernameInput.value
 	admin = userAdminCheckbox.checked
-	await fetch("/console/users?username=#{username}&admin=#{admin}", {
+	await fetch("/console/users/?username=#{username}&admin=#{admin}", {
 		method: 'post'
 	});
 	update()

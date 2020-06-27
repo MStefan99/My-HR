@@ -2,16 +2,25 @@ const twoFactor = require('node-2fa');
 
 
 function generateSecret(user) {
-	return twoFactor.generateSecret({name: 'My HR', account: user.username || 'My HR'});
+	if (!user || user === 'NO_USER') {
+		return twoFactor.generateSecret({name: 'My HR', account: 'My HR'});
+	} else {
+		return twoFactor.generateSecret({name: 'My HR', account: user.username});
+	}
 }
 
 
-function verifyOtp(user, otp) {
-	const delta = twoFactor.verifyToken(user.secret, otp);
-	if (!delta) {
-		return false;
+function verifyOtp(user, token) {
+	if (user) {
+		const delta = twoFactor.verifyToken(user.secret, token);
+
+		if (!delta) {
+			return false;
+		} else {
+			return delta.delta === 0;
+		}
 	} else {
-		return delta.delta === 0;
+		return false;
 	}
 }
 

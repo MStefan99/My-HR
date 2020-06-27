@@ -84,7 +84,7 @@ describe('With test session and user', () => {
 
 
 	test('Delete session', async () => {
-		await session1.delete();
+		expect(await session1.delete()).toBe('OK');
 
 		const sessions = await user.getSessions();
 		expect(sessions).not.toContainEqual(session1);
@@ -92,7 +92,7 @@ describe('With test session and user', () => {
 
 
 	test('Delete all sessions', async () => {
-		await user.deleteAllSessions();
+		expect(await user.deleteAllSessions()).toBe('OK');
 
 		const sessions = await user.getSessions();
 		expect(sessions).toHaveLength(0);

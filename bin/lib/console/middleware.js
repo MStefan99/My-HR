@@ -8,7 +8,7 @@ const sessionLength = 1000 * 60 * 60 * 12;  // 12-hour sessions
 
 async function getSession(req, res, next) {
 	if (req.cookies.CSID) {
-		req.session = libSession.getSessionByUUID(req.cookies.CSID);
+		req.session = await libSession.getSessionByUUID(req.cookies.CSID);
 	}
 	next();
 }
@@ -16,9 +16,9 @@ async function getSession(req, res, next) {
 
 async function getUser(req, res, next) {
 	if (req.session) {
-		req.user = libUser.getUserByID(req.session.userID);
+		req.user = await libUser.getUserByID(req.session.userID);
 	} else if (req.cookies.CUID) {
-		req.user = libUser.getUserByUUID(req.cookies.CUID);
+		req.user = await libUser.getUserByUUID(req.cookies.CUID);
 	}
 	next();
 }
@@ -36,7 +36,11 @@ async function redirectIfNotAuthorized(req, res, next) {
 		case 'UA_CHANGED':
 		case 'WRONG_IP':
 		case 'EXPIRED':
-			req.session.delete();
+			await req.session.delete();
+			res.redirect(303, '/console/login/');
+			break;
+		case 'ID_MISMATCH':
+			await req.user.deleteAllSessions();
 			res.redirect(303, '/console/login/');
 			break;
 		case 'NO_PASSWORD' :

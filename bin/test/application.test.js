@@ -102,8 +102,18 @@ describe('With test sessions and applications', () => {
 	});
 
 
+	test('Get application by file ', async () => {
+		expect(await libApplication.getApplicationByFilePath(filePath1))
+			.toMatchObject(application1);
+		expect(await libApplication.getApplicationByFilePath(filePath2))
+			.toMatchObject(application2);
+	});
+
+
 	test('Get invalid application', async () => {
 		expect(await libApplication.getApplicationByID(-1))
+			.toBe('NO_APPLICATION');
+		expect(await libApplication.getApplicationByFilePath(null, session1))
 			.toBe('NO_APPLICATION');
 	});
 
@@ -143,7 +153,7 @@ describe('With test sessions and applications', () => {
 
 
 	test('Accept rejected application', async () => {
-			expect(await application2.accept()).toBe('ALREADY_REJECTED');
+		expect(await application2.accept()).toBe('ALREADY_REJECTED');
 		expect(application2.accepted).toBe(-1);
 	});
 
@@ -166,38 +176,8 @@ describe('With test sessions and applications', () => {
 	});
 
 
-	test('Retrieve invalid attachment', async () => {
-		expect(await libApplication.getAttachment(null, session1))
-			.toBe('NO_APPLICATION');
-	});
-
-
-	test('Retrieve another user\'s attachment', async () => {
-		expect(await libApplication.getAttachment(filePath2, session2))
-			.toBe('NOT_ALLOWED');
-	});
-
-
-	test('Retrieve user attachment', async () => {
-		expect(await libApplication.getAttachment(filePath1, session1))
-			.toMatchObject({fileName: 'cv1.txt', filePath: filePath1});
-		expect(await libApplication.getAttachment(filePath2, session1))
-			.toMatchObject({fileName: 'cv2.txt', filePath: filePath2});
-	});
-
-
-	test('Delete another user\'s application', async () => {
-		const applications = await libApplication.getApplicationsBySession(session1);
-
-		expect(await applications[1].delete(session2))
-			.toBe('NOT_ALLOWED');
-		expect(await libApplication.getApplicationsBySession(session1))
-			.toContainEqual(applications[1]);
-	});
-
-
 	test('Delete accepted application', async () => {
-		expect(await application1.delete(session1))
+		expect(await application1.delete())
 			.toBe('ALREADY_ACCEPTED');
 		expect(await libApplication.getApplicationsBySession(session1))
 			.toContainEqual(application1);
@@ -207,7 +187,7 @@ describe('With test sessions and applications', () => {
 	test('Delete application', async () => {
 		await testLibApplication.setApplicationAcceptedStatus(application1, -1);
 
-		expect(await application1.delete(session1))
+		expect(await application1.delete())
 			.toBe('OK');
 		expect(await libApplication.getApplicationsBySession(session1))
 			.not.toContainEqual(application1);
