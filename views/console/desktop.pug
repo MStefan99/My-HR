@@ -10,31 +10,37 @@ html(lang='en')
 	body
 		header
 			a(href='/console/')
-				div My HR
+				img(src='/img/mh-logo.svg')
+			span My HR Desktop
 			noscript
 				span JavaScript is disabled in your browser.
 					|  Desktop will not work.
 			a(href='/console/settings/')
-				div Settings
+				img(src='/img/settings.svg')
 
 		main
 
 		footer
 			div#dock
 				div.dock-shortcut(data-src='/console/applications/'
-					data-name='All applications' title='All applications')
-					img.dock-icon(src='/img/applications.svg')
+					data-name='All applications' data-img='/img/applications.svg'
+					title='All applications')
+					img(src='/img/applications.svg')
 				div.dock-shortcut(data-src='/console/applications/?type=stars'
-					data-name='Your stars' title='Your stars')
-					img.dock-icon(src='/img/star-active.svg')
+					data-name='Your stars' data-img='/img/star-active.svg'
+					title='Your stars')
+					img(src='/img/star-active.svg')
 				div.dock-shortcut(data-src='/console/applications/?type=pending'
-					data-name='Pending applications' title='Pending applications')
-					img.dock-icon(src='/img/progress.svg')
+					data-name='Pending applications' data-img='/img/progress.svg'
+					title='Pending applications')
+					img(src='/img/progress.svg')
 				div.dock-shortcut(data-src='/console/applications/?type=accepted'
-					data-name='Accepted applications' title='Accepted applications')
-					img.dock-icon(src='/img/checkmark.svg')
+					data-name='Accepted applications' data-img='/img/checkmark.svg'
+					title='Accepted applications')
+					img(src='/img/checkmark.svg')
 				div.dock-shortcut(data-src='/console/applications/?type=rejected'
-					data-name='Rejected applications' title='Rejected applications')
-					img.dock-icon(src='/img/cross.svg')
+					data-name='Rejected applications' data-img='/img/cross.svg'
+					title='Rejected applications')
+					img(src='/img/cross.svg')
 				div#dock-separator
 		script(type='text/javascript' src='/js/desktop.js')

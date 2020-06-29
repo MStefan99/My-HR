@@ -4,7 +4,7 @@ pane-color = #ffffff44
 pane-dark-color = #dddddd88
 shadow-color = #00000022
 
-ease-in = cubic-bezier(0.22, 0.61, 0.36, 1)
+ease-in = cubic-bezier(0, 0.6, 0.4, 1)
 
 
 html
@@ -30,7 +30,8 @@ html
 			display flex
 			flex-flow row nowrap
 			justify-content space-between
-			padding .2em 1em
+			align-items center
+			padding .2em .5em
 			backdrop-filter blur(8px)
 			color white
 			font-weight bold
@@ -42,18 +43,26 @@ html
 			transition transform .2s ease-in
 
 			&.hidden
-				transform translateY(-100%)
+				transform translateY(-95%)
+
+				&:hover
+					transform none
 
 			a
 				color white
 				text-decoration none
+				height fit-content
+
+				img
+					height 18px
+					margin 0 .5em
 
 		main
 			.app-window
 				position absolute
 				left 50px
 				top 50px
-				width 500px
+				width 750px
 				height 500px
 				min-width 300px
 				min-height 100px
@@ -66,8 +75,25 @@ html
 				flex-flow column nowrap
 				backdrop-filter blur(8px)
 				box-shadow 0 .5vh 2vh shadow-color
-				transition opacity .2s linear,
+				transition opacity .2s ease-in,
 				transform .3s ease-in
+
+				&.maximized
+					left 0 !important
+					top 0 !important
+					width 100vw !important
+					height 100vh !important
+
+				&.minimized
+					pointer-events none
+					opacity 0
+					transform scale(.8) translateY(30%)
+
+				&.animated
+					transition left .3s ease-in,
+					top .3s ease-in,
+					width .3s ease-in,
+					height .3s ease-in
 
 				&.hidden
 					pointer-events none
@@ -130,9 +156,6 @@ html
 						border none
 						user-select auto
 
-						header, footer
-							display none !important
-
 		footer
 			position absolute
 			bottom 0
@@ -147,7 +170,7 @@ html
 				margin 0 auto
 				padding 0 30px
 				display flex
-				flex-flow row wrap
+				flex-flow row nowrap
 				justify-content center
 				align-items center
 				backdrop-filter blur(8px)
@@ -156,7 +179,7 @@ html
 				border-radius 1em 1em 0 0
 				box-sizing border-box
 				transform translateY(80%)
-				overflow-x auto
+				overflow-y hidden
 				transition transform .2s 1s ease-in
 
 				&:hover
@@ -189,7 +212,10 @@ html
 					align-items center
 					box-shadow 0 .2vh .5vh shadow-color
 					transition background-color .1s linear,
-					transform .1s ease-in
+					transform .4s cubic-bezier(0, 0.5, 0.5, 1.5)
+
+					&.hidden
+						transform translateY(120%)
 
 					&:hover
 						background pane-color
@@ -197,6 +223,6 @@ html
 					&:active
 						transform scale(.9)
 
-					.dock-icon
+					img
 						width 5vh
 						filter drop-shadow(0 .3vh .2vh shadow-color)
