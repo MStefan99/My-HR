@@ -198,6 +198,7 @@ fabric.properties
 
 # End of https://www.gitignore.io/api/node,webstorm
 
+
 database/*.sqlite
 static/style/*.css
 static/js/*.js
@@ -206,3 +207,7 @@ setup/ssl
 ssl
 uploads
 package-lock.json
+
+
+# Exceptions
+!static/js/desktop.js

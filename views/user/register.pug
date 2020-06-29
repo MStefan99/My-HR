@@ -1,6 +1,6 @@
 doctype html
 
-html(lang="en")
+html(lang='en')
 	head
 		title Join us - Mine Eclipse
 		include head
@@ -13,25 +13,25 @@ html(lang="en")
 			div#splash-wrapper
 				div#splash
 					span#text-left.logo-text.hidden Mine e
-					img#logo.hidden(src="/img/me-logo.svg" alt="Mine Eclipse logo")
+					img#logo.hidden(src='/img/me-logo.svg' alt='Mine Eclipse logo')
 					span#text-right.logo-text.hidden lipse
 				div#welcome-container.hidden
 					h1 Apply now!
 					h2 Start your journey with Mine Eclipse today!
-					a(href="#register") Click here to get started
+					a(href='#register') Click here to get started
 			div#content-container
 				h1#register We're happy to see you!
 				h2 Just a few steps first...
 				p We need to make sure you are a Metropolia student.
 					|  For this, please fill in this very simple form below and we'll get back to you in a moment!
-				form(action="/register/" method="post")
-					label.required(for="username") Enter your Metropolia email:
-					input#username(type="text" name="username" required)
-					label#metropolia-domain(for="username") @metropolia.fi
-					input(type="submit")
+				form(action='/register/' method='post')
+					label.required(for='username') Enter your Metropolia email:
+					input#username(type='text' name='username' required)
+					label#metropolia-domain(for='username') @metropolia.fi
+					input(type='submit')
 					label.label-info.required-info * Required fields
-				a(href="/join") Already registered? Click here!
-			script(type="text/javascript" src="/js/main.js")
+				a(href='/join') Already registered? Click here!
+			script(type='text/javascript' src='/js/main.js')
 
 		footer
 			include footer

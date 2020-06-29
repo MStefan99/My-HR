@@ -185,6 +185,12 @@ router.get('/', (req, res) => {
 });
 
 
+router.get('/desktop', (req, res) => {
+	res.set('Cache-control', publicCache);
+	res.render('console/desktop');
+});
+
+
 router.get('/applications', async (req, res) => {
 	res.set('Cache-control', publicCache);
 	res.render('console/applications');

@@ -1,18 +1,18 @@
 -
-	var linksPlaceholder = "You can include links to your code, " +
-	"social network pages or anything else here. " +
-	"Separate links from each other and your comments by at least one whitespace or newline. " +
-	"Maximum 5000 characters."
+	var linksPlaceholder = 'You can include links to your code, ' +
+	'social network pages or anything else here. ' +
+	'Separate links from each other and your comments by at least one whitespace or newline. ' +
+	'Maximum 5000 characters.'
 
 -
-	var freeFormPlaceholder = "Feel free to add anything you want here. " +
-	"You can tell more about yourself, your projects, education, achievements, work experience or anything " +
-	"else you can think of. Maximum 5000 characters."
+	var freeFormPlaceholder = 'Feel free to add anything you want here. ' +
+	'You can tell more about yourself, your projects, education, achievements, work experience or anything ' +
+	'else you can think of. Maximum 5000 characters.'
 
 
 doctype html
 
-html(lang="en")
+html(lang='en')
 	head
 		title Application - Mine Eclipse
 		include head
@@ -25,62 +25,62 @@ html(lang="en")
 			div#content-container
 				h1 Welcome to Mine Eclipse!
 				// Include video here
-				p(style="color: #c00") Video will be here
+				p(style='color: #c00') Video will be here
 				h2 Join us today by filling the form below!
-				form(action="/join/" method="post" enctype="multipart/form-data")
-					label.required(for="first-name") First name
-					input#first-name(type="text" name="firstName" placeholder="John"
-						title="Your first name" maxlength=100 required)
-					label.required(for="last-name") Last name
-					input#last-name(type="text" name="lastName" placeholder="Doe"
-						title="Your last name" maxlength=100 required)
-					label.required(for="email") Your Metropolia email
-					input#email(type="email" name="email" value=email
-						title="Your Metropolia email, filled in automatically" disabled required)
-					label.required(for="backup-email") Secondary email
-					input#backup-email(type="email" name="backupEmail" placeholder="john.doe@gmail.com"
-						title="Your non-Metropolia email" maxlength=100 required)
-					label.required(for="phone") Main phone number
-					input#phone(type="tel" name="phone"
-						title="Your phone starting with 0 or +358"
-						placeholder="+358400000000" pattern="(0|\\+358).{9}" required)
-					label(for="phone") Secondary phone number
-					input#backup-phone(type="tel" name="backupPhone"
-						title="Your backup phone number in case the main one is unavailable"
-						placeholder="+358400000000" pattern="(0|\\+358).{9}")
+				form(action='/join/' method='post' enctype='multipart/form-data')
+					label.required(for='first-name') First name
+					input#first-name(type='text' name='firstName' placeholder='John'
+						title='Your first name' maxlength=100 required)
+					label.required(for='last-name') Last name
+					input#last-name(type='text' name='lastName' placeholder='Doe'
+						title='Your last name' maxlength=100 required)
+					label.required(for='email') Your Metropolia email
+					input#email(type='email' name='email' value=email
+						title='Your Metropolia email, filled in automatically' disabled required)
+					label.required(for='backup-email') Secondary email
+					input#backup-email(type='email' name='backupEmail' placeholder='john.doe@gmail.com'
+						title='Your non-Metropolia email' maxlength=100 required)
+					label.required(for='phone') Main phone number
+					input#phone(type='tel' name='phone'
+						title='Your phone starting with 0 or +358'
+						placeholder='+358400000000' pattern='(0|\\+358).{9}' required)
+					label(for='phone') Secondary phone number
+					input#backup-phone(type='tel' name='backupPhone'
+						title='Your backup phone number in case the main one is unavailable'
+						placeholder='+358400000000' pattern='(0|\\+358).{9}')
 					label.required Select your team
 					br
-					input#team-e(type="radio" value="Embedded" name="team"
-						title="Here you'll be developing an IoT device itself" required)
-					label.inline(for="team-e") Embedded team
+					input#team-e(type='radio' value='Embedded' name='team'
+						title='Here you'll be developing an IoT device itself' required)
+					label.inline(for='team-e') Embedded team
 					br
-					input#team-f(type="radio" value="Frontend" name="team"
-						title="Here you'll be developing a web interface")
-					label.inline(for="team-f") Frontend team
+					input#team-f(type='radio' value='Frontend' name='team'
+						title='Here you'll be developing a web interface')
+					label.inline(for='team-f') Frontend team
 					br
-					input#team-b(type="radio" value="Backend" name="team"
-						title="Here you'll be developing a server software connecting other components together")
-					label.inline(for="team-b") Backend team
+					input#team-b(type='radio' value='Backend' name='team'
+						title='Here you'll be developing a server software connecting other components together')
+					label.inline(for='team-b') Backend team
 					br
-					input#team-a(type="radio" value="Android" name="team"
-						title="Here you'll be developing an Android client")
-					label.inline(for="team-a") Android team
+					input#team-a(type='radio' value='Android' name='team'
+						title='Here you'll be developing an Android client')
+					label.inline(for='team-a') Android team
 					br
-					input#team-i(type="radio" value="iOS" name="team"
-						title="Here you'll be developing an iOS client")
-					label.inline(for="team-i") iOS team
+					input#team-i(type='radio' value='iOS' name='team'
+						title='Here you'll be developing an iOS client')
+					label.inline(for='team-i') iOS team
 					br
-					label(for="links") Add useful links (GitHub, LinkedIn, etc.)
-					textarea#links(name="links" placeholder=linksPlaceholder
-						title = "Add any relevant links here" maxlength=5000)
-					label(for="free-form") Anything else you'd like to tell
-					textarea#free-form(name="freeForm" placeholder=freeFormPlaceholder
-						title="Add anything about yourself here" maxlength=5000)
-					label.required(for="cv") Please attach your cv
-					input#cv(type="file" name="cv" required)
-					input#submit(type="submit" value="Join!")
+					label(for='links') Add useful links (GitHub, LinkedIn, etc.)
+					textarea#links(name='links' placeholder=linksPlaceholder
+						title = 'Add any relevant links here' maxlength=5000)
+					label(for='free-form') Anything else you'd like to tell
+					textarea#free-form(name='freeForm' placeholder=freeFormPlaceholder
+						title='Add anything about yourself here' maxlength=5000)
+					label.required(for='cv') Please attach your cv
+					input#cv(type='file' name='cv' required)
+					input#submit(type='submit' value='Join!')
 					label.label-info.required-info * Required fields
-					script(type="text/javascript" src="/js/join.js")
+					script(type='text/javascript' src='/js/join.js')
 
 		footer
 			include footer

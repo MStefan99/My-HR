@@ -1,0 +1,35 @@
+doctype html
+
+html(lang='en')
+	head
+		link(rel='stylesheet' type='text/css' href='/style/desktop.css')
+		link(rel='icon' type='image/svg+xml' href='/console/favicon.ico')
+		meta(name='viewport' content='width=device-width, initial-scale=1.0')
+
+	body
+		header
+			a(href='/console/')
+				div My HR
+			a(href='/console/settings/')
+				div Settings
+
+		main
+
+		footer
+			div#dock
+				//div.dock-button#all-button(data-src='/console/applications/')
+				//	img.dock-icon(src='/img/')
+				div.dock-shortcut#stars-shortcut(data-src='/console/applications/?type=stars'
+					data-name='Starred applications')
+					img.dock-icon(src='/img/star-active.svg')
+				div.dock-shortcut#pending-shortcut(data-src='/console/applications/?type=pending'
+					data-name='Pending applications')
+					img.dock-icon(src='/img/progress.svg')
+				div.dock-shortcut#accepted-shortcut(data-src='/console/applications/?type=accepted'
+					data-name='Accepted applications')
+					img.dock-icon(src='/img/checkmark.svg')
+				div.dock-shortcut#rejected-shortcut(data-src='/console/applications/?type=rejected'
+					data-name='Rejected applications')
+					img.dock-icon(src='/img/cross.svg')
+				div#dock-separator
+		script(type='text/javascript' src='/js/desktop.js')

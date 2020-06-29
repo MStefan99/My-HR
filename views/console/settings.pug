@@ -1,6 +1,6 @@
 doctype html
 
-html(lang="en")
+html(lang='en')
 	head
 		title Settings - My HR
 		include head
@@ -22,24 +22,24 @@ html(lang="en")
 								th Browser
 								th Logged in at
 						tbody#sessions-table
-					a(href="/console/exit") Sign out everywhere
-				script(type="text/javascript" src="/js/settings.js")
+					a(href='/console/exit') Sign out everywhere
+				script(type='text/javascript' src='/js/settings.js')
 				h2 User settings
 				div.section
 					p= 'Your username is: ' + user.username
-					form(action="/console/settings/" method="post")
-						label(for="password") New password
-						input#password(type="password" name="password" required)
-						label(for="password-repeat") Repeat new password
-						input#password-repeat(type="password" name="passwordRepeat" required)
-						input(type="submit" value="Update password")
+					form(action='/console/settings/' method='post')
+						label(for='password') New password
+						input#password(type='password' name='password' required)
+						label(for='password-repeat') Repeat new password
+						input#password-repeat(type='password' name='passwordRepeat' required)
+						input(type='submit' value='Update password')
 						label Be careful when selecting your password! We do not store your email
 							|  which means there is no way to restore lost or forgotten password.
 							|  We recommend that you use a password manager to avoid losing access.
 				if (user.admin)
 					h2 Admin options
 					div.section
-						a(href="/console/users") Manage users
+						a(href='/console/users') Manage users
 
 		footer
 			include footer
