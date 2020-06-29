@@ -10,42 +10,41 @@ html(lang='en')
 			include header-full
 
 		main
-			div#main-container
-				h1 Settings
-				h2 Sessions
+			h1 Settings
+			h2 Sessions
+			div.section
+				table
+					thead
+						tr
+							th IP
+							th OS / Device
+							th Browser
+							th Logged in at
+					tbody#sessions-table
+				p For your security, old sessions are deleted automatically so you
+					|  don't have to worry about signing out of My HR. But you still have to be careful
+					|  while using My HR on public computers and ALWAYS remember to sign out
+					|  when you're done using them.
+				a(href='/console/exit') Sign out everywhere
+			h2 User settings
+			div.section
+				p= 'Your username is: ' + user.username
+				form(action='/console/settings/' method='post')
+					label(for='password') New password
+					input#password(type='password' name='password' required)
+					label(for='password-repeat') Repeat new password
+					input#password-repeat(type='password' name='passwordRepeat' required)
+					input(type='submit' value='Update password')
+					label Be careful when selecting your password! We do not store your email
+						|  which means there is no way to restore lost or forgotten password.
+						|  We recommend that you use a password manager to avoid losing access.
+						|  If you do lose access though, please contact an administrator
+						|  to reset your password.
+			if (user.admin)
+				h2 Admin options
 				div.section
-					table
-						thead
-							tr
-								th IP
-								th OS / Device
-								th Browser
-								th Logged in at
-						tbody#sessions-table
-					p For your security, old sessions are deleted automatically so you
-						|  don't have to worry about signing out of My HR. But please still be careful
-						|  while using My HR on public computers and ALWAYS sign out when you're done
-						|  using them.
-					a(href='/console/exit') Sign out everywhere
-				script(type='text/javascript' src='/js/settings.js')
-				h2 User settings
-				div.section
-					p= 'Your username is: ' + user.username
-					form(action='/console/settings/' method='post')
-						label(for='password') New password
-						input#password(type='password' name='password' required)
-						label(for='password-repeat') Repeat new password
-						input#password-repeat(type='password' name='passwordRepeat' required)
-						input(type='submit' value='Update password')
-						label Be careful when selecting your password! We do not store your email
-							|  which means there is no way to restore lost or forgotten password.
-							|  We recommend that you use a password manager to avoid losing access.
-							|  If you do lose access though, please contact an administrator
-							|  to reset your password.
-				if (user.admin)
-					h2 Admin options
-					div.section
-						a(href='/console/users') Manage users
+					a(href='/console/users') Manage users
+		script(type='text/javascript' src='/js/settings.js')
 
 		footer
 			include footer

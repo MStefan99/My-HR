@@ -2,6 +2,7 @@ doctype html
 
 html(lang='en')
 	head
+		title My HR Desktop
 		link(rel='stylesheet' type='text/css' href='/style/desktop.css')
 		link(rel='icon' type='image/svg+xml' href='/console/favicon.ico')
 		meta(name='viewport' content='width=device-width, initial-scale=1.0')
@@ -10,6 +11,9 @@ html(lang='en')
 		header
 			a(href='/console/')
 				div My HR
+			noscript
+				span JavaScript is disabled in your browser.
+					|  Desktop will not work.
 			a(href='/console/settings/')
 				div Settings
 
@@ -17,19 +21,20 @@ html(lang='en')
 
 		footer
 			div#dock
-				//div.dock-button#all-button(data-src='/console/applications/')
-				//	img.dock-icon(src='/img/')
-				div.dock-shortcut#stars-shortcut(data-src='/console/applications/?type=stars'
-					data-name='Starred applications')
+				div.dock-shortcut(data-src='/console/applications/'
+					data-name='All applications' title='All applications')
+					img.dock-icon(src='/img/applications.svg')
+				div.dock-shortcut(data-src='/console/applications/?type=stars'
+					data-name='Your stars' title='Your stars')
 					img.dock-icon(src='/img/star-active.svg')
-				div.dock-shortcut#pending-shortcut(data-src='/console/applications/?type=pending'
-					data-name='Pending applications')
+				div.dock-shortcut(data-src='/console/applications/?type=pending'
+					data-name='Pending applications' title='Pending applications')
 					img.dock-icon(src='/img/progress.svg')
-				div.dock-shortcut#accepted-shortcut(data-src='/console/applications/?type=accepted'
-					data-name='Accepted applications')
+				div.dock-shortcut(data-src='/console/applications/?type=accepted'
+					data-name='Accepted applications' title='Accepted applications')
 					img.dock-icon(src='/img/checkmark.svg')
-				div.dock-shortcut#rejected-shortcut(data-src='/console/applications/?type=rejected'
-					data-name='Rejected applications')
+				div.dock-shortcut(data-src='/console/applications/?type=rejected'
+					data-name='Rejected applications' title='Rejected applications')
 					img.dock-icon(src='/img/cross.svg')
 				div#dock-separator
 		script(type='text/javascript' src='/js/desktop.js')

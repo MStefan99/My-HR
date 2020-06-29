@@ -109,6 +109,8 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/register/', async (req, res) => {
+	req.user = await libUser.getUserByUsername(req.body.username);
+
 	if (req.user === 'NO_USER') {
 		res.render('console/status', {
 			title: 'No such user', info: 'Please check if the username you entered is correct ' +
@@ -126,7 +128,7 @@ router.post('/register/', async (req, res) => {
 				'registration and retype your password.'
 		});
 	} else {
-		switch (await res.user.updatePassword(req.body.password)) {
+		switch (await req.user.updatePassword(req.body.password)) {
 			case 'NO_PASSWORD':
 				res.status(400).render('console/status', {
 					title: 'No password', info: 'You have entered an empty password. Please ' +
@@ -219,6 +221,12 @@ router.get('/settings', (req, res) => {
 router.get('/versions', (req, res) => {
 	res.set('Cache-control', publicCache);
 	res.render('console/versions');
+});
+
+
+router.get('/about', (req, res) => {
+	res.set('Cache-control', publicCache);
+	res.render('console/about');
 });
 
 

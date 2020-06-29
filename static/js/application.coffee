@@ -60,7 +60,8 @@ addEventListener('load', ->
 		backupPhoneElement.href = 'tel:' + application.backupPhone
 	else
 		backupPhoneElement.innerHTML = '[Not provided]'
-	links = application.links.replace(/(http:\/\/|https:\/\/)?(.*?\..*?)(\s|$)/g, '<a href="https://$2">$&</a>')
+	links = application.links.replace(/(http:\/\/|https:\/\/)?(.*?\..*?)(\s|$)/g,
+		'<a href="https://$2" target="_blank">$&</a>')
 	linksElement.innerHTML = links or '[Empty]'
 	freeFormElement.innerHTML = application.freeForm or '[Empty]'
 	fileLinkElement.innerHTML = application.fileName

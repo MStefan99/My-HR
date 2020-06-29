@@ -163,10 +163,10 @@ class AppWindow {
 }
 
 
+
 if (screen.width < 1024) {
 	window.location.href = '/console/';
 }
-
 
 
 modifyAppStyle = function (iframeDocument) {
@@ -175,11 +175,12 @@ modifyAppStyle = function (iframeDocument) {
 	const iframeMain = iframeDocument.querySelector('main');
 	const iframeFooter = iframeDocument.querySelector('footer');
 
-	iframeHeader.style.display = 'none';
-	iframeFooter.style.display = 'none';
+	remove(iframeHeader);
+	remove(iframeFooter);
 
 	iframeBody.style.background = '#ffffff33';
 	iframeMain.style.background = 'none';
+	iframeMain.style['border-radius'] = '0';
 	iframeMain.style.margin = '0';
 };
 

@@ -10,32 +10,31 @@ html(lang='en')
 			include header-full
 
 		main
-			div#main-container
-				h1#applications-header Applications
-				div#tab-container
-					div#tab-all.tab.selected
-						span All teams
-					div#tab-embedded.tab
-						span Embedded
-					div#tab-backend.tab
-						span Backend
-					div#tab-frontend.tab
-						span Frontend
-					div#tab-android.tab
-						span Android
-					div#tab-ios.tab
-						span iOS
-				table
-					thead
-						tr
-							th Status
-							th First name
-							th Last name
-							th Team
-							th Info
-					tbody#applications-table
-				p#application-count
-				script(type='text/javascript', src='/js/applications.js')
+			h1#applications-header Applications
+			div#tab-container
+				div#tab-all.tab.selected
+					span All teams
+				div#tab-embedded.tab
+					span Embedded
+				div#tab-backend.tab
+					span Backend
+				div#tab-frontend.tab
+					span Frontend
+				div#tab-android.tab
+					span Android
+				div#tab-ios.tab
+					span iOS
+			table
+				thead
+					tr
+						th Status
+						th First name
+						th Last name
+						th Team
+						th Info
+				tbody#applications-table
+			p#application-count
+		script(type='text/javascript', src='/js/applications.js')
 
 		footer
 			include footer
