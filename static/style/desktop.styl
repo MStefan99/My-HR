@@ -4,6 +4,8 @@ pane-color = #ffffff44
 pane-dark-color = #dddddd88
 shadow-color = #00000022
 
+ease-in = cubic-bezier(0.22, 0.61, 0.36, 1)
+
 
 html
 	font-family sans-serif
@@ -31,6 +33,11 @@ html
 			border-radius 0 0 5px 5px
 			box-shadow 0 .2vh 1vh shadow-color
 			z-index 2
+			user-select none
+			transition transform .2s ease-in
+
+			&.hidden
+				transform translateY(-100%)
 
 			a
 				color white
@@ -54,6 +61,13 @@ html
 				flex-flow column nowrap
 				backdrop-filter blur(8px)
 				box-shadow 0 .5vh 2vh shadow-color
+				transition opacity .2s linear,
+				transform .3s ease-in
+
+				&.hidden
+					pointer-events none
+					opacity 0
+					transform scale(.9)
 
 				&::-webkit-resizer
 					display none
@@ -94,7 +108,7 @@ html
 							cursor pointer
 
 							&.minimize-icon
-								background #dd0
+								background #ee0
 
 							&.maximize-icon
 								background #0c0
@@ -117,12 +131,14 @@ html
 		footer
 			position absolute
 			bottom 0
-			left 50%
+			left 0
+			right 0
 			z-index 2
+			user-select none
 
 			#dock
-				position relative
-				left -50%
+				max-width fit-content
+				margin 0 auto
 				padding 0 30px
 				display flex
 				flex-flow row wrap
@@ -133,15 +149,21 @@ html
 				border-radius 1em 1em 0 0
 				box-sizing border-box
 				transform translateY(80%)
-				transition transform .2s 1s cubic-bezier(0.22, 0.61, 0.36, 1)
+				overflow-x auto
+				transition transform .2s 1s ease-in
 
 				&:hover
 					transform translateY(0)
-					transition transform .2s cubic-bezier(0.22, 0.61, 0.36, 1)
+					transition transform .2s ease-in
+
+				&.hidden
+					transform translateY(100%)
+					transition transform .2s ease-in
 
 				#dock-separator
 					width 5px
 					height 8vh
+					flex-shrink 0
 					background pane-dark-color
 					border-radius 2px
 					margin 0 2em
@@ -151,6 +173,7 @@ html
 					width 8vh
 					height 8vh
 					margin 10px 10px
+					flex-shrink 0
 					background icon-color
 					border-radius 30%
 					cursor pointer
@@ -158,6 +181,15 @@ html
 					justify-content center
 					align-items center
 					box-shadow 0 .2vh .5vh shadow-color
+					transition background-color .1s linear,
+					transform .1s ease-in
+
+					&:hover
+						background pane-color
+
+					&:active
+						transform scale(.9)
 
 					.dock-icon
 						width 5vh
+						filter drop-shadow(0 .3vh .2vh shadow-color)

@@ -50,7 +50,7 @@ class AppWindow {
 		appTop += 20;
 
 		this.window = document.createElement('div');
-		this.window.classList.add('app-window');
+		this.window.classList.add('app-window', 'hidden');
 		this.window.style.left = this.left + 'px';
 		this.window.style.top = this.top + 'px';
 		pushToFront(this);
@@ -146,12 +146,10 @@ class AppWindow {
 	}
 
 	close() {
-		[this.window, this.header, this.title,
-			this.windowIconGroup, this.closeIcon, this.minimizeIcon,
-			this.maximizeIcon, this.content, this.iframe]
-			.forEach(function (e) {
-				remove(e);
-			});
+		this.window.classList.add('hidden');
+		setTimeout(() => {
+			remove(this.window);
+		}, 1000);
 	}
 
 	home() {
@@ -162,6 +160,11 @@ class AppWindow {
 		this.iframe.contentWindow.location.reload();
 	}
 
+}
+
+
+if (screen.width < 1024) {
+	window.location.href = '/console/';
 }
 
 
@@ -186,7 +189,10 @@ shortcuts.forEach((shortcut) => {
 		const src = shortcut.getAttribute('data-src');
 		const name = shortcut.getAttribute('data-name');
 
-		console.log(new AppWindow(src, name));
+		const app = new AppWindow(src, name);
+		setTimeout(() => {
+			app.window.classList.remove('hidden');
+		}, 10);
 	});
 });
 
@@ -195,10 +201,4 @@ addEventListener('mousemove', () => {
 	for (const app of apps) {
 		app.header.removeEventListener('mousemove', app.dragHandler);
 	}
-});
-
-
-addEventListener('beforeunload', (e) => {
-	e.preventDefault();
-	e.returnValue = '';
 });

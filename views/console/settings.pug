@@ -22,6 +22,10 @@ html(lang='en')
 								th Browser
 								th Logged in at
 						tbody#sessions-table
+					p For your security, old sessions are deleted automatically so you
+						|  don't have to worry about signing out of My HR. But please still be careful
+						|  while using My HR on public computers and ALWAYS sign out when you're done
+						|  using them.
 					a(href='/console/exit') Sign out everywhere
 				script(type='text/javascript' src='/js/settings.js')
 				h2 User settings
@@ -36,6 +40,8 @@ html(lang='en')
 						label Be careful when selecting your password! We do not store your email
 							|  which means there is no way to restore lost or forgotten password.
 							|  We recommend that you use a password manager to avoid losing access.
+							|  If you do lose access though, please contact an administrator
+							|  to reset your password.
 				if (user.admin)
 					h2 Admin options
 					div.section

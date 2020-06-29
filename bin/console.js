@@ -92,6 +92,13 @@ router.post('/login', async (req, res) => {
 				'is wrong or expired, please try again.'
 		});
 	} else {
+		const sessions = await req.user.getSessions();
+		for (const session of sessions) {
+			if (Date.now() - session.time > cookieOptions.maxAge) {
+				await session.delete();
+			}
+		}
+
 		req.session = await libSession.createSession(req.user,
 			req.headers['user-agent'], req.connection.remoteAddress);
 

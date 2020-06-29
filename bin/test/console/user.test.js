@@ -114,14 +114,20 @@ describe('With test user', () => {
 	test('Set null password', async () => {
 		expect(await user.updatePassword(null))
 			.toBe('NO_PASSWORD');
+		const retrievedUser = await libUser.getUserByID(user.id);
+
 		expect(user.passwordHash).toBeNull();
+		expect(retrievedUser.passwordHash).toBeNull();
 	});
 
 
 	test('Set short password', async () => {
 		expect(await user.updatePassword('a'))
 			.toBe('TOO_SHORT');
+		const retrievedUser = await libUser.getUserByID(user.id);
+
 		expect(user.passwordHash).toBeNull();
+		expect(retrievedUser.passwordHash).toBeNull();
 	});
 
 
@@ -131,12 +137,26 @@ describe('With test user', () => {
 		const retrievedUser = await libUser.getUserByID(user.id);
 
 		expect(user.passwordHash).not.toBeNull();
+		expect(user.setupCode).toBeNull();
 		expect(retrievedUser.passwordHash).not.toBeNull();
+		expect(retrievedUser.setupCode).toBeNull();
 
 		expect(user.verifyPassword('testPassword'))
 			.toBeTruthy();
 		expect(retrievedUser.verifyPassword('testPassword'))
 			.toBeTruthy();
+	});
+
+
+	test('Reset password', async () => {
+		expect(await user.resetPassword())
+			.toBe('OK');
+		const retrievedUser = await libUser.getUserByID(user.id);
+
+		expect(user.passwordHash).toBeNull();
+		expect(user.setupCode).not.toBeNull();
+		expect(retrievedUser.passwordHash).toBeNull();
+		expect(retrievedUser.setupCode).not.toBeNull();
 	});
 
 

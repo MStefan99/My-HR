@@ -152,6 +152,22 @@ class User {
 		return this.passwordHash === hash.digest('hex');
 	}
 
+	async resetPassword() {
+		const db = await openDB();
+		this.setupCode = uuid.v4();
+		this.passwordHash = null;
+
+		await db.run(`update console_users
+                          set password_hash=null,
+                              setup_code=$code
+                          where id=$id`, {
+			$id: this.id,
+			$code: this.setupCode
+		});
+		await db.close();
+		return 'OK';
+	}
+
 
 	async updatePassword(password) {
 		if (!password) {
@@ -164,6 +180,7 @@ class User {
 			const hash = crypto.createHmac('sha512', hashSecret);
 			hash.update(password);
 			this.passwordHash = hash.digest('hex');
+			this.setupCode = null;
 
 			await db.run(`update console_users
                           set password_hash=$hash,
