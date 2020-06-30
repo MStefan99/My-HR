@@ -15,7 +15,7 @@ async function getSession(req, res, next) {
 
 
 async function getUser(req, res, next) {
-	if (req.session) {
+	if (req.session && req.session !== 'NO_SESSION') {
 		req.user = await libUser.getUserByID(req.session.userID);
 	} else if (req.cookies.CUID) {
 		req.user = await libUser.getUserByUUID(req.cookies.CUID);

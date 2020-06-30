@@ -14,7 +14,7 @@ html(lang='en')
 			form(action='/console/login/' method='post')
 				label.required(for='username') Username
 				input.text#username(type='text' name='username'
-					title='Your username' required)
+					title='Your username' required autofocus)
 				label.label-status#u-label
 				label(for='password') Password
 				input.text#password(type='password' name='password'

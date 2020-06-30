@@ -56,16 +56,20 @@ update = ->
 			removeLink.innerHTML = 'Remove'
 			if user.username != 'admin'
 				removeLink.addEventListener('click', ->
-					await fetch("/console/users/?username=#{user.username}", {
-						method: 'delete'
-					});
-					update()
+					if confirm("If you continue,
+							user \"#{user.username}\" will be deleted.
+							\nAre you sure you want to continue?")
+						await fetch("/console/users/?username=#{user.username}", {
+							method: 'delete'
+						});
+						update()
 				)
 
 
 submitButton.addEventListener('click', ->
 	username = usernameInput.value
 	admin = userAdminCheckbox.checked
+
 	await fetch("/console/users/?username=#{username}&admin=#{admin}", {
 		method: 'post'
 	});

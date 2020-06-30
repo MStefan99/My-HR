@@ -14,11 +14,10 @@ html(lang='en')
 			form(action='/console/register/' method='post')
 				label.required(for='username') Your username
 				input.text#username(type='text' name='username'
-					title='Your username' required)
-				label.label-status#u-label
+					title='Your username' disabled)
 				label.required(for='code') Your setup code
 				input.text#code(type='text' name='setupCode'
-					title='Your setup code' required)
+					title='Your setup code' required autofocus)
 				label.label-status#sc-label
 				label.required(for='password') Your password
 				input.text#password(type='password' name='password'

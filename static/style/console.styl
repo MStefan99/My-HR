@@ -60,12 +60,12 @@ html
 					color just-gray
 
 			.button
+				margin .5vh .5vw
+				padding .5em 1em
 				background very-gray
 				white-space nowrap
 				text-align center
 				cursor pointer
-				margin .5vh .5vw
-				padding .5em 1em
 				border-radius .5em
 				box-shadow 0 .5vh 1vh shadow-color
 				transition background-color .1s ease-in
@@ -74,6 +74,7 @@ html
 					display block
 
 				&:hover
+					color white
 					background #444
 
 				&:active
@@ -299,6 +300,9 @@ html
 				border-radius .25em
 				border 1px solid just-gray
 				box-shadow 0 .5vh 1vh -.2vh shadow-color
+				transition box-shadow .2s ease-in,
+				background-color .2s ease-in,
+				border-color .2s ease-in
 
 				&:hover
 					background just-gray

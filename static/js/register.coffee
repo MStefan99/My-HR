@@ -3,7 +3,6 @@ codeElement = document.querySelector('#code')
 passwordElement = document.querySelector('#password')
 passwordRepeatElement = document.querySelector('#password-repeat')
 
-usernameLabel = document.querySelector('#u-label')
 codeLabel = document.querySelector('#sc-label')
 passwordLabel = document.querySelector('#pwd-label')
 passwordRepeatLabel = document.querySelector('#pwdr-label')
@@ -13,14 +12,6 @@ submitButton = document.querySelector('#submit')
 
 validate = ->
 	submitButton.disabled = false
-
-	if !usernameElement.value.length
-		usernameLabel.innerHTML = 'No username'
-		usernameElement.classList.add('status-bad')
-		submitButton.disabled = true
-	else
-		usernameLabel.innerHTML = ''
-		usernameElement.classList.remove('status-bad')
 
 	if !codeElement.value.length
 		codeLabel.innerHTML = 'No setup code'
@@ -59,7 +50,11 @@ validate = ->
 
 addEventListener('load', ->
 	params = new URLSearchParams(window.location.search)
-	usernameElement.value = params.get('username')
+	username = params.get('username')
+	if username
+		usernameElement.value = params.get('username')
+	else
+		window.location.href = '/console/login'
 
 	validate()
 )

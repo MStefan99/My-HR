@@ -22,10 +22,10 @@ html(lang='en')
 				tbody#users-table
 			h3 Add user
 			form
-				label Username
+				label(for='username') Username
 				input#username(type='text' placeholder='user' name='username' required)
 				input#admin(type='checkbox' name='admin')
-				label Admin
+				label(for='admin') Admin
 				input#submit(type='button' value='Add' required)
 		script(type='text/javascript' src='/js/users.js')
 

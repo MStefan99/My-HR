@@ -18,7 +18,7 @@ const router = express.Router();
 const cookieOptions = {
 	httpOnly: true,
 	sameSite: 'strict',
-	maxAge: 24 * 60 * 60 * 1000  // 1 day in milliseconds
+	maxAge: 12 * 60 * 60 * 1000  // 12-hour session
 };
 const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=86400';  // 1 day in seconds
 const privateCache = process.env.NO_CACHE ? 'no-cache' : 'private, max-age=86400';  // 1 day in seconds
@@ -56,9 +56,6 @@ router.get('/setup-otp', (req, res) => {
 });
 
 
-router.use(middleware.getUser);
-
-
 router.get('/get-otp', async (req, res) => {
 	if (req.user === 'NO_USER') {
 		res.redirect(303, '/console/login/');
@@ -77,6 +74,7 @@ router.post('/login', async (req, res) => {
 				'and try again.'
 		});
 	} else if (!req.user.passwordHash) {
+		res.cookie('CUID', req.user.uuid, cookieOptions);
 		res.redirect(303, '/console/register/?username=' + req.user.username);
 	} else if (!req.user.verifyPassword(req.body.password)) {
 		res.status(403).render('console/status', {
@@ -87,7 +85,7 @@ router.post('/login', async (req, res) => {
 		res.cookie('CUID', req.user.uuid, cookieOptions);
 		res.redirect(303, '/console/setup-otp/');
 	} else if (!lib2FA.verifyOtp(req.user.secret, req.body.token)) {
-		res.render('console/status', {
+		res.status(403).render('console/status', {
 			title: 'Wrong authenticator code', info: 'Your one-time password ' +
 				'is wrong or expired, please try again.'
 		});
@@ -98,7 +96,6 @@ router.post('/login', async (req, res) => {
 				await session.delete();
 			}
 		}
-
 		req.session = await libSession.createSession(req.user,
 			req.headers['user-agent'], req.connection.remoteAddress);
 
@@ -109,21 +106,16 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/register/', async (req, res) => {
-	req.user = await libUser.getUserByUsername(req.body.username);
-
 	if (req.user === 'NO_USER') {
-		res.render('console/status', {
-			title: 'No such user', info: 'Please check if the username you entered is correct ' +
-				'and try again.'
-		});
+		res.redirect(303, '/console/login/');
 	} else if (req.user.setupCode !== req.body.setupCode) {
-		res.render('console/status', {
+		res.status(403).render('console/status', {
 			title: 'Wrong setup code', info: 'You have entered a wrong setup code. ' +
 				'These codes are used as an additional protection against unauthorized users. ' +
 				'Please check your setup code and try again. '
 		});
 	} else if (req.body.password !== req.body.passwordRepeat) {
-		res.render('console/status', {
+		res.status(400).render('console/status', {
 			title: 'Passwords do not match', info: 'Please return to ' +
 				'registration and retype your password.'
 		});
@@ -142,7 +134,6 @@ router.post('/register/', async (req, res) => {
 				});
 				break;
 			case 'OK':
-				res.cookie('CUID', req.user.uuid, cookieOptions);
 				res.redirect(303, '/console/setup-otp/');
 				break;
 		}
@@ -152,9 +143,9 @@ router.post('/register/', async (req, res) => {
 
 router.post('/setup-otp/', async (req, res) => {
 	if (req.user === 'NO_USER') {
-		res.redirect(303, '/console/');
+		res.redirect(303, '/console/login/');
 	} else if (!lib2FA.verifyOtp(req.body.secret, req.body.token)) {
-		res.render('console/status', {
+		res.status(403).render('console/status', {
 			title: 'Wrong authenticator code', info: 'Your one-time password ' +
 				'is wrong or expired, please try again.'
 		});
@@ -172,7 +163,6 @@ router.post('/setup-otp/', async (req, res) => {
 router.get('/logout', async (req, res) => {
 	await req.session.delete();
 
-	res.clearCookie('CSID', cookieOptions);
 	res.redirect(303, '/console/');
 });
 
@@ -180,7 +170,6 @@ router.get('/logout', async (req, res) => {
 router.get('/exit', async (req, res) => {
 	await req.user.deleteAllSessions();
 
-	res.clearCookie('CSID', cookieOptions);
 	res.redirect('/console/login/');
 });
 
@@ -407,7 +396,7 @@ router.get('/users', (req, res) => {
 
 
 router.delete('/users', async (req, res) => {
-	const user =  await libUser.getUserByUsername(req.query.username);
+	const user = await libUser.getUserByUsername(req.query.username);
 
 	switch (await user.delete()) {
 		case 'CANNOT_DELETE_ADMIN':

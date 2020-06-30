@@ -5,7 +5,7 @@ const libAuth = require('./auth');
 const cookieOptions = {
 	httpOnly: true,
 	sameSite: 'strict',
-	maxAge: 30 * 60 * 1000  // 30 min in milliseconds
+	maxAge: 30 * 60 * 1000  // 30-min sessions
 };
 
 
