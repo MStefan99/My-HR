@@ -12,56 +12,58 @@ html(lang='en')
 		main
 			h1 Application
 				img#status-icon.icon
-			h2 Actions
 			div.section
-				div.button-container
-					span#star-button.button(title='Save this application and return to it later')
-							span#star-text.text Star
-							img#star-icon.icon(alt='Star icon' src='/img/star-inactive.svg')
-					span#share-button.button(title='Share this application')
-						span.text Share
-						img.icon(alt='Share icon' src='/img/share.svg')
-					span#accept-button.button(title='Accept this application')
-						span.text Accept
-						img.icon(alt='Accept icon' src='/img/checkmark.svg')
-					span#reject-button.button(title='Reject this application')
-						span.text Reject
-						img.icon(alt='Reject icon' src='/img/cross.svg')
-			h2 Basic info
-			div.section
-				span.label First name:
-				span#first-name
-				br
-				span.label Last name:
-				span#last-name
-				br
-				span.label Team selected:
-				span#team
-			h2 Contact info
-			div.section
-				span.label Metropolia email:
-				a#email
-				br
-				span.label Other email:
-				a#backup-email
-				br
-				span.label Phone:
-				a#phone
-				br
-				span.label Backup phone:
-				a#backup-phone
-				br
-			h2 Other
-			div.section
-				span.label Links:
-				p.block#links
-				p.label.block Note: For security reasons, all links use HTTPS,
-					|  even if the original link had an HTTP protocol.
-					|  You can see the original protocol above.
-				span.label Free form:
-				p.block#free-form
-				span.label Download CV:
-				a#file-link
+				h2 Actions
+				div.section
+					div.button-container
+						span#star-button.button(title='Save this application and return to it later')
+								span#star-text.text Star
+								img#star-icon.icon(alt='Star icon' src='/img/star-inactive.svg')
+						span#share-button.button(title='Share this application')
+							span.text Share
+							img.icon(alt='Share icon' src='/img/share.svg')
+						span#accept-button.button(title='Accept this application')
+							span.text Accept
+							img.icon(alt='Accept icon' src='/img/checkmark.svg')
+						span#reject-button.button(title='Reject this application')
+							span.text Reject
+							img.icon(alt='Reject icon' src='/img/cross.svg')
+				h2 Basic info
+				div.section
+					span.label First name:
+					span#first-name
+					br
+					span.label Last name:
+					span#last-name
+					br
+					span.label Team selected:
+					span#team
+				h2 Contact info
+				div.section
+					span.label Metropolia email:
+					a#email
+					br
+					span.label Other email:
+					a#backup-email
+					br
+					span.label Phone:
+					a#phone
+					br
+					span.label Backup phone:
+					a#backup-phone
+					br
+				h2 Other
+				div.section
+					span.label Links:
+					p.section#links
+					p.section
+						b Note: For security reasons, all links use HTTPS,
+							|  even if the original link had an HTTP protocol.
+							|  You can see the original protocol above.
+					span.label Free form:
+					p.section#free-form
+					span.label Download CV:
+					a#file-link
 		script(type='text/javascript' src='/js/application.js')
 
 		footer

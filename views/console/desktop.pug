@@ -9,14 +9,31 @@ html(lang='en')
 
 	body
 		header
-			a(href='/console/')
+			a.icon(href='/console/')
 				img(src='/img/mh-logo.svg')
 			span My HR Desktop
 			noscript
 				span JavaScript is disabled in your browser.
 					|  Desktop will not work.
-			a(href='/console/settings/')
+			div#settings-icon.icon
 				img(src='/img/settings.svg')
+
+		div#settings-panel.hidden
+			div.icon-group
+				a(href='/console/logout/' title='Sign out')
+					img.icon(src='/img/exit.svg')
+				a(href='/console/exit/' title='Sign out everywhere')
+					img.icon(src='/img/close.svg')
+				a(href='javascript:' title='Settings')#button-settings
+					img.icon(src='/img/settings.svg')
+				a(href='javascript:' title='Help')#button-help
+					img.icon(src='/img/help.svg')
+			form
+				input(type='checkbox')#cb-menu
+				label(for='cb-menu') Hide menu bar automatically
+				br
+				input(type='checkbox')#cb-dock
+				label(for='cb-dock') Hide Dock automatically
 
 		main
 

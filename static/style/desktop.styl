@@ -24,7 +24,6 @@ html
 
 		header
 			position absolute
-			top 0
 			left 0
 			right 0
 			display flex
@@ -38,26 +37,72 @@ html
 			user-select none
 			border-radius 0 0 5px 5px
 			background pane-color
-			z-index 2
+			z-index 10
 			box-shadow 0 .2vh 1vh shadow-color
-			transition transform .2s ease-in
+			transition transform .2s 1s ease-in
 
-			&.hidden
-				transform translateY(-95%)
+			&.hidden, &.auto-hide
+				transform translateY(-90%)
 
 				&:hover
+					transition transform .2s ease-in
 					transform none
 
-			a
+			.icon
 				color white
 				text-decoration none
-				height fit-content
+				cursor pointer
 
 				img
 					height 18px
 					margin 0 .5em
 
+		#settings-panel
+			position absolute
+			top 40px
+			right 0
+			padding 1em
+			margin 1em
+			width max-content
+			height min-content
+			z-index 10
+			color #444
+			background pane-color
+			border-radius 10px
+			user-select none
+			backdrop-filter blur(8px)
+			box-shadow 0 .2vh 1vh shadow-color
+			transition opacity .2s ease-in,
+			transform .2s ease-in
+
+			&.hidden
+				pointer-events none
+				opacity 0
+				transform translateY(-50%)
+
+			.icon-group
+				display flex
+				flex-flow row nowrap
+				justify-content space-around
+				margin-bottom .5em
+
+				a
+					margin 0 .5em
+					display block
+					color #444
+
+					img
+						height 2em
+						margin 0 .5em
+						filter grayscale()
+
+			label
+				margin .2em 0
+				display inline-block
+
 		main
+			height 100vh
+
 			.app-window
 				position absolute
 				left 50px
@@ -83,6 +128,7 @@ html
 					top 0 !important
 					width 100vw !important
 					height 100vh !important
+					resize none
 
 				&.minimized
 					pointer-events none
@@ -161,7 +207,7 @@ html
 			bottom 0
 			left 0
 			right 0
-			z-index 2
+			z-index 10
 			user-select none
 			pointer-events none
 
@@ -178,16 +224,18 @@ html
 				background pane-color
 				border-radius 1em 1em 0 0
 				box-sizing border-box
-				transform translateY(80%)
 				overflow-y hidden
 				transition transform .2s 1s ease-in
 
-				&:hover
-					transform translateY(0)
-					transition transform .2s ease-in
+				&.auto-hide
+					transform translateY(80%)
 
 				&.hidden
 					transform translateY(100%)
+					transition transform .2s ease-in
+
+				&:hover
+					transform none
 					transition transform .2s ease-in
 
 				#dock-separator
@@ -214,14 +262,14 @@ html
 					transition background-color .1s linear,
 					transform .4s cubic-bezier(0, 0.5, 0.5, 1.5)
 
-					&.hidden
-						transform translateY(120%)
-
 					&:hover
 						background pane-color
 
 					&:active
 						transform scale(.9)
+
+					&.hidden
+						transform translateY(120%)
 
 					img
 						width 5vh

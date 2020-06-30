@@ -28,8 +28,7 @@ addEventListener('load', ->
 
 	qrElement.setAttribute('src', secret.qr)
 
-	secretElement.innerHTML = 'If you cannot scan QR code with your device, please paste
-		this code into your authenticator app: ' + secret.secret
+	secretElement.innerHTML = secret.secret
 
 	secretLabel = document.createElement('input')
 	secretLabel.type = 'hidden'

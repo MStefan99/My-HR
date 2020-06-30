@@ -86,7 +86,7 @@ router.post('/login', async (req, res) => {
 	} else if (!req.user.secret) {
 		res.cookie('CUID', req.user.uuid, cookieOptions);
 		res.redirect(303, '/console/setup-otp/');
-	} else if (!lib2FA.verifyOtp(req.user, req.body.token)) {
+	} else if (!lib2FA.verifyOtp(req.user.secret, req.body.token)) {
 		res.render('console/status', {
 			title: 'Wrong authenticator code', info: 'Your one-time password ' +
 				'is wrong or expired, please try again.'
@@ -153,7 +153,7 @@ router.post('/register/', async (req, res) => {
 router.post('/setup-otp/', async (req, res) => {
 	if (req.user === 'NO_USER') {
 		res.redirect(303, '/console/');
-	} else if (!lib2FA.verifyOtp(req.user, req.body.token)) {
+	} else if (!lib2FA.verifyOtp(req.body.secret, req.body.token)) {
 		res.render('console/status', {
 			title: 'Wrong authenticator code', info: 'Your one-time password ' +
 				'is wrong or expired, please try again.'
@@ -421,7 +421,8 @@ router.delete('/users', async (req, res) => {
 
 
 router.post('/users', async (req, res) => {
-	switch (await libUser.createUser(req.query.username, req.query.admin)) {
+	switch (await libUser.createUser(req.query.username,
+		req.query.admin === 'true')) {
 		case 'DUPLICATE_USERNAME':
 			res.status(400).send('DUPLICATE_USERNAME');
 			break;

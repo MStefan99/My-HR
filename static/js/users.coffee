@@ -50,7 +50,8 @@ update = ->
 
 			removeCell = document.createElement('td')
 			tableRow.appendChild(removeCell)
-			removeLink = document.createElement('span')
+			removeLink = document.createElement('a')
+			removeLink.href = 'javascript:'
 			removeCell.appendChild(removeLink)
 			removeLink.innerHTML = 'Remove'
 			if user.username != 'admin'

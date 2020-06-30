@@ -10,9 +10,9 @@ function generateSecret(user) {
 }
 
 
-function verifyOtp(user, token) {
-	if (user) {
-		const delta = twoFactor.verifyToken(user.secret, token);
+function verifyOtp(secret, token) {
+	if (secret && token) {
+		const delta = twoFactor.verifyToken(secret, token);
 
 		if (!delta) {
 			return false;

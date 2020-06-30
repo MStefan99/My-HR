@@ -56,11 +56,12 @@ describe('With test user', () => {
 	});
 
 
-	test('Verify secret', async () => {
+	test('Set and verify secret', async () => {
 		const secret = lib2FA.generateSecret(user);
-		await user.setSecret(secret.secret);
+		expect(await user.setSecret(secret.secret))
+			.toBe('OK');
 
-		expect(lib2FA.verifyOtp(user,
+		expect(lib2FA.verifyOtp(user.secret,
 			twoFactor.generateToken(user.secret).token))
 			.toBeTruthy();
 	});
