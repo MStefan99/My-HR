@@ -1,0 +1,91 @@
+doctype html
+
+html(lang='en')
+	head
+		title= 'Help - My HR'
+		include head
+		link(rel='stylesheet' type='text/css' href='/style/help.css')
+
+	body
+		header
+			include header-full
+
+		main
+			h1 My HR Help
+			div.section.grid
+				div.cell#img-intro
+					img#logo(src='/img/mh-logo.svg')
+				div.cell#img-statuses
+					img(src='/img/progress.svg')
+					img(src='/img/checkmark.svg')
+					img(src='/img/cross.svg')
+				div.cell#img-applications
+					img(src='/img/help-applications.jpg')
+				div.cell#img-application
+					img(src='/img/help-application.jpg')
+				div.cell#img-desktop
+					img(src='/img/help-desktop.jpg')
+				div.cell#img-dock
+					img(src='/img/help-dock.jpg')
+
+				div.cell#text-intro
+					h2 Welcome to My HR!
+					p If you're having trouble using My HR or want to know more about it, this page has everything you need!
+						br
+						|  My HR is a recruitment application developed by
+						|  Mikhail Stefantsev exclusively for Mine Eclipse allowing you to
+						|  collect, view and manage applications.
+				div.cell#text-statuses
+					h2 Application status
+					p Each application can have one of three statuses: pending (indicated by three dots),
+						|  accepted (green checkmark) and rejected (red X sign). All applications are pending by default until
+						|  they are accepted or rejected by one of My HR users. When that happens, an email is
+						|  sent to an applicant to update them on their application and its status can't be changed anymore.
+						|  So please be careful when you decide which applications to accept or reject. This
+						|  cannot be undone.
+				div.cell#text-applications
+					h2 Viewing all applications
+					p If click any link on the #[a(href='/console/') home page], an applications page will open.
+						|  On those pages you will see the table with selected type of applications.
+						|  To save space, only essential information is included here: status, name, team and free info.
+						|  To open the full application, just click the row and you will be taken to the application viewer.
+						br
+						|  Above the application table you'll see filter tabs. Those are used to filter applications
+						|  by team. Just click one of those tabs and applications to teams other than your selected one
+						|  will be removed. You can also use your browser's back button to undo the filtering.
+				div.cell#text-application
+					h2 Application viewer
+					p When you click on a row in the table, an application viewer will open. Here you can read all the information
+						|  about an applicant, download their cv, view links they submitted. From this
+						|  page you can also star the application (meaning to add it to the list of your favorites
+						|  to return later), share the link, accept or reject the application. Please remember at all times
+						|  that you cannot mark accepted or rejected application as pending again.
+						|  Corresponding action buttons can be found under 'Actions' section.
+						|  Please note that share button may not work on all devices, so if
+						|  that's the case for you, please copy the URL of the page. All URLs at My HR are shareable.
+				div.cell#text-desktop
+					h2 My HR Desktop
+					p My HR Desktop is a convenient way to view multiple applications in a single browser window
+						|  available to all users of My HR. Desktop works like any desktop OS, allowing
+						|  you to open multiple My HR windows on a single screen.
+						|  Please note that Desktop is not available on devices with
+						|  small screen size.
+				div.cell#text-desktop-2
+					h3 Desktop panels
+					p  By default on the Desktop you will find a menu bar (at the top) and a Dock (at the bottom).
+						|  Menu bar includes home button (in the top left), allowing you to return to home page and
+						|  settings button (in the top right), which opens quick settings panel. On this panel you will
+						|  find buttons you can use to sign out, sign out from all devices, open settings and open help
+						|  (from left to right). Below those you will find options to automatically hide Dock and menu
+						|  to extend the available space.
+				div.cell#text-dock
+					h3 Dock
+					p The Dock is a very important panel in Desktop workflow. It allows you to open new windows,
+						|  restore minimized ones and close the ones you don't need anymore. The Dock is separated into
+						|  two parts. The left part contains shortcuts to the most used apps. By clicking the
+						|  shortcut, a new window of the app will open. The right half shows open applications.
+						|  by clicking an icon here you can bring corresponding window to the front or minimize it.
+						|  Also, you can right-click icons on the right to close the app window completely.
+
+		footer
+			include footer

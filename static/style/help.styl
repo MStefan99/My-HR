@@ -1,0 +1,95 @@
+.grid
+	display grid
+	grid-gap 2em
+	grid-template-columns repeat(3, 1fr)
+	grid-template-areas \
+	'text-intro text-intro img-intro'\
+	'img-statuses text-statuses text-statuses'\
+	'text-applications img-applications img-applications'\
+	'img-application text-application text-application'\
+	'text-desktop text-desktop text-desktop'\
+	'img-desktop img-desktop img-desktop'\
+	'text-desktop-2 text-desktop-2 text-desktop-2'\
+	'text-dock text-dock text-dock'\
+	'img-dock img-dock img-dock'
+
+	@media screen and (max-width 768px)
+		grid-gap 1em
+		grid-template-columns repeat(2, 1fr)
+		grid-template-areas \
+		'img-intro text-intro'\
+		'text-statuses img-statuses'\
+		'text-applications text-applications'\
+		'img-applications img-applications'\
+		'text-application text-application'\
+		'img-application img-application'\
+		'text-desktop text-desktop'\
+		'img-desktop img-desktop'\
+		'text-desktop-2 text-desktop-2'\
+		'text-dock text-dock'\
+		'img-dock img-dock'
+
+	.cell
+		h1, h2, h3
+			margin-top 0
+
+		img
+			display block
+			margin 0 auto
+			max-width 100%
+			border-radius 10px
+			filter drop-shadow(0 0 .5vh #00000022)
+
+			&#logo
+				max-height 150px
+
+	#img-intro
+		grid-area img-intro
+
+	#img-statuses
+		grid-area img-statuses
+		display flex
+		flex-flow row wrap
+		justify-content center
+		align-items center
+
+		img
+			margin .5em 2em
+			height 50px
+
+	#img-applications
+		grid-area img-applications
+
+	#img-application
+		grid-area img-application
+
+	#img-desktop
+		grid-area img-desktop
+
+	#text-intro
+		grid-area text-intro
+
+	#img-intro
+		grid-area img-intro
+
+	#img-dock
+		grid-area img-dock
+
+
+	#text-statuses
+		grid-area text-statuses
+
+	#text-applications
+		grid-area text-applications
+
+	#text-application
+		grid-area text-application
+
+	#text-desktop
+		grid-area text-desktop
+
+	#text-desktop-2
+		grid-area text-desktop-2
+
+	#text-dock
+		grid-area text-dock

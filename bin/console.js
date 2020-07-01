@@ -221,6 +221,12 @@ router.get('/about', (req, res) => {
 });
 
 
+router.get('/help', (req, res) => {
+	res.set('Cache-control', publicCache);
+	res.render('console/help');
+});
+
+
 router.get('/get-applications', async (req, res) => {
 	let applications;
 	if (req.query.type === 'stars') {

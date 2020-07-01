@@ -1,7 +1,6 @@
 window-color = #ffffffaa
 icon-color = #ffffff88
 pane-color = #ffffff44
-pane-dark-color = #dddddd88
 shadow-color = #00000022
 
 ease-in = cubic-bezier(0, 0.6, 0.4, 1)
@@ -15,7 +14,7 @@ html
 		margin 0
 		height 100vh
 		overflow hidden
-		background url("/img/desktop.jpg") center
+		background url('/img/desktop.jpg') center
 		background-size cover
 
 		noscript
@@ -57,6 +56,9 @@ html
 					height 18px
 					margin 0 .5em
 
+					&#settings-icon
+						filter brightness(10)
+
 		#settings-panel
 			position absolute
 			top 40px
@@ -67,7 +69,7 @@ html
 			height min-content
 			z-index 10
 			color #444
-			background pane-color
+			background window-color
 			border-radius 10px
 			user-select none
 			backdrop-filter blur(8px)
@@ -89,7 +91,7 @@ html
 				a
 					margin 0 .5em
 					display block
-					color #444
+					color black
 
 					img
 						height 2em
@@ -119,7 +121,7 @@ html
 				display flex
 				flex-flow column nowrap
 				backdrop-filter blur(8px)
-				box-shadow 0 .5vh 2vh shadow-color
+				box-shadow 0 .5vh 3vh 1vh shadow-color
 				transition opacity .2s ease-in,
 				transform .3s ease-in
 
@@ -242,7 +244,7 @@ html
 					width 5px
 					height 8vh
 					flex-shrink 0
-					background pane-dark-color
+					background icon-color
 					border-radius 2px
 					margin 0 2em
 					box-shadow 0 .2vh .5vh shadow-color
