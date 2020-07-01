@@ -1,3 +1,5 @@
+'use strict';
+
 Storage = window.localStorage;
 
 

@@ -1,3 +1,5 @@
+'use strict';
+
 const header = document.querySelector('header');
 const main = document.querySelector('main');
 const dock = document.querySelector('#dock');
@@ -31,6 +33,11 @@ function clamp(val, min, max) {
 }
 
 
+function remove(element) {
+	element.parentNode.removeChild(element);
+}
+
+
 function pushToFront(app) {
 	for (const app of apps) {
 		app.window.style['z-index'] = 0;
@@ -39,9 +46,24 @@ function pushToFront(app) {
 }
 
 
-remove = function (element) {
-	return element.parentNode.removeChild(element);
-};
+function saveApps() {
+	Storage.setItem('desktop_open-apps', JSON.stringify(apps));
+}
+
+
+function loadApps() {
+	const savedApps = JSON.parse(Storage.getItem('desktop_open-apps'));
+
+	if (savedApps) {
+		for (const app of savedApps) {
+			new AppWindow(app.src,
+				app.name,
+				app.img)
+		}
+		return true;
+	}
+	return false;
+}
 
 
 class AppWindow {
@@ -180,6 +202,9 @@ class AppWindow {
 
 		// Adding created app to app list
 		apps.push(this);
+
+		// Saving apps to restore them on refresh
+		saveApps();
 	}
 
 
@@ -246,6 +271,9 @@ class AppWindow {
 		this.shortcut.classList.add('hidden');
 
 		setTimeout(() => {
+			apps.splice(apps.indexOf(this), 1);
+			saveApps();
+
 			remove(this.window);
 			remove(this.shortcut);
 		}, 400);
@@ -260,10 +288,19 @@ class AppWindow {
 	refresh() {
 		this.iframe.contentWindow.location.reload();
 	}
+
+
+	toJSON() {
+		return {
+			src: this.src,
+			name: this.name,
+			img: this.img
+		}
+	}
 }
 
 
-modifyAppStyle = function (iframeDocument) {
+function modifyAppStyle(iframeDocument) {
 	const iframeBody = iframeDocument.querySelector('body');
 	const iframeHeader = iframeDocument.querySelector('header');
 	const iframeMain = iframeDocument.querySelector('main');
@@ -350,10 +387,12 @@ helpLink.addEventListener('click', () => {
 		window.history.back();
 	}
 
-	new AppWindow('/console/applications/',
-		'All applications',
-		'/img/applications.svg'
-	);
+	if (!loadApps()) {
+		new AppWindow('/console/applications/',
+			'All applications',
+			'/img/applications.svg'
+		);
+	}
 	if (Storage.getItem('desktop_help-viewed') !== 'true') {
 		Storage.setItem('desktop_help-viewed', 'true');
 		new AppWindow('/console/help/',

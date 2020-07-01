@@ -1,3 +1,5 @@
+'use strict';
+
 applicationId = window.location.pathname.match(/\d*$/)
 starText = document.querySelector('#star-text')
 starIcon = document.querySelector('#star-icon')

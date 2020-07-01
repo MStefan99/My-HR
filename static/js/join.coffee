@@ -1,3 +1,5 @@
+'use strict';
+
 iosRadio = document.querySelector('#team-i')
 
 iosRadio.addEventListener('click', (e) ->

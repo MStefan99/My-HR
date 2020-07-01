@@ -1,3 +1,5 @@
+'use strict';
+
 table = document.querySelector('#applications-table')
 applicationCountElement = document.querySelector('#application-count')
 applicationsHeader = document.querySelector('#applications-header')

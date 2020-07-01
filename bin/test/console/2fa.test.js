@@ -1,3 +1,5 @@
+'use strict';
+
 const twoFactor = require('node-2fa');
 
 const lib2FA = require('../../lib/console/2fa');

@@ -11,93 +11,102 @@ html(lang='en')
 
 		main
 			h1 Version History
-			table#version-table
-				thead
-					tr
-						th Version
-						th Changelog
-				tbody
-					tr
-						td v0.5.2-beta
-						td
-							p Added Desktop settings panel
-							p Added welcome and new version messages
-							p Minor design updates
-					tr
-						td v0.5.1-beta
-						td
-							p Design overhaul
-							p Improved login and registration experience
-					tr
-						td v0.5.0-beta
-						td
-							p Added My HR Desktop
-					tr
-						td v0.4.0-beta
-						td
-							p Migrated to the new core libraries
-					tr
-						td v0.3.1-beta
-						td
-							p Links in applications are now clickable
-					tr
-						td v0.3.0-beta
-						td
-							p Filtering improvements
-							p Performance overhaul
-					tr
-						td v0.2.0-beta
-						td
-							p Added team filtering
-					tr
-						td v0.1.4-beta
-						td
-							p Added email sending on accept/reject
-							p Security patch
-					tr
-						td v0.1.3-beta
-						td
-							p Added accept/reject icons and buttons
-							p New home page
-					tr
-						td v0.1.2-beta
-						td
-							p Added stars
-							p Added share button
-							p Added page-specific titles
-					tr
-						td v0.1.1-beta
-						td
-							p Added version history
-							p Added 404 page
-					tr
-						td v0.1.0-beta
-						td
-							p Added session viewer
-							p Added version info
-					tr
-						td v0.0.5-alpha
-						td
-							p Added user management
-					tr
-						td v0.0.4-alpha
-						td
-							p Added settings
-					tr
-						td v0.0.3-alpha
-						td
-							p Added application viewer
-							p 2FA fixes and improvements
-					tr
-						td v0.0.2-alpha
-						td
-							p Added 2-factor authentication
-							p Added application preview
-					tr
-						td v0.0.1-alpha
-						td
-							p Initial console release
-							p Added user authentication
+			div.section
+				table#version-table
+					thead
+						tr
+							th Version
+							th Changelog
+					tbody
+						//- Current version changelog
+						tr
+							td
+								b= console_version
+							td
+								p Desktop windows are now restored at launch
+						//- Add version history below this line
+						tr
+							td v0.5.2
+							td
+								p Desktop now has settings panel
+								p You can now choose to hide Desktop menu and Dock
+								p You will now see welcome messages on first login and after updates
+								p Minor design updates
+						tr
+							td v0.5.1-beta
+							td
+								p Design overhaul
+								p Improved login and registration experience
+						tr
+							td v0.5.0-beta
+							td
+								p My HR Desktop was added
+						tr
+							td v0.4.0-beta
+							td
+								p Migrated to the new core libraries
+						tr
+							td v0.3.1-beta
+							td
+								p Links in applications are now clickable
+						tr
+							td v0.3.0-beta
+							td
+								p Filtering improvements
+								p Performance overhaul
+						tr
+							td v0.2.0-beta
+							td
+								p Applications can now be filtered by team
+						tr
+							td v0.1.4-beta
+							td
+								p An email is now sent when an application is accepted/rejected
+								p Security patch
+						tr
+							td v0.1.3-beta
+							td
+								p Applications can now be accepted or rejected
+								p New home page
+						tr
+							td v0.1.2-beta
+							td
+								p You can now star applications
+								p Share button was added
+								p Pages now have different titles
+						tr
+							td v0.1.1-beta
+							td
+								p This page was added
+								p 404 page was added
+						tr
+							td v0.1.0-beta
+							td
+								p You can now view your active sessions in settings
+								p Version number was added at the bottom of the page
+						tr
+							td v0.0.5-alpha
+							td
+								p Admins can now add and delete users
+						tr
+							td v0.0.4-alpha
+							td
+								p You can now change your password in settings
+						tr
+							td v0.0.3-alpha
+							td
+								p Moved application view onto a separate page
+								p 2FA fixes and improvements
+						tr
+							td v0.0.2-alpha
+							td
+								p Two-Factor authentication is introduced
+								p Applications can now be viewed on the home page
+						tr
+							td v0.0.1-alpha
+							td
+								p Initial console release
+								p Users can register and login with their password now
 
 		footer
 			include footer

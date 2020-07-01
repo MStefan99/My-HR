@@ -1,3 +1,5 @@
+'use strict';
+
 const twoFactor = require('node-2fa');
 
 

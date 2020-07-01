@@ -1,3 +1,5 @@
+'use strict';
+
 const libUser = require('../../../lib/console/user');
 const openDB = require('../../../lib/db');
 

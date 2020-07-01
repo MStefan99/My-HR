@@ -1,3 +1,5 @@
+'use strict';
+
 usernameElement = document.querySelector('#username')
 otpElement = document.querySelector('#otp')
 
@@ -30,9 +32,6 @@ validate = ->
 addEventListener('load', validate)
 
 
-[usernameElement,
-	otpElement].forEach((element) ->
-	'keyup paste'.split(' ').forEach((event) ->
-		element.addEventListener(event, validate)
-	)
+'keyup mousemove'.split(' ').forEach((event) ->
+	addEventListener(event, validate)
 )

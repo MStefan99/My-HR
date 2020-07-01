@@ -1,3 +1,5 @@
+'use strict';
+
 const openDB = require('../db');
 const uuid = require('uuid');
 

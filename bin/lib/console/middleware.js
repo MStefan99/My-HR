@@ -1,3 +1,5 @@
+'use strict';
+
 const libSession = require('./session');
 const libUser = require('./user');
 const libAuth = require('./auth');
@@ -33,7 +35,7 @@ async function redirectIfNotAuthorized(req, res, next) {
 		case 'NO_SESSION':
 			res.redirect(303, '/console/login/');
 			break;
-		case 'UA_CHANGED':
+		case 'WRONG_UA':
 		case 'WRONG_IP':
 		case 'EXPIRED':
 			await req.session.delete();

@@ -1,3 +1,5 @@
+'use strict';
+
 const libApplication = require('../../lib/application');
 const openDB = require('../../lib/db');
 const fs = require('fs');

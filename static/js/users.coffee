@@ -1,3 +1,5 @@
+'use strict';
+
 usersTable = document.querySelector('#users-table')
 usernameInput = document.querySelector('#username')
 userAdminCheckbox = document.querySelector('#admin')

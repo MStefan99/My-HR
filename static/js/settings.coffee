@@ -1,3 +1,5 @@
+'use strict';
+
 sessionTable = document.querySelector('#sessions-table')
 
 
@@ -31,10 +33,10 @@ addEventListener('load', ->
 		sessionRow.appendChild(osCell)
 
 		browserCell = document.createElement('td')
-		browserCell.innerHTML = session.ua.replace(/.*(Chrome|Firefox|Edg|OPR)\/(.*?)\..*/, '$1 $2')
+		browserCell.innerHTML = session.ua.replace(/.*(Chrome|Firefox|EdgA?|OPR)\/(.*?)\..*/, '$1 $2')
 			.replace(/.*(Safari)\/(.*?)\..*/, '$1 $2')
-			.replace('Edg', 'Edge')
-			.replace('OPR', 'Opera')
+			.replace(/EdgA?/, 'Edge')
+			.replace(/OPR/, 'Opera')
 		sessionRow.appendChild(browserCell)
 
 		timeCell = document.createElement('td')

@@ -1,3 +1,5 @@
+'use strict';
+
 function checkAuthStatus(session, user, userAgent, ip, age) {
 	if (!session || session === 'NO_SESSION') {
 		return 'NO_SESSION';

@@ -1,9 +1,11 @@
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
 const openDB = require('./db');
-unlink = util.promisify(fs.unlink);
+const unlink = util.promisify(fs.unlink);
 
 
 class Application {

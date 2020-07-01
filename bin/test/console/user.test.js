@@ -1,3 +1,5 @@
+'use strict';
+
 const libUser = require('../../lib/console/user');
 const libSession = require('../../lib/user/session');
 const libApplication = require('../../lib/application');

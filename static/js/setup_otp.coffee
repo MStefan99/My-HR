@@ -1,3 +1,5 @@
+'use strict';
+
 formElement = document.querySelector('form')
 
 qrElement = document.querySelector('#qr')
@@ -38,6 +40,6 @@ addEventListener('load', ->
 )
 
 
-'keyup paste'.split(' ').forEach((event) ->
-	otpElement.addEventListener(event, validate)
+'keyup mousemove'.split(' ').forEach((event) ->
+	addEventListener(event, validate)
 )

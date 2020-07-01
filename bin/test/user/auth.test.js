@@ -1,3 +1,5 @@
+'use strict';
+
 const libSession = require('../../lib/user/session');
 const libAuth = require('../../lib/user/auth');
 

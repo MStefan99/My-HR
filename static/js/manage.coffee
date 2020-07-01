@@ -1,3 +1,5 @@
+'use strict';
+
 applicationsTable = document.querySelector('#applications-table')
 
 

@@ -1,3 +1,5 @@
+'use strict';
+
 logo = document.querySelector('#logo')
 textLeft = document.querySelector('#text-left')
 textRight = document.querySelector('#text-right')

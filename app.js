@@ -4,16 +4,16 @@ const path = require('path');
 const {applicationRouter} = require('./bin/user');
 const {consoleRouter} = require('./bin/console');
 
-const publicCache = process.env.NO_CACHE? 'no-cache' : 'public, max-age=604800'
+
+const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=604800';  // 1 week in seconds
+const app = express();
+
 
 const cacheOptions = {
 	setHeaders: (res, path, stat) => {
-		res.set('Cache-control', publicCache);  // 1 week in seconds
+		res.set('Cache-control', publicCache);
 	}
 };
-
-
-const app = express();
 
 
 app.set('view engine', 'pug');

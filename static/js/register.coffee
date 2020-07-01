@@ -1,3 +1,5 @@
+'use strict';
+
 usernameElement = document.querySelector('#username')
 codeElement = document.querySelector('#code')
 passwordElement = document.querySelector('#password')
@@ -38,16 +40,6 @@ validate = ->
 		passwordRepeatLabel.innerHTML = ''
 
 
-[usernameElement,
-	codeElement,
-	passwordElement,
-	passwordRepeatElement].forEach((element) ->
-	'keyup paste'.split(' ').forEach((event) ->
-		element.addEventListener(event, validate)
-	)
-)
-
-
 addEventListener('load', ->
 	params = new URLSearchParams(window.location.search)
 	username = params.get('username')
@@ -57,4 +49,9 @@ addEventListener('load', ->
 		window.location.href = '/console/login'
 
 	validate()
+)
+
+
+'keyup mousemove'.split(' ').forEach((event) ->
+	addEventListener(event, validate)
 )
