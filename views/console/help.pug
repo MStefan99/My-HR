@@ -27,6 +27,8 @@ html(lang='en')
 					img(src='/img/help-desktop.jpg')
 				div.cell#img-dock
 					img(src='/img/help-dock.jpg')
+				div.cell#img-window
+					img(src='/img/help-window.jpg')
 
 				div.cell#text-intro
 					h2 Welcome to My HR!
@@ -68,8 +70,13 @@ html(lang='en')
 					p My HR Desktop is a convenient way to view multiple applications in a single browser window
 						|  available to all users of My HR. Desktop works like any desktop OS, allowing
 						|  you to open multiple My HR windows on a single screen.
-						|  Please note that Desktop is not available on devices with
-						|  small screen size.
+					h3 Notes
+					p Desktop is not available on devices with small screen size and
+						|  touchscreens are also not supported.
+						|  Please note that browser history is shared across all windows,
+						|  meaning that pressing back button in your browser will navigate
+						|  back in the window you used previously. There is no way to override
+						|  this behavior, so all windows use home button instead of back button.
 				div.cell#text-desktop-2
 					h3 Desktop panels
 					p  By default on the Desktop you will find a menu bar (at the top) and a Dock (at the bottom).
@@ -84,8 +91,21 @@ html(lang='en')
 						|  restore minimized ones and close the ones you don't need anymore. The Dock is separated into
 						|  two parts. The left part contains shortcuts to the most used apps. By clicking the
 						|  shortcut, a new window of the app will open. The right half shows open applications.
-						|  by clicking an icon here you can bring corresponding window to the front or minimize it.
-						|  Also, you can right-click icons on the right to close the app window completely.
+						|  by clicking an icon here you can bring the corresponding window to the front or minimize it.
+						|  Also, you can right-click icons on the right to close the window completely.
+				div.cell#text-window
+					h3 Apps
+					p The main feature of the Desktop is the option to open many My HR windows at the same time.
+						|  In Desktop, they are called apps. You can open as many apps as you like.
+						|  You can resize the app by dragging its bottom-right corner or bring it to front
+						|  by clicking anywhere on the header bar. These apps are
+						|  slightly modified My HR pages so they work exactly the same as My HR outside the Desktop.
+						|  On the top of the app you will see the window header, which includes some additional buttons
+						|  for working with apps. On the left there are home and refresh button. Home button opens
+						|  the app home page and refresh button updates the app. On the right you will see, from left to
+						|  right, three buttons: they are used to maximize, minimize and close the app and work similarly
+						|  to other desktop operating systems. Please note though, that you cannot maximize more than
+						|  one app at once.
 
 		footer
 			include footer

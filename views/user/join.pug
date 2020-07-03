@@ -51,23 +51,23 @@ html(lang='en')
 					label.required Select your team
 					br
 					input#team-e(type='radio' value='Embedded' name='team'
-						title='Here you'll be developing an IoT device itself' required)
+						title=`Here you'll be developing an IoT device itself` required)
 					label.inline(for='team-e') Embedded team
 					br
 					input#team-f(type='radio' value='Frontend' name='team'
-						title='Here you'll be developing a web interface')
+						title=`Here you\'ll be developing a web interface`)
 					label.inline(for='team-f') Frontend team
 					br
 					input#team-b(type='radio' value='Backend' name='team'
-						title='Here you'll be developing a server software connecting other components together')
+						title=`Here you\'ll be developing a server software connecting other components together`)
 					label.inline(for='team-b') Backend team
 					br
 					input#team-a(type='radio' value='Android' name='team'
-						title='Here you'll be developing an Android client')
+						title=`Here you\'ll be developing an Android client`)
 					label.inline(for='team-a') Android team
 					br
 					input#team-i(type='radio' value='iOS' name='team'
-						title='Here you'll be developing an iOS client')
+						title=`Here you\'ll be developing an iOS client`)
 					label.inline(for='team-i') iOS team
 					br
 					label(for='links') Add useful links (GitHub, LinkedIn, etc.)
@@ -78,7 +78,7 @@ html(lang='en')
 						title='Add anything about yourself here' maxlength=5000)
 					label.required(for='cv') Please attach your cv
 					input#cv(type='file' name='cv' required)
-					input#submit(type='submit' value='Join!')
+					input#submit(type='submit' value='Join!' title='Send!')
 					label.label-info.required-info * Required fields
 					script(type='text/javascript' src='/js/join.js')
 

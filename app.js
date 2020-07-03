@@ -1,3 +1,5 @@
+'use strict';
+
 const express = require('express');
 const http = require('http');
 const path = require('path');
@@ -18,6 +20,11 @@ const cacheOptions = {
 
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+app.use((req, res, next) => {
+	res.set('Vary', 'Cookie');
+	res.set('Referrer-Policy', 'same-origin');
+	next();
+});
 app.use('/style', express.static(path.join(__dirname, 'static', 'style'), cacheOptions));
 app.use('/js', express.static(path.join(__dirname, 'static', 'js'), cacheOptions));
 app.use('/img', express.static(path.join(__dirname, 'static', 'img'), cacheOptions));

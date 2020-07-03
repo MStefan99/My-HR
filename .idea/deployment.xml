@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" serverName="Pi" exclude="*.coffee;*.test.js;*.styl;*.sqlite;.svn;.cvs;.idea;.DS_Store;.git;.hg;*.hprof;*.pyc">
+    <serverData>
+      <paths name="Pi">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/my_hr" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/bin/test" />
+            <excludedPath path="/my_hr/node_modules" />
+            <excludedPath local="true" path="$PROJECT_DIR$/node_modules" />
+            <excludedPath local="true" path="$PROJECT_DIR$/uploads" />
+            <excludedPath path="/my_hr/uploads" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>

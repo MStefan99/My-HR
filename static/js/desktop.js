@@ -2,6 +2,7 @@
 
 const header = document.querySelector('header');
 const main = document.querySelector('main');
+const body = document.querySelector('body');
 const dock = document.querySelector('#dock');
 const shortcuts = document.querySelectorAll('footer .dock-shortcut');
 
@@ -310,9 +311,11 @@ function modifyAppStyle(iframeDocument) {
 	remove(iframeFooter);
 
 	iframeBody.style.background = '#ffffff33';
-	iframeMain.style.background = 'none';
-	iframeMain.style['border-radius'] = '0';
-	iframeMain.style.margin = '0';
+	if (iframeMain) {
+		iframeMain.style.background = 'none';
+		iframeMain.style['border-radius'] = '0';
+		iframeMain.style.margin = '0';
+	}
 };
 
 
@@ -381,10 +384,26 @@ helpLink.addEventListener('click', () => {
 });
 
 
-// Initial setup when Desktop is opened
-(function init() {
-	if (screen.width < 1024) {
+addEventListener('popstate', () => {
+	if (confirm('You are about to exit Desktop. Do you wish to continue?')) {
 		window.history.back();
+	} else {
+		window.history.pushState({}, 'Back warning');
+	}
+});
+
+
+// Initial setup when Desktop is opened
+addEventListener('load',() => {
+	if (screen.width < 1024) {
+		alert('Desktop is not supported on devices with small screen sizes. ' +
+			'You will have to return back.');
+		window.history.back();
+		return;
+	}
+
+	if (Storage.getItem('mh_theme') === 'dark') {
+		body.classList.add('dark-theme');
 	}
 
 	if (!loadApps()) {
@@ -396,7 +415,7 @@ helpLink.addEventListener('click', () => {
 	if (Storage.getItem('desktop_help-viewed') !== 'true') {
 		Storage.setItem('desktop_help-viewed', 'true');
 		new AppWindow('/console/help/',
-			'Welcome to My HR Desktop!'
+			'Welcome to Desktop!'
 		);
 	}
 
@@ -409,4 +428,6 @@ helpLink.addEventListener('click', () => {
 	if (Storage.getItem('desktop_hide-dock') === 'true') {
 		dock.classList.add('auto-hide');
 	}
-})()
+
+	window.history.pushState({}, 'Back warning');
+});

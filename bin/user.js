@@ -54,6 +54,7 @@ router.get('/registered', (req, res) => {
 
 router.use(middleware.getSession);
 router.use(middleware.redirectIfNotAuthorized);
+router.use(middleware.redirectIfExpired);
 
 
 router.post('/join', upload.single('cv'), async (req, res) => {
@@ -80,9 +81,6 @@ router.get('/success', async (req, res) => {
 		info: 'We have received your application and will contact you as soon as possible.'
 	});
 });
-
-
-router.use(middleware.redirectIfExpired);
 
 
 router.get('/manage', (req, res) => {

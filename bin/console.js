@@ -12,18 +12,16 @@ const libSetup = require('./lib/console/setup');
 const libSession = require('./lib/console/session');
 const libUser = require('./lib/console/user');
 const lib2FA = require('./lib/console/2fa');
+const {consoleCookieOptions} = require('./lib/cookie');
 
 
 const router = express.Router();
 
 
-const cookieOptions = {
-	httpOnly: true,
-	sameSite: 'strict',
-	maxAge: 12 * 60 * 60 * 1000  // 12-hour session
-};
-const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=86400';  // 1 day in seconds
-const privateCache = process.env.NO_CACHE ? 'no-cache' : 'private, max-age=86400';  // 1 day in seconds
+const publicCache = process.env.NO_CACHE ? 'no-cache' :
+	'public, max-age=86400';  // 1 day in seconds
+const privateCache = process.env.NO_CACHE ? 'no-cache' :
+	'private, max-age=86400';  // 1 day in seconds
 
 
 router.use('/favicon.ico', express.static(path.join(__dirname, '..', 'static', 'img', 'mh-logo.svg'), {
@@ -76,7 +74,7 @@ router.post('/login', async (req, res) => {
 				'and try again.'
 		});
 	} else if (!req.user.passwordHash) {
-		res.cookie('CUID', req.user.uuid, cookieOptions);
+		res.cookie('CUID', req.user.uuid, consoleCookieOptions);
 		res.redirect(303, '/console/register/?username=' + req.user.username);
 	} else if (!req.user.verifyPassword(req.body.password)) {
 		res.status(403).render('console/status', {
@@ -84,7 +82,7 @@ router.post('/login', async (req, res) => {
 				'Please try again.'
 		});
 	} else if (!req.user.secret) {
-		res.cookie('CUID', req.user.uuid, cookieOptions);
+		res.cookie('CUID', req.user.uuid, consoleCookieOptions);
 		res.redirect(303, '/console/setup-otp/');
 	} else if (!lib2FA.verifyOtp(req.user.secret, req.body.token)) {
 		res.status(403).render('console/status', {
@@ -94,14 +92,14 @@ router.post('/login', async (req, res) => {
 	} else {
 		const sessions = await req.user.getSessions();
 		for (const session of sessions) {
-			if (Date.now() - session.time > cookieOptions.maxAge) {
+			if (Date.now() - session.time > consoleCookieOptions.maxAge) {
 				await session.delete();
 			}
 		}
 		req.session = await libSession.createSession(req.user,
 			req.headers['user-agent'], req.connection.remoteAddress);
 
-		res.cookie('CSID', req.session.uuid, cookieOptions);
+		res.cookie('CSID', req.session.uuid, consoleCookieOptions);
 		res.redirect(303, '/console/');
 	}
 });
@@ -154,7 +152,7 @@ router.post('/setup-otp/', async (req, res) => {
 	} else {
 		await req.user.setSecret(req.body.secret);
 
-		res.clearCookie('CUID', cookieOptions);
+		res.clearCookie('CUID', consoleCookieOptions);
 		res.render('console/status', {
 			title: 'Account created!', info: 'You can log in with your new account now!'
 		});
@@ -162,9 +160,13 @@ router.post('/setup-otp/', async (req, res) => {
 });
 
 
+router.use(middleware.redirectIfNotAuthorized);
+
+
 router.get('/logout', async (req, res) => {
 	await req.session.delete();
 
+	res.clearCookie('CSID', consoleCookieOptions);
 	res.redirect(303, '/console/');
 });
 
@@ -172,11 +174,9 @@ router.get('/logout', async (req, res) => {
 router.get('/exit', async (req, res) => {
 	await req.user.deleteAllSessions();
 
+	res.clearCookie('CSID', consoleCookieOptions);
 	res.redirect('/console/login/');
 });
-
-
-router.use(middleware.redirectIfNotAuthorized);
 
 
 router.get('/', (req, res) => {
@@ -371,7 +371,7 @@ router.post('/settings', async (req, res) => {
 			case 'OK':
 				await req.user.deleteAllSessions();
 
-				res.clearCookie('CSID', cookieOptions);
+				res.clearCookie('CSID', consoleCookieOptions);
 				res.render('console/status', {
 					title: 'Success', info: 'You can log in with your new password now. ' +
 						'Note that you have been logged out on all devices.'

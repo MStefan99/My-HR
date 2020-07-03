@@ -1,8 +1,3 @@
-window-color = #ffffffaa
-icon-color = #ffffff88
-pane-color = #ffffff44
-shadow-color = #00000022
-
 ease-in = cubic-bezier(0, 0.6, 0.4, 1)
 
 
@@ -12,10 +7,33 @@ html
 
 	body
 		margin 0
-		height 100vh
+		height 100%
 		overflow hidden
 		background url('/img/desktop.jpg') center
 		background-size cover
+		--window-color #ffffffaa
+		--icon-color #ffffff88
+		--pane-color #ffffff44
+		--shadow-color #00000022
+		--light white
+		--dark black
+
+		&.dark-theme
+			--window-color #000000cc
+			--icon-color #cccccc88
+			--pane-color #00000066
+			--shadow-color #00000022
+			--light black
+			--dark white
+
+			#settings-panel img, .app-window .header img
+				filter invert()
+
+			.app-window .header .icon
+				filter brightness(.8)
+
+			#dock .dock-shortcut img
+				filter saturate(.8) drop-shadow(0 .3vh .2vh var(--shadow-color))
 
 		noscript
 			color #c00 !important
@@ -35,9 +53,9 @@ html
 			font-weight bold
 			user-select none
 			border-radius 0 0 5px 5px
-			background pane-color
+			background var(--pane-color)
 			z-index 10
-			box-shadow 0 .2vh 1vh shadow-color
+			box-shadow 0 .2vh 1vh var(--shadow-color)
 			transition transform .2s 1s ease-in
 
 			&.hidden, &.auto-hide
@@ -48,7 +66,7 @@ html
 					transform none
 
 			.icon
-				color white
+				color var(--light)
 				text-decoration none
 				cursor pointer
 
@@ -68,12 +86,12 @@ html
 			width max-content
 			height min-content
 			z-index 10
-			color #444
-			background window-color
+			color var(--dark)
+			background var(--window-color)
 			border-radius 10px
 			user-select none
 			backdrop-filter blur(8px)
-			box-shadow 0 .2vh 1vh shadow-color
+			box-shadow 0 .2vh 1vh var(--shadow-color)
 			transition opacity .2s ease-in,
 			transform .2s ease-in
 
@@ -91,12 +109,11 @@ html
 				a
 					margin 0 .5em
 					display block
-					color black
+					color var(--dark)
 
 					img
 						height 2em
 						margin 0 .5em
-						filter grayscale()
 
 			label
 				margin .2em 0
@@ -114,14 +131,14 @@ html
 				min-width 300px
 				min-height 100px
 				border-radius 15px
-				background window-color
+				background var(--window-color)
 				overflow hidden
 				user-select none
 				resize both
 				display flex
 				flex-flow column nowrap
 				backdrop-filter blur(8px)
-				box-shadow 0 .5vh 3vh 1vh shadow-color
+				box-shadow 0 .5vh 3vh 1vh var(--shadow-color)
 				transition opacity .2s ease-in,
 				transform .3s ease-in
 
@@ -138,7 +155,9 @@ html
 					transform scale(.8) translateY(30%)
 
 				&.animated
-					transition left .3s ease-in,
+					transition opacity .2s ease-in,
+					transform .3s ease-in,
+					left .3s ease-in,
 					top .3s ease-in,
 					width .3s ease-in,
 					height .3s ease-in
@@ -157,7 +176,7 @@ html
 					padding 0 1em
 					flex-shrink 0
 					box-sizing border-box
-					background window-color
+					background var(--window-color)
 					display flex
 					flex-flow row nowrap
 					justify-content space-between
@@ -166,7 +185,7 @@ html
 					.title
 						font-size 80%
 						font-weight bold
-						color black
+						color var(--dark)
 
 					.icon-group
 						width 40px
@@ -214,7 +233,7 @@ html
 			pointer-events none
 
 			#dock
-				max-width fit-content
+				max-width max-content
 				margin 0 auto
 				padding 0 30px
 				display flex
@@ -223,7 +242,7 @@ html
 				align-items center
 				backdrop-filter blur(8px)
 				pointer-events all
-				background pane-color
+				background var(--pane-color)
 				border-radius 1em 1em 0 0
 				box-sizing border-box
 				overflow-y hidden
@@ -244,28 +263,29 @@ html
 					width 5px
 					height 8vh
 					flex-shrink 0
-					background icon-color
+					background var(--icon-color)
 					border-radius 2px
 					margin 0 2em
-					box-shadow 0 .2vh .5vh shadow-color
+					box-shadow 0 .2vh .5vh var(--shadow-color)
 
 				.dock-shortcut
 					width 8vh
 					height 8vh
 					margin 10px 10px
 					flex-shrink 0
-					background icon-color
+					background var(--icon-color)
 					border-radius 30%
 					cursor pointer
 					display flex
 					justify-content center
 					align-items center
-					box-shadow 0 .2vh .5vh shadow-color
-					transition background-color .1s linear,
+					box-shadow 0 .2vh .5vh var(--shadow-color)
+					transition filter .1s ease-in,
+					background-color .1s ease-in,
 					transform .4s cubic-bezier(0, 0.5, 0.5, 1.5)
 
 					&:hover
-						background pane-color
+						filter opacity(.8) brightness(.8)
 
 					&:active
 						transform scale(.9)
@@ -275,4 +295,4 @@ html
 
 					img
 						width 5vh
-						filter drop-shadow(0 .3vh .2vh shadow-color)
+						filter drop-shadow(0 .3vh .2vh var(--shadow-color))

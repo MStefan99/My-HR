@@ -1,9 +1,32 @@
 'use strict';
 
+body = document.querySelector('body')
 sessionTable = document.querySelector('#sessions-table')
+lightRadio = document.querySelector('#theme-light')
+darkRadio = document.querySelector('#theme-dark')
+
+Storage = window.localStorage;
+
+
+lightRadio.addEventListener('click', ->
+	body.classList.remove('dark-theme')
+	Storage.setItem('mh_theme', 'light')
+)
+
+
+darkRadio.addEventListener('click', ->
+	body.classList.add('dark-theme')
+	Storage.setItem('mh_theme', 'dark')
+)
 
 
 addEventListener('load', ->
+	if Storage.getItem('mh_theme') is 'light'
+		lightRadio.checked = true
+	else
+		darkRadio.checked = true
+
+
 	res = await fetch('/console/sessions/')
 	sessions = await res.json();
 

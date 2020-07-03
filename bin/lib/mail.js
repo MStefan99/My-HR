@@ -10,7 +10,7 @@ const readFile = util.promisify(fs.readFile);
 
 
 async function sendMail(email, subject, template, params = {}) {
-	const text = await readFile(path.join(__dirname, 'mail_templates', template), 'utf8');
+	const text = await readFile(path.join(__dirname, '..', 'mail_templates', template), 'utf8');
 
 	const html = text.replace(/%{(.*?)}/g, (match, g1) => params[g1]);
 	const transporter = nodemailer.createTransport({

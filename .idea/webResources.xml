@@ -12,7 +12,6 @@
             <path value="file://$PROJECT_DIR$/static/style" />
             <path value="file://$PROJECT_DIR$/bin/mail" />
             <path value="file://$PROJECT_DIR$/database/ddl" />
-            <path value="file://$PROJECT_DIR$/setup" />
             <path value="file://$PROJECT_DIR$/database/test_data" />
           </resourceRoots>
         </entryData>

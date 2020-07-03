@@ -11,7 +11,8 @@
 	'img-desktop img-desktop img-desktop'\
 	'text-desktop-2 text-desktop-2 text-desktop-2'\
 	'text-dock text-dock text-dock'\
-	'img-dock img-dock img-dock'
+	'img-dock img-dock img-dock'\
+	'img-window text-window text-window'
 
 	@media screen and (max-width 768px)
 		grid-gap 1em
@@ -21,13 +22,14 @@
 		'text-statuses img-statuses'\
 		'text-applications text-applications'\
 		'img-applications img-applications'\
-		'text-application text-application'\
-		'img-application img-application'\
+		'img-application text-application'\
 		'text-desktop text-desktop'\
 		'img-desktop img-desktop'\
 		'text-desktop-2 text-desktop-2'\
 		'text-dock text-dock'\
-		'img-dock img-dock'
+		'img-dock img-dock'\
+		'text-window text-window'\
+		'img-window img-window'
 
 	.cell
 		h1, h2, h3
@@ -75,6 +77,9 @@
 	#img-dock
 		grid-area img-dock
 
+	#img-window
+		grid-area img-window
+
 
 	#text-statuses
 		grid-area text-statuses
@@ -93,3 +98,6 @@
 
 	#text-dock
 		grid-area text-dock
+
+	#text-window
+		grid-area text-window

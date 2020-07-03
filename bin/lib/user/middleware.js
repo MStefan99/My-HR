@@ -3,19 +3,15 @@
 const libSession = require('./session');
 const libAuth = require('./auth');
 
+const {userCookieOptions} = require('../cookie');
 
-const cookieOptions = {
-	httpOnly: true,
-	sameSite: 'strict',
-	maxAge: 30 * 60 * 1000  // 30-min sessions
-};
 
 
 async function getSession(req, res, next) {
 	const uuid = req.query.sessionID || req.cookies.SID;
 
 	if (req.query.sessionId) {
-		res.cookie('SID', req.query.sessionID, cookieOptions);
+		res.cookie('SID', req.query.sessionID, userCookieOptions);
 	}
 	req.session = await libSession.getSessionByUUID(uuid);
 	next();
@@ -50,7 +46,7 @@ function redirectIfNotAuthorized(req, res, next) {
 
 
 function redirectIfExpired(req, res, next) {
-	switch (libAuth.checkExpirationStatus(req.session, cookieOptions.maxAge)) {
+	switch (libAuth.checkExpirationStatus(req.session, userCookieOptions.maxAge)) {
 		case 'EXPIRED':
 			res.render('user/status', {
 				title: 'Link expired', info: 'To ensure our data stays safe we\'ve limited the time during which ' +

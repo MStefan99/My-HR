@@ -4,8 +4,7 @@ const libSession = require('./session');
 const libUser = require('./user');
 const libAuth = require('./auth');
 
-
-const sessionLength = 1000 * 60 * 60 * 12;  // 12-hour sessions
+const {consoleCookieOptions} = require('../cookie');
 
 
 async function getSession(req, res, next) {
@@ -31,18 +30,23 @@ async function redirectIfNotAuthorized(req, res, next) {
 		req.user,
 		req.headers['user-agent'],
 		req.headers['x-forwarded-for'] || req.connection.remoteAddress,
-		sessionLength)) {
+		consoleCookieOptions.maxAge)) {
 		case 'NO_SESSION':
+			res.clearCookie('CSID', consoleCookieOptions);
 			res.redirect(303, '/console/login/');
 			break;
 		case 'WRONG_UA':
 		case 'WRONG_IP':
 		case 'EXPIRED':
 			await req.session.delete();
+
+			res.clearCookie('CSID', consoleCookieOptions);
 			res.redirect(303, '/console/login/');
 			break;
 		case 'ID_MISMATCH':
 			await req.user.deleteAllSessions();
+
+			res.clearCookie('CSID', consoleCookieOptions);
 			res.redirect(303, '/console/login/');
 			break;
 		case 'NO_PASSWORD' :
@@ -59,7 +63,6 @@ async function redirectIfNotAuthorized(req, res, next) {
 
 
 async function redirectIfNotAdmin(req, res, next) {
-
 	switch (libAuth.getPrivileges(req.user)) {
 		case 'USER':
 			res.redirect(303, '/console/');

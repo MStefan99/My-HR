@@ -1,13 +1,3 @@
-primary-color = #3795e2
-primary-color-light = #98beff
-secondary-color = #21dea9
-simply-red = #a00
-almost-green = #0a0
-just-gray = #ddd
-pretty-gray = #999
-very-gray = #555
-shadow-color = #00000022
-
 ease-in = cubic-bezier(0, 0.6, 0.4, 1)
 
 
@@ -17,11 +7,51 @@ html
 	body
 		display flex
 		flex-direction column
+		margin 0
 		min-height 100vh
 		width 100vw
+		color var(--dark)
+		background var(--light)
 		overflow-x hidden
-		margin 0
-		background #eaeaea
+		--primary-color #3795e2
+		--secondary-color #21dea9
+		--background-color #fff
+		--simply-red #a00
+		--light #fff
+		--dark #000
+		--light-gray #eee
+		--just-gray #ddd
+		--pretty-gray #999
+		--very-gray #555
+		--shadow-color #00000022
+
+		&.dark-theme
+			--primary-color #973c00
+			--secondary-color #780027
+			--background-color #393b3d
+			--light #222
+			--dark #ccc
+			--light-gray #444
+			--just-gray #999
+			--pretty-gray #777
+			--very-gray #111
+			--shadow-color #00000022
+
+			header, footer
+				color var(--dark)
+
+			main a
+				&:hover
+					color var(--just-gray)
+
+				&:active
+					color var(--pretty-gray)
+
+			img
+				filter saturate(.7) brightness(2)
+
+		a
+			color inherit
 
 		.hidden
 			display none !important
@@ -40,53 +70,53 @@ html
 			align-items center
 			justify-content space-between
 			padding .5em 2em
-			background linear-gradient(90deg, primary-color 0%, secondary-color 100%)
-			box-shadow 0 .5vh 2vh shadow-color
+			color var(--light)
+			background linear-gradient(90deg, var(--primary-color) 10%, var(--secondary-color) 90%)
+			box-shadow 0 .5vh 2vh var(--shadow-color)
 			border-radius 0 0 20px 20px
 
 			h1
 				font-size 2rem
 				margin 0
-				text-shadow 0 .5vh 1.5vh shadow-color
+				text-shadow 0 .5vh 1.5vh var(--shadow-color)
 
 				@media screen and (min-width 425px)
 					font-size 3rem
 
 			a
-				color white
 				text-decoration none
 
 				&:hover
-					color just-gray
+					color var(--just-gray)
 
 			.button
 				margin .5vh .5vw
 				padding .5em 1em
-				background very-gray
-				white-space nowrap
+				font-weight bold
+				background var(--very-gray)
 				text-align center
 				cursor pointer
 				border-radius .5em
-				box-shadow 0 .5vh 1vh shadow-color
+				white-space nowrap
+				box-shadow 0 .5vh 1vh var(--shadow-color)
 				transition background-color .1s ease-in
 
 				@media screen and (max-width 425px)
 					display block
 
 				&:hover
-					color white
-					background #444
+					background #222
 
 				&:active
-					background #333
+					background #111
 
 		div#login-container
 			width 25em
 			flex-grow 1
 			padding 3em
 			margin 10vh auto
-			background white
-			box-shadow 0 .5vh 2vh shadow-color
+			background var(--light)
+			box-shadow 0 .5vh 2vh var(--shadow-color)
 			border-radius 10px
 
 			@media screen and (max-width 425px)
@@ -111,51 +141,51 @@ html
 					border-radius 8px
 					box-sizing border-box
 					outline none
-					border-bottom 4px solid just-gray
+					border-bottom 4px solid var(--just-gray)
 					transition border-bottom-color .2s ease-in,
 					background-color .2s ease-in,
 					box-shadow .2s ease-in,
 					color .2s ease-in
 
 					&:hover
-						border-bottom-color primary-color
+						border-bottom-color var(--primary-color)
 
 					&:focus
-						border-bottom-color secondary-color
-						box-shadow 0 0 1vh -.1vh shadow-color
+						border-bottom-color var(--secondary-color)
+						box-shadow 0 0 1vh -.1vh var(--shadow-color)
 
 				.status-bad
-					color simply-red
-					border-bottom-color simply-red
-					background just-gray
+					color var(--simply-red)
+					border-bottom-color var(--simply-red)
+					background var(--just-gray)
 
 				.label-status
-					color simply-red
+					color var(--simply-red)
 
 				input[type="submit"]
 					padding .5em 0
-					color white
+					color var(--light)
 					cursor pointer
-					background primary-color
-					border-bottom-color primary-color
-					box-shadow 0 .5vh 1vh shadow-color
+					background var(--primary-color)
+					border-bottom-color var(--primary-color)
+					box-shadow 0 .5vh 1vh var(--shadow-color)
 
 					&[disabled]
-						color black
-						background just-gray
-						border-bottom-color just-gray
+						color var(--dark)
+						background var(--just-gray)
+						border-bottom-color var(--just-gray)
 						cursor not-allowed
 
 					&:hover
-						color black
-						background just-gray
+						color var(--dark)
+						background var(--just-gray)
 						box-shadow none
 
 					&:focus
-						border-bottom-color secondary-color
-						background secondary-color
-						color white
-						box-shadow inset 0 .5vh 1vh -.5vh shadow-color
+						color var(--light)
+						border-bottom-color var(--secondary-color)
+						background var(--secondary-color)
+						box-shadow inset 0 .5vh 1vh -.5vh var(--shadow-color)
 
 				#qr
 					display block
@@ -164,21 +194,21 @@ html
 
 				label.required:after
 					content "*"
-					color simply-red
+					color var(--simply-red)
 
 				.label-info
 					&#secret
 						word-break break-all
 
 					&.required-info
-						color simply-red
+						color var(--simply-red)
 
 		main
 			flex-grow 1
 			margin 5vh 0
 			padding 3vh 3vw
-			background white
-			box-shadow 0 .5vh 2vh shadow-color
+			background var(--background-color)
+			box-shadow 0 .5vh 2vh var(--shadow-color)
 			border-radius 20px
 
 			@media screen and (min-width 425px)
@@ -187,14 +217,12 @@ html
 			#status-icon
 				margin-left .5em
 
-			h1 a, h2 a, h3 a
-				color inherit
-
+			a
 				&:hover
-					color very-gray
+					color var(--very-gray)
 
 				&:active
-					color pretty-gray
+					color var(--pretty-gray)
 
 			#tab-container
 				display flex
@@ -205,17 +233,17 @@ html
 				.tab
 					flex-grow 1
 					padding 1em .5em
-					background white
+					background var(--background-color)
 					white-space nowrap
 					text-align center
 					cursor pointer
 					user-select none
-					border-top 1px solid black
+					border-top 1px solid var(--dark)
 					transition box-shadow .1s ease-in
 
 					&.selected
 						z-index 1
-						box-shadow 0 .5vh 1vh .1vh shadow-color
+						box-shadow 0 .5vh 1vh .1vh var(--shadow-color)
 
 			.icon
 				width 20px
@@ -241,7 +269,7 @@ html
 				border-radius 10px
 				overflow hidden
 				border-collapse collapse
-				box-shadow 0 .2vh 1vh .2vh shadow-color
+				box-shadow 0 .2vh 1vh .2vh var(--shadow-color)
 
 				th, td
 					padding 1vh 1vw
@@ -250,24 +278,24 @@ html
 						text-decoration underline
 						cursor pointer
 
-				thead tr
+				thead
 					font-weight bold
-					background pretty-gray
-					color white
+					background var(--pretty-gray)
+					color var(--light)
 
 				tbody tr
-					border-bottom 1px solid just-gray
+					border-bottom 1px solid var(--just-gray)
 
 					&.clickable
 						user-select none
 						cursor pointer
 
 						&:hover
-							background just-gray
+							background var(--just-gray)
 
 					@media screen and (min-width 768px)
 						td:not(:last-child)
-							border-right 1px solid black
+							border-right 1px solid var(--dark)
 
 				@media screen and (max-width 768px)
 					thead tr
@@ -296,26 +324,25 @@ html
 				margin .5em 1em .5em 0
 				width fit-content
 				text-decoration none
-				color black
-				background #eee
+				background var(--light-gray)
 				cursor pointer
 				user-select none
 				border-radius .25em
-				border 1px solid just-gray
-				box-shadow 0 .5vh 1vh -.2vh shadow-color
+				border 1px solid var(--just-gray)
+				box-shadow 0 .5vh 1vh -.2vh var(--shadow-color)
 				transition box-shadow .2s ease-in,
 				background-color .2s ease-in,
 				border-color .2s ease-in
 
 				&:hover
-					background just-gray
+					background var(--just-gray)
 
 				&:active
-					background pretty-gray
+					background var(--pretty-gray)
 
 				&.disabled
-					background pretty-gray
-					border-color pretty-gray
+					background var(--pretty-gray)
+					border-color var(--pretty-gray)
 					filter grayscale()
 					cursor not-allowed
 					box-shadow none
@@ -352,17 +379,15 @@ html
 			display flex
 			flex-flow row wrap
 			justify-content space-between
-			background very-gray
-			color white
+			color var(--light)
+			background var(--very-gray)
 			padding .5em 0
 			border-radius 10px 10px 0 0
-			box-shadow inset 0 0 3vh shadow-color
+			box-shadow inset 0 0 3vh var(--shadow-color)
 
 			p
 				margin .5em 2em
 
 			a
-				color white
-
 				&:hover
-					color just-gray
+					color var(--just-gray)
