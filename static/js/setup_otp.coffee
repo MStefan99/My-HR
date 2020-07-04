@@ -24,22 +24,20 @@ validate = ->
 
 
 addEventListener('load', ->
-	validate()
 	res = await fetch('/console/get-otp/')
 	secret = await res.json()
 
 	qrElement.setAttribute('src', secret.qr)
-
 	secretElement.innerHTML = secret.secret
-
 	secretLabel = document.createElement('input')
 	secretLabel.type = 'hidden'
 	secretLabel.name = 'secret'
 	secretLabel.value = secret.secret
 	formElement.appendChild(secretLabel)
+
+	validate()
 )
 
 
-'keyup mousemove'.split(' ').forEach((event) ->
-	addEventListener(event, validate)
-)
+addEventListener('keyup', validate)
+setInterval(validate, 1000)

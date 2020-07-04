@@ -245,7 +245,6 @@ router.get('/get-application/:applicationID', async (req, res) => {
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
 	} else {
-		// noinspection JSPrimitiveTypeWrapperUsage
 		application.starred = await req.user.hasStarredApplication(application);
 
 		res.json(application);

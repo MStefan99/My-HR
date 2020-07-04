@@ -7,6 +7,7 @@ module.exports = {
 	consoleCookieOptions: {
 		httpOnly: true,
 		sameSite: 'strict',
-		maxAge: 12 * 60 * 60 * 1000  // 12-hour sessions
+		maxAge: 12 * 60 * 60 * 1000,  // 12-hour sessions
+		path: '/console/'
 	}
 };

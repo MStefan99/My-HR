@@ -21,10 +21,10 @@ darkRadio.addEventListener('click', ->
 
 
 addEventListener('load', ->
-	if Storage.getItem('mh_theme') is 'light'
-		lightRadio.checked = true
-	else
+	if Storage.getItem('mh_theme') is 'dark'
 		darkRadio.checked = true
+	else
+		lightRadio.checked = true
 
 
 	res = await fetch('/console/sessions/')

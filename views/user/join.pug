@@ -24,7 +24,7 @@ html(lang='en')
 		main
 			div#content-container
 				h1 Welcome to Mine Eclipse!
-				// Include video here
+				//- Include video here
 				p(style='color: #c00') Video will be here
 				h2 Join us today by filling the form below!
 				form(action='/join/' method='post' enctype='multipart/form-data')
@@ -36,7 +36,7 @@ html(lang='en')
 						title='Your last name' maxlength=100 required)
 					label.required(for='email') Your Metropolia email
 					input#email(type='email' name='email' value=email
-						title='Your Metropolia email, filled in automatically' disabled required)
+						title='Your Metropolia email, filled in automatically' readonly)
 					label.required(for='backup-email') Secondary email
 					input#backup-email(type='email' name='backupEmail' placeholder='john.doe@gmail.com'
 						title='Your non-Metropolia email' maxlength=100 required)

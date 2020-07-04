@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectStartupSharedConfiguration">
     <configurations>
-      <configuration id="Node.js.Run without cache" name="Run without cache" />
+      <configuration id="Node.js.Run (develop)" name="Run (develop)" />
     </configurations>
   </component>
 </project>

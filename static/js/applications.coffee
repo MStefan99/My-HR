@@ -23,6 +23,7 @@ addEventListener('load', ->
 	applicationsHeader.innerHTML = title
 
 	res = await fetch(path);
+
 	applications = await res.json();
 
 	oldCells = document.querySelectorAll('td')

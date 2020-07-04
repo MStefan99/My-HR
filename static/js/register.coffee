@@ -52,6 +52,5 @@ addEventListener('load', ->
 )
 
 
-'keyup mousemove'.split(' ').forEach((event) ->
-	addEventListener(event, validate)
-)
+addEventListener('keyup', validate)
+setInterval(validate, 1000)

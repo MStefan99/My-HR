@@ -5,7 +5,7 @@ RUN curl -sL https://deb.nodesource.com/setup_14.x | bash -
 RUN apt-get install nodejs -y
 
 COPY ./ /var/www/html/
-COPY setup/your-hr.service /etc/systemd/system/
+COPY setup/my-hr.service /etc/systemd/system/
 COPY setup/ssl /var/www/html/cert/
 
 EXPOSE 3000
