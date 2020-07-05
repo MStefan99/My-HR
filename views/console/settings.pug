@@ -48,11 +48,13 @@ html(lang='en')
 					br
 					input#theme-dark(type='radio' name='theme')
 					label(for='theme-dark') Dark theme (β)
+					p If you are using Desktop, you will have to refresh the page
+						|  for the changes to fully apply.
 				if (user.admin)
 					h2 Admin options
 					div.section
 						a(href='/console/users') Manage users
-		script(type='text/javascript' src='/js/settings.js')
+		script(async type='text/javascript' src='/js/settings.js')
 
 		footer
 			include footer

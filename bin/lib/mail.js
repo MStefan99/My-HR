@@ -14,16 +14,17 @@ async function sendMail(email, subject, template, params = {}) {
 
 	const html = text.replace(/%{(.*?)}/g, (match, g1) => params[g1]);
 	const transporter = nodemailer.createTransport({
-		host: 'mail.inet.fi',
-		port: 25,
-		secure: false,
-		tls: {
-			rejectUnauthorized: false
-		}
+		host: 'email-smtp.eu-central-1.amazonaws.com',
+		port: 465,
+		secure: true,
+		auth: {
+			user: 'AKIA6G2A3BYBHJBIBXKE',
+			pass: 'BKMG1/6xZ4pzftcqUkp/k3vRwVTvRabjIoasoS/yjsfF',
+		},
 	});
 
 	await transporter.sendMail({
-		from: 'noreply@mstefan99.com',
+		from: 'hr@mineeclipse.com',
 		to: email,
 		subject: subject,
 		html: html

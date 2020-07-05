@@ -10,7 +10,7 @@ const {userCookieOptions} = require('../cookie');
 async function getSession(req, res, next) {
 	const uuid = req.query.sessionID || req.cookies.SID;
 
-	if (req.query.sessionId) {
+	if (req.query.sessionID) {
 		res.cookie('SID', req.query.sessionID, userCookieOptions);
 	}
 	req.session = await libSession.getSessionByUUID(uuid);

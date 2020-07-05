@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const {applicationRouter} = require('./bin/user');
 const {consoleRouter} = require('./bin/console');
+const {internalRouter} = require('./bin/internal');
 
 
 const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=604800';  // 1 week in seconds
@@ -34,6 +35,7 @@ app.use('/style', express.static(path.join(__dirname, 'static', 'style'), cacheO
 app.use('/js', express.static(path.join(__dirname, 'static', 'js'), cacheOptions));
 app.use('/img', express.static(path.join(__dirname, 'static', 'img'), cacheOptions));
 app.use('/favicon.ico', express.static(path.join(__dirname, 'static', 'img', 'me-logo.svg'), cacheOptions));
+app.use('/int', internalRouter);
 app.use('/console', consoleRouter);
 app.use(applicationRouter);
 
@@ -43,7 +45,8 @@ if (process.env.HTTPS) {
 		hostname: 'apply.mineeclipse.com',
 		path: '/',
 		key: fs.readFileSync('/etc/letsencrypt/live/apply.mineeclipse.com/privkey.pem'),
-		cert: fs.readFileSync('/etc/letsencrypt/live/apply.mineeclipse.com/cert.pem')
+		cert: fs.readFileSync('/etc/letsencrypt/live/apply.mineeclipse.com/cert.pem'),
+		ca: fs.readFileSync('/etc/letsencrypt/live/apply.mineeclipse.com/fullchain.pem')
 	};
 
 	https.createServer(serverOptions, app).listen(443);
