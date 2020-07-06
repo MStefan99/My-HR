@@ -86,10 +86,10 @@ describe('With test user', () => {
 	});
 
 
-	test('Get invalid users', async () => {
-		expect(await libUser.getUserByID(0))
+	test('Get invalid user', async () => {
+		expect(await libUser.getUserByID(-1))
 			.toBe('NO_USER');
-		expect(await libUser.getUserByUUID(0))
+		expect(await libUser.getUserByUUID(-1))
 			.toBe('NO_USER');
 		expect(await libUser.getUserByUsername(null))
 			.toBe('NO_USER');
@@ -240,10 +240,18 @@ describe('With test user', () => {
 	});
 
 
-	test('Delete admin', async () => {
+	test('Delete admin user', async () => {
 		await libUser.createUser('admin', true);
 
 		const adminUser = await testLibUser.getUserByUsername('admin');
+		expect(await adminUser.delete()).toBe('CANNOT_DELETE_ADMIN');
+	});
+
+
+	test('Delete System user', async () => {
+		await libUser.createUser('System', true);
+
+		const adminUser = await testLibUser.getUserByUsername('System');
 		expect(await adminUser.delete()).toBe('CANNOT_DELETE_ADMIN');
 	});
 

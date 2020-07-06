@@ -6,14 +6,17 @@ const libAuth = require('./auth');
 const {userCookieOptions} = require('../cookie');
 
 
-
 async function getSession(req, res, next) {
 	const uuid = req.query.sessionID || req.cookies.SID;
-
-	if (req.query.sessionID) {
-		res.cookie('SID', req.query.sessionID, userCookieOptions);
-	}
 	req.session = await libSession.getSessionByUUID(uuid);
+
+	if (req.query.sessionID && req.session !== 'NO_SESSION') {
+		const options = {...userCookieOptions};
+		options.expires = new Date(req.session.createdAt + userCookieOptions.maxAge);
+		delete options.maxAge;
+
+		res.cookie('SID', req.query.sessionID, options);
+	}
 	next();
 }
 

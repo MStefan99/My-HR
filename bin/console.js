@@ -305,7 +305,7 @@ router.post('/applications/accept', async (req, res) => {
 				await sendMail(application.email,
 					'Welcome to Mine Eclipse!',
 					'accepted.html',
-					{name: this.firstName});
+					{name: application.firstName});
 
 				res.send('OK');
 				break;
@@ -331,7 +331,7 @@ router.post('/applications/reject', async (req, res) => {
 				await sendMail(application.email,
 					'Your Mine Eclipse application',
 					'rejected.html',
-					{name: application.name});
+					{name: application.firstName});
 
 				res.send('OK');
 				break;
@@ -388,7 +388,7 @@ router.get('/file/:path', async (req, res) => {
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
 	} else {
-		res.download(path.join(__dirname, '..', '/uploads/', req.params.name), application.fileName);
+		res.download(path.join(__dirname, '..', '/uploads/', req.params.path), application.fileName);
 	}
 });
 

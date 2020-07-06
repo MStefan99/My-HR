@@ -40,7 +40,10 @@ app.use('/console', consoleRouter);
 app.use(applicationRouter);
 
 
-if (process.env.HTTPS) {
+if (process.env.NO_HTTPS) {
+	http.createServer(app).listen(80);
+	console.log('Listening on HTTP');
+} else {
 	const serverOptions = {
 		hostname: 'apply.mineeclipse.com',
 		path: '/',
@@ -56,7 +59,4 @@ if (process.env.HTTPS) {
 		res.end();
 	}).listen(80);
 	console.log('HTTP redirect enabled');
-} else {
-	http.createServer(app).listen(80);
-	console.log('Listening on HTTP');
 }

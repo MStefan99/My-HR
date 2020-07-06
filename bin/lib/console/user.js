@@ -334,7 +334,7 @@ class User {
 
 
 	async delete() {
-		if (this.username === 'admin') {
+		if (this.username === 'admin' || this.username === 'System') {
 			return 'CANNOT_DELETE_ADMIN';
 		} else {
 			const db = await openDB();

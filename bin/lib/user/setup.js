@@ -16,8 +16,12 @@ async function createTables() {
 	if (!tables.find(table => table.name === 'applications')) {
 		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'applications.sql'), 'utf-8'));
 	}
+	if (!tables.find(table => table.name === 'mail')) {
+		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'mail.sql'), 'utf-8'));
+	}
 	await db.close();
 }
+
 
 async function init() {
 	await createTables();

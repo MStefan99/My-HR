@@ -121,7 +121,7 @@ accept = ->
 			\nIf you are still unsure about this application, it is recommended that you star it and
 			return later for a final decision.
 			\n\nAre you ABSOLUTELY sure you want to continue?")
-		res = fetch('/console/applications/accept/?applicationID=' + application.id, {
+		res = await fetch('/console/applications/accept/?applicationID=' + application.id, {
 			method: 'post'
 		})
 		if not res.ok
@@ -150,7 +150,7 @@ reject = ->
 			\nIf you are still unsure about this application, it is recommended that you leave this
 			application for a final decision.
 			\n\nAre you ABSOLUTELY sure you want to continue?")
-		res = fetch('/console/applications/reject/?applicationID=' + application.id, {
+		res = await fetch('/console/applications/reject/?applicationID=' + application.id, {
 			method: 'post'
 		})
 		if not res.ok

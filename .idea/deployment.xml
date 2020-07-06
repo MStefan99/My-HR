@@ -5,7 +5,7 @@
       <paths name="AWS">
         <serverdata>
           <mappings>
-            <mapping deploy="/home/bitnami/my-hr/" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/home/ubuntu/my-hr/" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/uploads" />

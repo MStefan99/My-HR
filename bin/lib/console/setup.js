@@ -11,6 +11,14 @@ async function addAdmin() {
 	const users = await db.get(`select *
                                 from console_users`);
 	if (!users) {
+		await db.run(`insert into console_users(id, 
+                          username, 
+                          uuid, 
+                          admin, 
+                          setup_code,
+                          password_hash,
+                          secret)
+                      values (0, 'System', $id, 1, null, 'hash', 'secret')`, {$id: uuid.v4()});
 		await db.run(`insert into console_users(username, uuid, admin, setup_code)
                       values ('admin', $id, 1, 'admin')`, {$id: uuid.v4()});
 	}
