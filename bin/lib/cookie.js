@@ -7,7 +7,7 @@ module.exports = {
 	},
 	consoleCookieOptions: {
 		httpOnly: true,
-		path: '/console/',
+		path: '/',
 		sameSite: 'strict',
 		secure: !!process.env.HTTPS,
 		maxAge: 12 * 60 * 60 * 1000,  // 12-hour sessions

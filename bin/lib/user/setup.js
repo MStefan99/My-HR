@@ -19,6 +19,9 @@ async function createTables() {
 	if (!tables.find(table => table.name === 'mail')) {
 		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'mail.sql'), 'utf-8'));
 	}
+	if (!tables.find(table => table.name === 'feedback')) {
+		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'feedback.sql'), 'utf-8'));
+	}
 	await db.close();
 }
 

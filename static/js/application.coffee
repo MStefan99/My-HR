@@ -1,6 +1,5 @@
 'use strict';
 
-applicationId = window.location.pathname.match(/\d*$/)
 starText = document.querySelector('#star-text')
 starIcon = document.querySelector('#star-icon')
 statusIcon = document.querySelector('#status-icon')
@@ -21,10 +20,10 @@ freeFormElement = document.querySelector('#free-form')
 fileLinkElement = document.querySelector('#file-link')
 
 
-application = {}
-
-
 addEventListener('load', ->
+	if not navigator.clipboard?
+		shareButton.classList.add('hidden');
+
 	params = new URLSearchParams(window.location.search)
 	res = await fetch('/console/get-application/' + params.get('id'))
 
@@ -66,7 +65,7 @@ addEventListener('load', ->
 			backupPhoneElement.href = 'tel:' + application.backupPhone
 		else
 			backupPhoneElement.innerHTML = '[Not provided]'
-		links = application.links.replace(/(http:\/\/|https:\/\/)?(.*?\..*?)(\s|$)/g,
+		links = application.links.replace(/(http:\/\/|https:\/\/)?(\S*?\.\S*)/g,
 			'<a href="https://$2" target="_blank">$&</a>')
 		linksElement.innerHTML = links or '[Empty]'
 		freeFormElement.innerHTML = application.freeForm or '[Empty]'

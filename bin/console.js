@@ -341,7 +341,7 @@ router.post('/applications/reject', async (req, res) => {
 
 
 router.get('/sessions', async (req, res) => {
-	const sessions = await req.user.getSessions();
+	const sessions = await libSession.getUserSessions(req.user);
 
 	res.json(sessions);
 });
@@ -434,7 +434,9 @@ router.get('/get-users', async (req, res) => {
 
 	for (const user of users) {
 		user.otpSetup = !!user.secret;
+		delete user.id;
 		delete user.passwordHash;
+		delete user.secret;
 	}
 	res.json(users);
 });

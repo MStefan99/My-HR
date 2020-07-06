@@ -76,6 +76,7 @@ html
 						top 1em
 						transition transform cubic-bezier(0, 0, 0, 1) 1.5s,
 						opacity linear .5s .5s
+						z-index 1
 
 						&.hidden
 							transform translateX(400%) rotate(270deg)
@@ -88,8 +89,8 @@ html
 						opacity linear .5s 1.2s
 						display inline-block
 
-						&#text-left
-							z-index -1
+						&#text-right
+							z-index 1
 
 						&.hidden
 							opacity 0

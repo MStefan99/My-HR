@@ -20,6 +20,19 @@ const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=86400';
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(cookieParser());
+if (process.env.USER_AUTH) {
+	router.use((req, res, next) => {
+		if (!req.cookies.CSID) {
+			res.status(403).render('user/status', {
+				title: 'Beta mode', info: 'This website is now in closed beta so you have to sign in ' +
+					'to continue using the website. If you do not know how to do it, ' +
+					'please return back later, when beta testing is over.'
+			});
+		} else {
+			next();
+		}
+	});
+}
 
 
 libSetup.init();

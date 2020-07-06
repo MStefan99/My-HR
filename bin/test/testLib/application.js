@@ -27,8 +27,6 @@ async function setApplicationAcceptedStatus(application, status) {
 			{$accepted: status, $id: application.id});
 		await db.close();
 		application.accepted = status;
-	} else {
-		throw new Error('No application!');
 	}
 }
 
@@ -44,8 +42,6 @@ async function deleteApplicationWithFile(application) {
                       from applications
                       where id=$id`, {$id: application.id});
 		await db.close();
-	} else {
-		throw new Error('No Application!');
 	}
 }
 

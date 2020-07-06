@@ -55,6 +55,12 @@ html
 		.hidden
 			display none !important
 
+		.clickable
+			cursor pointer
+
+			&:hover
+				color var(--just-gray)
+
 		@media screen and (max-width 1024px)
 			.desktop-only
 				display none !important
@@ -285,13 +291,6 @@ html
 				tbody tr
 					border-bottom 1px solid var(--just-gray)
 
-					&.clickable
-						user-select none
-						cursor pointer
-
-						&:hover
-							background var(--just-gray)
-
 					@media screen and (min-width 768px)
 						td:not(:last-child)
 							border-right 1px solid var(--dark)
@@ -362,9 +361,6 @@ html
 
 				@media screen and (min-width 425px)
 					margin 1vh 2vw
-
-				#links a
-					display block
 
 				span
 					display inline-block

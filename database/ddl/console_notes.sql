@@ -10,8 +10,8 @@ create table console_notes (
 		constraint console_notes_console_applications_id_fk
 			references applications
 			on update cascade on delete cascade,
-	private        integer default 1 not null,
-	note           text    not null
+	shared         integer default 1 not null,
+	message        text    not null
 );
 
 

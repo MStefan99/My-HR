@@ -55,7 +55,7 @@ describe('With test session and user', () => {
 
 
 	test('Get created sessions', async () => {
-		const sessions = await user.getSessions();
+		const sessions = await libSession.getUserSessions(user);
 		expect(sessions).toContainEqual(session1);
 		expect(sessions).toContainEqual(session2);
 	});
@@ -88,7 +88,7 @@ describe('With test session and user', () => {
 	test('Delete session', async () => {
 		expect(await session1.delete()).toBe('OK');
 
-		const sessions = await user.getSessions();
+		const sessions = await libSession.getUserSessions(user);
 		expect(sessions).not.toContainEqual(session1);
 	});
 
@@ -96,7 +96,7 @@ describe('With test session and user', () => {
 	test('Delete all sessions', async () => {
 		expect(await user.deleteAllSessions()).toBe('OK');
 
-		const sessions = await user.getSessions();
+		const sessions = await libSession.getUserSessions(user);
 		expect(sessions).toHaveLength(0);
 	});
 });

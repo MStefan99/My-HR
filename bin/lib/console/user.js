@@ -4,7 +4,6 @@ const uuid = require('uuid');
 const crypto = require('crypto');
 
 const openDB = require('../db');
-const libSession = require('./session');
 const libApplication = require('../application');
 
 
@@ -206,29 +205,6 @@ class User {
                       where id=$id`, {$secret: secret, $id: this.id});
 		await db.close();
 		return 'OK';
-	}
-
-
-	async getSessions() {
-		const sessions = [];
-
-		const db = await openDB();
-		const allSessionData = await db.all(`select id,
-                                                    user_id as userID,
-                                                    uuid,
-                                                    ip,
-                                                    ua,
-                                                    time
-                                             from console_sessions
-                                             where user_id=$id`, {$id: this.id});
-		await db.close();
-
-		for (const sessionData of allSessionData) {
-			const session = new libSession();
-			Object.assign(session, sessionData);
-			sessions.push(session);
-		}
-		return sessions;
 	}
 
 

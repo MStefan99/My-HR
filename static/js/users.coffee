@@ -52,11 +52,11 @@ update = ->
 
 			removeCell = document.createElement('td')
 			tableRow.appendChild(removeCell)
-			removeLink = document.createElement('a')
-			removeLink.href = 'javascript:'
+			removeLink = document.createElement('span')
+			removeLink.classList.add('clickable')
 			removeCell.appendChild(removeLink)
 			removeLink.innerHTML = 'Remove'
-			if user.username != 'admin'
+			if user.username isnt 'admin' and user.username isnt 'System'
 				removeLink.addEventListener('click', ->
 					if confirm("If you continue,
 							user \"#{user.username}\" will be deleted.

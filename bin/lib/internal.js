@@ -3,7 +3,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const openDB = require('./lib/db');
+const openDB = require('./db');
 
 const router = express.Router();
 

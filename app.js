@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const {applicationRouter} = require('./bin/user');
 const {consoleRouter} = require('./bin/console');
-const {internalRouter} = require('./bin/internal');
+const {internalRouter} = require('./bin/lib/internal');
 
 
 const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=604800';  // 1 week in seconds

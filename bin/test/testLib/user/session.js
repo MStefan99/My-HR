@@ -10,8 +10,6 @@ async function deleteSession(session) {
                       from sessions
                       where id=$id`, {$id: session.id});
 		await db.close();
-	} else {
-		throw new Error('No session!');
 	}
 }
 

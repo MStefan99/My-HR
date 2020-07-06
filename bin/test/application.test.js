@@ -81,16 +81,18 @@ describe('With test sessions and applications', () => {
 
 	test('Get all applications', async () => {
 		const applications = await libApplication.getAllApplications();
+
 		expect(applications).toContainEqual(application1);
 		expect(applications).toContainEqual(application2);
 
 		expect(await libApplication.getApplicationsByType('all'))
-			.toEqual(applications);
+			.toMatchObject(applications);
 	});
 
 
 	test('Get pending applications', async () => {
 		const applications = await libApplication.getApplicationsByType('pending');
+
 		expect(applications).toContainEqual(application1);
 		expect(applications).toContainEqual(application2);
 	});
@@ -106,9 +108,9 @@ describe('With test sessions and applications', () => {
 
 	test('Get application by file ', async () => {
 		expect(await libApplication.getApplicationByFilePath(filePath1))
-			.toMatchObject(application1);
+			.toEqual(application1);
 		expect(await libApplication.getApplicationByFilePath(filePath2))
-			.toMatchObject(application2);
+			.toEqual(application2);
 	});
 
 

@@ -83,6 +83,29 @@ class Session {
 	}
 
 
+	static async getUserSessions(user) {
+		const sessions = [];
+
+		const db = await openDB();
+		const allSessionData = await db.all(`select id,
+                                                    user_id as userID,
+                                                    uuid,
+                                                    ip,
+                                                    ua,
+                                                    time
+                                             from console_sessions
+                                             where user_id=$id`, {$id: user.id});
+		await db.close();
+
+		for (const sessionData of allSessionData) {
+			const session = new Session();
+			Object.assign(session, sessionData);
+			sessions.push(session);
+		}
+		return sessions;
+	}
+
+
 	async delete() {
 		const db = await openDB();
 		await db.run(`delete

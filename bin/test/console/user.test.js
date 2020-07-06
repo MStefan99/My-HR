@@ -2,7 +2,6 @@
 
 const libUser = require('../../lib/console/user');
 const libSession = require('../../lib/user/session');
-const libApplication = require('../../lib/application');
 
 const testLibUser = require('../testLib/console/user');
 const testLibSession = require('../testLib/user/session');
