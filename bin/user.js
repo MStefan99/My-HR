@@ -9,6 +9,7 @@ const sendMail = require('./lib/mail');
 
 const libSetup = require('./lib/user/setup');
 const middleware = require('./lib/user/middleware');
+const libFeedback = require('./lib/feedback');
 const libSession = require('./lib/user/session');
 const libApplication = require('./lib/application');
 
@@ -40,19 +41,52 @@ libSetup.init();
 
 router.get('/', (req, res) => {
 	res.set('Cache-control', publicCache);
-	res.render('user/register');
+	res.render('user/home');
+});
+
+router.get('/feedback', (req, res) => {
+	res.set('Cache-control', publicCache);
+	res.render('user/feedback');
 });
 
 
-router.post('/register', async (req, res) => {
-	const session = await libSession.createSession(req.body.username,
-		req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+router.post('/feedback', async (req, res) => {
+	if (!req.body.message) {
+		res.status(400).render('user/status', {
+			title: 'No message', info: 'You have submitted a feedback without a ' +
+				'message but empty feedbacks are not allowed. Please return and try again.'
+		});
+	} else {
+		await libFeedback.createFeedback(req.body.name,
+			req.body.email,
+			req.body.message);
+		res.render('user/status', {
+			title: 'Thank you', info: 'Thank you for your feedback! We will carefully ' +
+				'read it and improve things in the future!'
+		});
+	}
+});
 
-	await sendMail(session.email,
-		'Complete your application for Mine Eclipse',
-		'registered.html',
-		{uuid: session.uuid});
-	res.redirect(303, '/registered/');
+
+router.use(middleware.redirectIfApplicationPeriodEnded);
+
+
+router.post('/register', async (req, res) => {
+	if (!req.body.username) {
+		res.status(400).render('user/status', {
+			title: 'No email', info: 'You have submitted an empty email address, ' +
+				'please return and try again.'
+		});
+	} else {
+		const session = await libSession.createSession(req.body.username,
+			req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+
+		await sendMail(session.email,
+			'Complete your application for Mine Eclipse',
+			'registered.html',
+			{uuid: session.uuid});
+		res.redirect(303, '/registered/');
+	}
 });
 
 
@@ -71,19 +105,32 @@ router.use(middleware.redirectIfExpired);
 
 
 router.post('/join', upload.single('cv'), async (req, res) => {
-	await libApplication.createApplication(req.session, {
-		firstName: req.body.firstName,
-		lastName: req.body.lastName,
-		backupEmail: req.body.backupEmail,
-		phone: req.body.phone,
-		backupPhone: req.body.backupPhone,
-		team: req.body.team,
-		links: req.body.links,
-		freeForm: req.body.freeForm,
-		fileName: req.file.originalname,
-		filePath: req.file.filename
-	});
-	res.redirect(303, '/success/');
+	if (!req.body.firstName ||
+		!req.body.lastName ||
+		!req.body.email ||
+		!req.body.backupEmail ||
+		!req.body.phone ||
+		!req.body.team ||
+		!req.file) {
+		res.status(400).render('user/status', {
+			title: 'Missing information', info: 'Some required fields in your ' +
+				'form are missing, please return and try again.'
+		});
+	} else {
+		await libApplication.createApplication(req.session, {
+			firstName: req.body.firstName,
+			lastName: req.body.lastName,
+			backupEmail: req.body.backupEmail,
+			phone: req.body.phone,
+			backupPhone: req.body.backupPhone,
+			team: req.body.team,
+			links: req.body.links,
+			freeForm: req.body.freeForm,
+			fileName: req.file.originalname,
+			filePath: req.file.filename
+		});
+		res.redirect(303, '/success/');
+	}
 });
 
 

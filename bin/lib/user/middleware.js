@@ -5,6 +5,8 @@ const libAuth = require('./auth');
 
 const {userCookieOptions} = require('../cookie');
 
+const applicationPeriodEnd = 1600473600000;
+
 
 async function getSession(req, res, next) {
 	const uuid = req.query.sessionID || req.cookies.SID;
@@ -64,8 +66,21 @@ function redirectIfExpired(req, res, next) {
 }
 
 
+function redirectIfApplicationPeriodEnded(req, res, next) {
+	if (Date.now() > applicationPeriodEnd) {
+		res.render('user/status', {
+			title: 'Application period is over', info: 'Unfortunately, application period is over. ' +
+				'Thank you for your interest in Mine Eclipse!'
+		});
+	} else {
+		next();
+	}
+}
+
+
 module.exports = {
 	getSession: getSession,
 	redirectIfExpired: redirectIfExpired,
-	redirectIfNotAuthorized: redirectIfNotAuthorized
+	redirectIfNotAuthorized: redirectIfNotAuthorized,
+	redirectIfApplicationPeriodEnded: redirectIfApplicationPeriodEnded
 };

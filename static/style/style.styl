@@ -3,7 +3,7 @@ healthy-red = #c00
 kinda-gray = #888
 background-color = #28282f
 background-color-dark = #232329
-overlay-color = #00000088
+panel-color = #00000088
 
 
 html
@@ -19,6 +19,9 @@ html
 		margin 0
 		background background-color
 
+		.hidden
+			display none !important
+
 		a
 			font-weight bold
 			color white
@@ -33,11 +36,15 @@ html
 			top 0
 			left 0
 			right 0
-			background overlay-color
+			background panel-color
 			display flex
 			flex-flow row wrap
 			align-items center
 			justify-content space-between
+			z-index 10
+
+			@media screen and (min-width 768px)
+				background none
 
 			a
 				display inherit
@@ -57,10 +64,14 @@ html
 			.center
 				margin 0 auto
 
-			#splash-wrapper
+			#splash-container
 				height 100vh
 				width 80vw
 				margin 15vh auto 0 auto
+				text-align center
+
+				.invisible
+					opacity 0
 
 				#splash
 					margin 0 auto
@@ -74,27 +85,22 @@ html
 						display inline-block
 						height 4em
 						top 1em
+						z-index 1
+						filter drop-shadow(0 0 10vh theme-color)
 						transition transform cubic-bezier(0, 0, 0, 1) 1.5s,
 						opacity linear .5s .5s
-						z-index 1
 
-						&.hidden
+						&.invisible
 							transform translateX(400%) rotate(270deg)
-							opacity 0
 
 					.logo-text
 						white-space nowrap
 						font-size 2rem
+						display inline-block
 						transition transform cubic-bezier(0, 0, 0, 1) 1.7s .8s,
 						opacity linear .5s 1.2s
-						display inline-block
 
-						&#text-right
-							z-index 1
-
-						&.hidden
-							opacity 0
-
+						&.invisible
 							&#text-left
 								transform translateX(100%)
 
@@ -123,10 +129,7 @@ html
 							height 12em
 
 				#welcome-container
-					transition opacity linear .5s 1.6s
-
-					&.hidden
-						opacity 0
+					transition opacity linear .5s
 
 					h1, h2, a
 						text-align center
@@ -241,7 +244,7 @@ html
 								color kinda-gray
 
 					thead tr
-						background overlay-color
+						background panel-color-opaque
 
 					@media screen and (max-width 768px)
 						td, tr, th

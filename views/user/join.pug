@@ -25,7 +25,7 @@ html(lang='en')
 			div#content-container
 				h1 Welcome to Mine Eclipse!
 				//- Include video here
-				p(style='color: #c00') Video will be here
+				//- Video will be here
 				h2 Join us today by filling the form below!
 				form(action='/join/' method='post' enctype='multipart/form-data')
 					label.required(for='first-name') First name
@@ -38,7 +38,7 @@ html(lang='en')
 					input#email(type='email' name='email' value=email
 						title='Your Metropolia email, filled in automatically' readonly)
 					label.required(for='backup-email') Secondary email
-					input#backup-email(type='email' name='backupEmail' placeholder='john.doe@gmail.com'
+					input#backup-email(type='email' name='backupEmail' placeholder='john.doe@example.com'
 						title='Your non-Metropolia email' maxlength=100 required)
 					label.required(for='phone') Main phone number
 					input#phone(type='tel' name='phone'
@@ -80,7 +80,7 @@ html(lang='en')
 					input#cv(type='file' name='cv' required)
 					input#submit(type='submit' value='Join!' title='Send!')
 					label.label-info.required-info * Required fields
-					script(async type='text/javascript' src='/js/join.js')
+					script(async type='text/javascript' src='/js/user/join.js')
 
 		footer
 			include footer

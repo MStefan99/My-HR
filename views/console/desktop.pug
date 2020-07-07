@@ -20,13 +20,13 @@ html(lang='en')
 
 		div#settings-panel.hidden
 			div.icon-group
-				a(href='/console/logout/' title='Sign out')
+				a.button(href='/console/logout/' title='Sign out')
 					img.icon(src='/img/exit.svg')
-				a(href='/console/exit/' title='Sign out everywhere')
+				a.button(href='/console/exit/' title='Sign out everywhere')
 					img.icon(src='/img/close.svg')
-				a(href='javascript:' title='Settings')#button-settings
+				div.button(title='Settings')#button-settings
 					img.icon(src='/img/settings.svg')
-				a(href='javascript:' title='Help')#button-help
+				div.button(title='Help')#button-help
 					img.icon(src='/img/help.svg')
 			input(type='checkbox')#cb-menu
 			label(for='cb-menu') Hide menu bar automatically
@@ -59,4 +59,4 @@ html(lang='en')
 					title='Rejected applications')
 					img(src='/img/cross.svg')
 				div#dock-separator
-		script(async type='text/javascript' src='/js/desktop.js')
+		script(async type='text/javascript' src='/js/console/desktop.js')

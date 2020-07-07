@@ -10,16 +10,16 @@ html(lang='en')
 			include header
 
 		main
-			div#splash-wrapper
+			div#splash-container
 				div#splash
-					span#text-left.logo-text.hidden Mine e
-					img#logo.hidden(src='/img/me-logo.svg' alt='Mine Eclipse logo')
-					span#text-right.logo-text.hidden lipse
-				div#welcome-container.hidden
+					span#text-left.logo-text.invisible Mine e
+					img#logo.invisible(src='/img/me-logo.svg' alt='Mine Eclipse logo')
+					span#text-right.logo-text.invisible lipse
+				div#welcome-container.invisible
 					h1 Apply now!
 					h2 Start your journey with Mine Eclipse today!
 					a(href='#register') Click here to get started
-			div#content-container
+			div#content-container.hidden
 				h1#register We're happy to see you!
 				h2 Just a few steps first...
 				p We need to make sure you are a Metropolia student.
@@ -31,7 +31,8 @@ html(lang='en')
 					input(type='submit')
 					label.label-info.required-info * Required fields
 				a(href='/join') Already registered? Click here!
-			script(async type='text/javascript' src='/js/main.js')
+				p#splash-text.hidden
+			script(async type='text/javascript' src='/js/user/home.js')
 
 		footer
 			include footer

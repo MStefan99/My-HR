@@ -4,6 +4,7 @@
       <env name="NO_CACHE" value="true" />
       <env name="NO_HTTPS" value="true" />
       <env name="NO_MAIL" value="true" />
+      <env name="USER_AUTH" value="true" />
     </envs>
     <method v="2" />
   </configuration>

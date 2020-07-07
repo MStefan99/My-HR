@@ -42,7 +42,7 @@ app.use(applicationRouter);
 
 if (process.env.NO_HTTPS) {
 	http.createServer(app).listen(80);
-	console.log('Listening on HTTP');
+	console.log('Listening on HTTP, port 80');
 } else {
 	const serverOptions = {
 		hostname: 'apply.mineeclipse.com',
@@ -53,10 +53,10 @@ if (process.env.NO_HTTPS) {
 	};
 
 	https.createServer(serverOptions, app).listen(443);
-	console.log('Listening on HTTPS');
+	console.log('Listening on HTTPS, port 443');
 	http.createServer((req, res) => {
 		res.writeHead(301, {"Location": "https://" + req.headers['host'] + req.url});
 		res.end();
 	}).listen(80);
-	console.log('HTTP redirect enabled');
+	console.log('HTTP redirect enabled, port 80 -> 443');
 }

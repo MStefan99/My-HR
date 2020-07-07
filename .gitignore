@@ -199,15 +199,13 @@ fabric.properties
 # End of https://www.gitignore.io/api/node,webstorm
 
 
-database/*.sqlite
-static/style/*.css
-static/js/*.js
-static/js/*.map
-setup/ssl
-ssl
+database/**/*.sqlite
+static/style/**/*.css
+static/js/**/*.js
+static/js/**/*.map
 uploads
 package-lock.json
 
 
 # Exceptions
-!static/js/desktop.js
+!static/js/console/desktop.js
