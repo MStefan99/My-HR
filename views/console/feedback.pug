@@ -1,0 +1,24 @@
+doctype html
+
+html(lang='en')
+	head
+		title Applications - My HR
+		include head
+
+	body
+		header
+			include header-full
+
+		main
+			h1 User feedback
+			table
+				thead
+					tr
+						th Name
+						th Email
+						th Message
+				tbody#feedback-table
+		script(async type='text/javascript', src='/js/console/feedback.js')
+
+		footer
+			include footer

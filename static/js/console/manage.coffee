@@ -54,9 +54,9 @@ update = ->
 							If you choose to continue, we will delete all data associated with
 							this application and will no longer be able to offer you a
 							Mine Eclipse position. Do you still wish to continue?')
-						res = await fetch('/applications/' + application.id, {
+						res = await fetch('/applications/' + application.id,
 							method: 'delete'
-						})
+						)
 						if res.ok
 							update()
 							alert('Your application was successfully deleted')

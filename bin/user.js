@@ -85,17 +85,11 @@ router.post('/register', async (req, res) => {
 			'Complete your application for Mine Eclipse',
 			'registered.html',
 			{uuid: session.uuid});
-		res.redirect(303, '/registered/');
+		res.render('user/status', {
+			title: 'Check your email', info: 'We\'ve sent you an email with your link! ' +
+				'Please follow it to complete your application.'
+		});
 	}
-});
-
-
-router.get('/registered', (req, res) => {
-	res.set('Cache-control', publicCache);
-	res.render('user/status', {
-		title: 'Check your email', info: 'We\'ve sent you an email with your link! ' +
-			'Please follow it to complete your application.'
-	});
 });
 
 
@@ -129,17 +123,11 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 			fileName: req.file.originalname,
 			filePath: req.file.filename
 		});
-		res.redirect(303, '/success/');
+		res.render('user/status', {
+			title: 'Thank you',
+			info: 'We have received your application and will contact you as soon as possible.'
+		});
 	}
-});
-
-
-router.get('/success', async (req, res) => {
-	res.set('Cache-control', publicCache);
-	res.render('user/status', {
-		title: 'Thank you',
-		info: 'We have received your application and will contact you as soon as possible.'
-	});
 });
 
 

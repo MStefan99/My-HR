@@ -19,6 +19,8 @@ linksElement = document.querySelector('#links')
 freeFormElement = document.querySelector('#free-form')
 fileLinkElement = document.querySelector('#file-link')
 
+application = {}
+
 
 addEventListener('load', ->
 	if not navigator.clipboard?
@@ -87,17 +89,27 @@ updateStar = (starred) ->
 
 
 star = ->
-	res = await fetch("/console/stars/?applicationID=#{application.id}", {
+	res = await fetch('/console/stars/',
 		method: 'post'
-	})
+		headers:
+			'Content-Type': 'application/json'
+		body: JSON.stringify(
+			applicationID: application.id
+		)
+	)
 	if res.ok
 		updateStar(true)
 
 
 unstar = ->
-	res = await fetch("/console/stars/?applicationID=#{application.id}", {
+	res = await fetch('/console/stars/',
 		method: 'delete'
-	})
+		headers:
+			'Content-Type': 'application/json'
+		body: JSON.stringify(
+			applicationID: application.id
+		)
+	)
 	if res.ok
 		updateStar(false)
 
@@ -120,9 +132,14 @@ accept = ->
 			\nIf you are still unsure about this application, it is recommended that you star it and
 			return later for a final decision.
 			\n\nAre you ABSOLUTELY sure you want to continue?")
-		res = await fetch('/console/applications/accept/?applicationID=' + application.id, {
+		res = await fetch('/console/applications/accept/',
 			method: 'post'
-		})
+			headers:
+				'Content-Type': 'application/json'
+			body: JSON.stringify(
+				applicationID: application.id
+			)
+		)
 		if not res.ok
 			switch await res.text()
 				when 'NO_APPLICATION'
@@ -149,9 +166,14 @@ reject = ->
 			\nIf you are still unsure about this application, it is recommended that you leave this
 			application for a final decision.
 			\n\nAre you ABSOLUTELY sure you want to continue?")
-		res = await fetch('/console/applications/reject/?applicationID=' + application.id, {
+		res = await fetch('/console/applications/reject/',
 			method: 'post'
-		})
+			headers:
+				'Content-Type': 'application/json'
+			body: JSON.stringify(
+				applicationID: application.id
+			)
+		)
 		if not res.ok
 			switch await res.text()
 				when 'NO_APPLICATION'

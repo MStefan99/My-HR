@@ -122,12 +122,14 @@ html
 
 		main
 			height 100vh
+			padding 5% 2%
+			box-sizing border-box
 
 			.app-window
 				position absolute
 				left 50px
 				top 50px
-				width 750px
+				width 780px
 				height 500px
 				min-width 300px
 				min-height 100px
@@ -224,6 +226,35 @@ html
 						border none
 						user-select auto
 
+		.shortcut
+			width 8vh
+			height 8vh
+			margin 10px 10px
+			flex-shrink 0
+			background var(--icon-color)
+			border-radius 30%
+			cursor pointer
+			display flex
+			justify-content center
+			align-items center
+			box-shadow 0 .2vh .5vh var(--shadow-color)
+			transition filter .1s ease-in,
+			background-color .1s ease-in,
+			transform .4s cubic-bezier(0, 0.5, 0.5, 1.5)
+
+			&:hover
+				filter opacity(.8) brightness(.8)
+
+			&:active
+				transform scale(.9)
+
+			&.hidden
+				transform translateY(120%)
+
+			img
+				width 5vh
+				filter drop-shadow(0 .3vh .2vh var(--shadow-color))
+
 		footer
 			position absolute
 			bottom 0
@@ -268,32 +299,3 @@ html
 					border-radius 2px
 					margin 0 2em
 					box-shadow 0 .2vh .5vh var(--shadow-color)
-
-				.dock-shortcut
-					width 8vh
-					height 8vh
-					margin 10px 10px
-					flex-shrink 0
-					background var(--icon-color)
-					border-radius 30%
-					cursor pointer
-					display flex
-					justify-content center
-					align-items center
-					box-shadow 0 .2vh .5vh var(--shadow-color)
-					transition filter .1s ease-in,
-					background-color .1s ease-in,
-					transform .4s cubic-bezier(0, 0.5, 0.5, 1.5)
-
-					&:hover
-						filter opacity(.8) brightness(.8)
-
-					&:active
-						transform scale(.9)
-
-					&.hidden
-						transform translateY(120%)
-
-					img
-						width 5vh
-						filter drop-shadow(0 .3vh .2vh var(--shadow-color))

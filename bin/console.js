@@ -7,10 +7,12 @@ const path = require('path');
 
 const sendMail = require('./lib/mail');
 const middleware = require('./lib/console/middleware');
+const libFeedback = require('./lib/feedback');
 const libApplication = require('./lib/application');
 const libSetup = require('./lib/console/setup');
 const libSession = require('./lib/console/session');
 const libUser = require('./lib/console/user');
+const libNote = require('./lib/console/note');
 const lib2FA = require('./lib/console/2fa');
 const {consoleCookieOptions} = require('./lib/cookie');
 
@@ -30,6 +32,7 @@ router.use('/favicon.ico', express.static(path.join(__dirname, '..', 'static', '
 	}
 }));
 router.use(bodyParser.urlencoded({extended: true}));
+router.use(bodyParser.json());
 router.use(cookieParser());
 router.use(middleware.getSession);
 router.use(middleware.getUser);
@@ -209,6 +212,18 @@ router.get('/settings', (req, res) => {
 });
 
 
+router.get('/feedback', (req, res) => {
+	res.set('Cache-control', privateCache);
+	res.render('console/feedback');
+});
+
+
+router.get('/notes', (req, res) => {
+	res.set('Cache-control', privateCache);
+	res.render('console/notes');
+});
+
+
 router.get('/versions', (req, res) => {
 	res.set('Cache-control', publicCache);
 	res.render('console/versions');
@@ -252,8 +267,43 @@ router.get('/get-application/:applicationID', async (req, res) => {
 });
 
 
+router.get('/get-feedback', async (req, res) => {
+	const feedback = await libFeedback.getAllFeedback();
+
+	res.json(feedback);
+});
+
+
+router.get('/get-notes', async (req, res) => {
+	let notes = [];
+
+	if (!req.query.applicationID) {
+		notes = await libNote.getCommonNotes(req.user);
+	} else {
+		const application = await libApplication
+			.getApplicationByID(req.query.applicationID);
+
+		if (application !== 'NO_APPLICATION') {
+			notes = await libNote.getApplicationNotes(req.user, application);
+		}
+	}
+
+	for (const note of notes) {
+		//TODO: optimize username fetching
+		const author = await libUser.getUserByID(note.userID);
+
+		note.my = note.userID === req.user.id;
+		note.author = author.username;
+		delete note.userID;
+		delete note.applicationID;
+	}
+
+	res.json(notes);
+});
+
+
 router.post('/stars', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.query.applicationID);
+	const application = await libApplication.getApplicationByID(req.body.applicationID);
 
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
@@ -271,7 +321,7 @@ router.post('/stars', async (req, res) => {
 
 
 router.delete('/stars', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.query.applicationID);
+	const application = await libApplication.getApplicationByID(req.body.applicationID);
 
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
@@ -288,8 +338,52 @@ router.delete('/stars', async (req, res) => {
 });
 
 
+router.post('/notes', async (req, res) => {
+	let application = null;
+	if (req.body.applicationID) {
+		application = libApplication
+			.getApplicationByID(req.body.applicationID);
+
+		if (application === 'NO_APPLICATION') {
+			application = null;
+		}
+	}
+
+	const note = await libNote.createNote(req.user,
+		application,
+		req.body.shared,
+		req.body.message);
+	switch (note) {
+		case 'NO_MESSAGE':
+			res.status(400).send('NO_MESSAGE');
+			break;
+		default:
+			delete note.userID;
+			delete note.applicationID;
+
+			note.my = true;
+			note.author = req.user.username;
+
+			res.json(note);
+			break;
+	}
+});
+
+
+router.delete('/notes', async (req, res) => {
+	const note = await libNote.getNoteByID(req.body.id);
+
+	if (note.userID !== req.user.id) {
+		res.status(403).send('NOT_ALLOWED');
+	} else {
+		await note.delete();
+		res.send('OK');
+	}
+});
+
+
 router.post('/applications/accept', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.query.applicationID);
+	const application = await libApplication.getApplicationByID(req.body.applicationID);
 
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
@@ -315,7 +409,7 @@ router.post('/applications/accept', async (req, res) => {
 
 
 router.post('/applications/reject', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.query.applicationID);
+	const application = await libApplication.getApplicationByID(req.body.applicationID);
 
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
@@ -340,7 +434,7 @@ router.post('/applications/reject', async (req, res) => {
 });
 
 
-router.get('/sessions', async (req, res) => {
+router.get('/get-sessions', async (req, res) => {
 	const sessions = await libSession.getUserSessions(req.user);
 
 	res.json(sessions);
@@ -403,7 +497,7 @@ router.get('/users', (req, res) => {
 
 
 router.delete('/users', async (req, res) => {
-	const user = await libUser.getUserByUsername(req.query.username);
+	const user = await libUser.getUserByUsername(req.body.username);
 
 	switch (await user.delete()) {
 		case 'CANNOT_DELETE_ADMIN':
@@ -417,13 +511,19 @@ router.delete('/users', async (req, res) => {
 
 
 router.post('/users', async (req, res) => {
-	switch (await libUser.createUser(req.query.username,
-		req.query.admin === 'true')) {
+	const user = await libUser.createUser(req.body.username,
+		!!req.body.admin);
+	switch (user) {
 		case 'DUPLICATE_USERNAME':
 			res.status(400).send('DUPLICATE_USERNAME');
 			break;
 		default:
-			res.send('OK');
+			user.otpSetup = !!user.secret;
+			delete user.id;
+			delete user.passwordHash;
+			delete user.secret;
+
+			res.json(user);
 			break;
 	}
 });

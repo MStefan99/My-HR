@@ -12,16 +12,28 @@ html(lang='en')
 		main
 			h1 My HR
 			div.section
-				h2
-					a(href='/console/applications/') All applications
-				h2
-					a(href='/console/applications/?type=stars') My stars
-				h2
-					a(href='/console/applications/?type=pending') Pending applications
-				h2
-					a(href='/console/applications/?type=accepted') Accepted applications
-				h2
-					a(href='/console/applications/?type=rejected') Rejected applications
+				h2 Applications
+				div.section
+					h3
+						a(href='/console/applications/') All applications
+					h3
+						a(href='/console/applications/?type=stars') My stars
+					h3
+						a(href='/console/applications/?type=pending') Pending applications
+					h3
+						a(href='/console/applications/?type=accepted') Accepted applications
+					h3
+						a(href='/console/applications/?type=rejected') Rejected applications
+				h2 Other tools
+				div.section
+					h3
+						a(href='/console/feedback/') User feedback
+					h3
+						a(href='/console/notes/') Notes
+					h3
+						a(href='/console/desktop/') Desktop
+					h3
+						a(href='/console/settings/') Settings
 
 		footer
 			include footer

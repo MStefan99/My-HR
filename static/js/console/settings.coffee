@@ -27,7 +27,7 @@ addEventListener('load', ->
 		lightRadio.checked = true
 
 
-	res = await fetch('/console/sessions/')
+	res = await fetch('/console/get-sessions/')
 	sessions = await res.json();
 
 	for session in sessions

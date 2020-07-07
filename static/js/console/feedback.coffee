@@ -1,0 +1,32 @@
+'use strict';
+
+table = document.querySelector('#feedback-table')
+
+
+remove = (element) ->
+	element.parentNode.removeChild(element)
+
+
+addEventListener('load', ->
+	res = await fetch('/console/get-feedback/');
+
+	feedbacks = await res.json();
+
+	for feedback in feedbacks
+		tableRow = document.createElement('tr')
+		table.appendChild(tableRow)
+
+		nameCell = document.createElement('td')
+		nameCell.innerHTML = feedback.name || '[Not provided]'
+		tableRow.appendChild(nameCell)
+
+		emailCell = document.createElement('td')
+		emailCell.innerHTML = feedback.email || '[Not provided]'
+		tableRow.appendChild(emailCell)
+
+		messageCell = document.createElement('td')
+		messageCell.innerHTML = feedback.message
+		tableRow.appendChild(messageCell)
+)
+
+

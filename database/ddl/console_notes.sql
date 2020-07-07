@@ -11,7 +11,8 @@ create table console_notes (
 			references applications
 			on update cascade on delete cascade,
 	shared         integer default 1 not null,
-	message        text    not null
+	message        text    not null,
+	time           real    not null
 );
 
 

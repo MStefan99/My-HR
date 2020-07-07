@@ -4,7 +4,7 @@ const header = document.querySelector('header');
 const main = document.querySelector('main');
 const body = document.querySelector('body');
 const dock = document.querySelector('#dock');
-const shortcuts = document.querySelectorAll('footer .dock-shortcut');
+const shortcuts = document.querySelectorAll('footer .shortcut');
 
 const settingsIcon = document.querySelector('#settings-icon');
 const settingsPanel = document.querySelector('#settings-panel');
@@ -321,6 +321,10 @@ function modifyAppStyle(iframeDocument) {
 
 // Setting event listeners for shortcuts
 shortcuts.forEach((shortcut) => {
+	const image = document.createElement('img');
+	image.src = shortcut.getAttribute('data-img');
+	shortcut.appendChild(image);
+
 	shortcut.addEventListener('click', () => {
 		const src = shortcut.getAttribute('data-src');
 		const name = shortcut.getAttribute('data-name');

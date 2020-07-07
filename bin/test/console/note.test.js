@@ -119,6 +119,26 @@ describe('With test user, session, application and notes', () => {
 				shared: true,
 				message: 'test note'
 			});
+		
+		expect(commonNote.id).toBeDefined();
+		expect(commonSharedNote.id).toBeDefined();
+		expect(applicationNote.id).toBeDefined();
+		expect(applicationSharedNote.id).toBeDefined();
+		
+		expect(commonNote.time).toBeDefined();
+		expect(commonSharedNote.time).toBeDefined();
+		expect(applicationNote.time).toBeDefined();
+		expect(applicationSharedNote.time).toBeDefined();
+	});
+
+
+	test('Add note without message', async () => {
+		expect(await libNote
+			.createNote(user1, null, false, null))
+			.toBe('NO_MESSAGE');
+		expect(await libNote
+			.createNote(user1, application1, false, null))
+			.toBe('NO_MESSAGE');
 	});
 
 

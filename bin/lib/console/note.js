@@ -18,19 +18,29 @@ class Note {
 		note.applicationID = application ? application.id : null;
 		note.shared = shared;
 		note.message = message;
+		note.time = Date.now();
 
-		const db = await openDB();
-		await db.run(`insert into console_notes(user_id, application_id, shared, message)
-                      values ($uid, $aid, $shared, $message)`, {
-			$uid: note.userID,
-			$aid: note.applicationID,
-			$shared: note.shared ? 1 : 0,
-			$message: note.message
-		});
-		note.id = (await db.get(`select last_insert_rowid() as id`)).id;
-		await db.close();
+		if (!message) {
+			return 'NO_MESSAGE'
+		} else {
+			const db = await openDB();
+			await db.run(`insert into console_notes(user_id,
+                                                    application_id,
+                                                    shared,
+                                                    message,
+                                                    time)
+                          values ($uid, $aid, $shared, $message, $time)`, {
+				$uid: note.userID,
+				$aid: note.applicationID,
+				$shared: note.shared ? 1 : 0,
+				$message: note.message,
+				$time: note.time
+			});
+			note.id = (await db.get(`select last_insert_rowid() as id`)).id;
+			await db.close();
 
-		return note;
+			return note;
+		}
 	}
 
 
@@ -42,7 +52,8 @@ class Note {
                                               user_id        as userID,
                                               application_id as applicationID,
                                               shared,
-                                              message
+                                              message,
+                                              time
                                        from console_notes
                                        where id=$id`, {$id: noteID});
 		await db.close();
@@ -65,7 +76,8 @@ class Note {
                                                  user_id        as userID,
                                                  application_id as applicationID,
                                                  shared,
-                                                 message
+                                                 message,
+                                                 time
                                           from console_notes
                                           where application_id is null
                                             and (shared=1 or user_id=$uid)`,
@@ -91,7 +103,8 @@ class Note {
                                                  user_id        as userID,
                                                  application_id as applicationID,
                                                  shared,
-                                                 message
+                                                 message,
+                                                 time
                                           from console_notes
                                           where application_id=$aid
                                             and (shared=1 or user_id=$uid)`,
