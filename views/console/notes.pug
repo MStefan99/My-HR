@@ -10,7 +10,7 @@ html(lang='en')
 			include header-full
 
 		main
-			h1#note-title Notes
+			h1 Notes
 			div.section
 				div#note-container
 				div#filter-all.button.pressed All notes
@@ -22,7 +22,7 @@ html(lang='en')
 					div#shared-button.button.red Public
 					textarea#note-textarea(title='Your note here'
 					placeholder='What would you like to share?')
-					div#note-submit.button Send
+					div#note-submit.button.disabled Send
 		script(async type='text/javascript', src='/js/console/notes.js')
 
 		footer

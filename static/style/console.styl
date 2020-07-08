@@ -16,6 +16,8 @@ html
 		--secondary-color #21dea9
 		--background-color #fff
 		--simply-red #a00
+		--boring-red #ff8080
+		--not-very-green #99ec74
 		--light #fff
 		--dark #000
 		--light-gray #eee
@@ -28,13 +30,14 @@ html
 			--primary-color #973c00
 			--secondary-color #780027
 			--background-color #393b3d
+			--boring-red #793f3f
+			--not-very-green #35532a
 			--light #222
 			--dark #ccc
 			--light-gray #444
 			--just-gray #999
 			--pretty-gray #777
 			--very-gray #111
-			--shadow-color #00000022
 
 			header, footer
 				color var(--dark)
@@ -57,6 +60,7 @@ html
 
 		.clickable
 			cursor pointer
+			user-select none
 
 			&:hover
 				color var(--pretty-gray)
@@ -309,8 +313,11 @@ html
 							display block
 
 				&#version-table
-					p:before
+					h3:before
 						content: '» '
+
+					p:before
+						content: '› '
 
 					@media screen and (max-width 768px)
 						tbody tr td:first-child
@@ -344,7 +351,6 @@ html
 
 			#note-editor
 				display block
-				width 100%
 				margin 1em 0
 				padding .5em
 				background var(--light)
@@ -362,6 +368,8 @@ html
 					display block
 					width 100%
 					height 3em
+					color var(--dark)
+					background var(--light)
 					resize vertical
 					font-family sans-serif
 
@@ -395,11 +403,14 @@ html
 					cursor not-allowed
 					box-shadow none
 
+					&:active
+						pointer-events none
+
 				&.green
-					background #99ec74
+					background var(--not-very-green)
 
 				&.red
-					background #ff8080
+					background var(--boring-red)
 
 				.text
 					margin 0 .25em

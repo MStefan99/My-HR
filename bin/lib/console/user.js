@@ -300,6 +300,7 @@ class User {
 
 
 	async deleteAllSessions() {
+		//TODO: move to session library (important)
 		const db = await openDB();
 		await db.run(`delete
                       from console_sessions

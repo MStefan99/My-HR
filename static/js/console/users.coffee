@@ -48,6 +48,9 @@ addUser = (user) ->
 					body: JSON.stringify(
 						username: user.username
 					)
+				).catch(->
+					alert('Could not remove the user.
+						Please check your internet connection.')
 				)
 				if not res.ok
 					if await res.text() is 'CANNOT_DELETE_ADMIN'
@@ -61,22 +64,15 @@ addUser = (user) ->
 		)
 
 
-update = ->
-	tableRows = document.querySelectorAll('#users-table tr')
-
-	if tableRows?
-		for row in tableRows
-			remove(row)
-
-	res = await fetch('/console/get-users/')
+addEventListener('load', ->
+	res = await fetch('/console/get-users/').catch(->
+		alert('Could not download the user list.
+			Please check your internet connection.')
+	)
 	users = await res.json()
 
 	for user in users
 		addUser(user)
-
-
-addEventListener('load', ->
-	update()
 )
 
 
@@ -92,7 +88,9 @@ submitButton.addEventListener('click', ->
 			username: username
 			admin: admin
 		)
-	);
+	).catch(->
+		alert('Could not add the user. Please check your internet connection.')
+	)
 
 	if not res.ok
 		if await res.text() is 'DUPLICATE_USERNAME'

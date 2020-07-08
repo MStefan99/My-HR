@@ -64,7 +64,21 @@ html(lang='en')
 					p.section#free-form
 					span.label Download CV:
 					a#file-link
+				h2 Notes
+				div.section
+					div#note-container
+					div#filter-all.button.pressed All notes
+					div#filter-shared.button Public notes
+					div#filter-private.button Private notes
+					div#note-editor
+						h3 Add a note
+						div#private-button.button.green.pressed Private
+						div#shared-button.button.red Public
+						textarea#note-textarea(title='Your note here'
+							placeholder='What would you like to share?')
+						div#note-submit.button.disabled Send
 		script(async type='text/javascript' src='/js/console/application.js')
+		script(async type='text/javascript', src='/js/console/notes.js')
 
 		footer
 			include footer

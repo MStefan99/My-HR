@@ -8,9 +8,10 @@ remove = (element) ->
 
 
 addEventListener('load', ->
-	res = await fetch('/console/get-feedback/');
-
-	feedbacks = await res.json();
+	res = await fetch('/console/get-feedback/').catch(->
+		alert('Could not download feedback. Please check your internet connection.')
+	)
+	feedbacks = await res.json()
 
 	for feedback in feedbacks
 		tableRow = document.createElement('tr')

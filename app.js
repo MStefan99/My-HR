@@ -21,6 +21,7 @@ const cacheOptions = {
 };
 
 
+app.set('x-powered-by', false);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use((req, res, next) => {
@@ -29,6 +30,9 @@ app.use((req, res, next) => {
 	res.set('Content-Security-Policy', 'default-src \'self\'; img-src \'self\' https://*.googleapis.com');
 	res.set('X-Content-Type-Options', 'nosniff');
 	res.set('X-Frame-Options', 'SAMEORIGIN');
+	if (!process.env.NO_HTTPS) {
+		res.set('Strict-Transport-Security', 'max-age=' + 60 * 60 * 24 * 365);
+	}
 	next();
 });
 app.use('/style', express.static(path.join(__dirname, 'static', 'style'), cacheOptions));

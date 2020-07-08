@@ -27,7 +27,9 @@ addEventListener('load', ->
 		shareButton.classList.add('hidden');
 
 	params = new URLSearchParams(window.location.search)
-	res = await fetch('/console/get-application/' + params.get('id'))
+	res = await fetch('/console/get-application/?applicationID=' + params.get('id')).catch(->
+		alert('Could not download application data. Please check your internet connection.')
+	)
 
 	if not res.ok
 		alert('An application was not found. It may have been removed or the URL is wrong.')
@@ -96,6 +98,8 @@ star = ->
 		body: JSON.stringify(
 			applicationID: application.id
 		)
+	).catch(->
+		alert('Could not star the application. Please check your internet connection.')
 	)
 	if res.ok
 		updateStar(true)
@@ -109,6 +113,8 @@ unstar = ->
 		body: JSON.stringify(
 			applicationID: application.id
 		)
+	).catch(->
+		alert('Could not unstar the application. Please check your internet connection.')
 	)
 	if res.ok
 		updateStar(false)
@@ -139,6 +145,8 @@ accept = ->
 			body: JSON.stringify(
 				applicationID: application.id
 			)
+		).catch(->
+			alert('Could not accept the application. Please check your internet connection.')
 		)
 		if not res.ok
 			switch await res.text()
@@ -173,6 +181,8 @@ reject = ->
 			body: JSON.stringify(
 				applicationID: application.id
 			)
+		).catch(->
+			alert('Could not reject the application. Please check your internet connection.')
 		)
 		if not res.ok
 			switch await res.text()

@@ -1,6 +1,5 @@
 'use strict';
 
-titleElement = document.querySelector('#note-title')
 noteContainer = document.querySelector('#note-container')
 privateButton = document.querySelector('#private-button')
 sharedButton = document.querySelector('#shared-button')
@@ -13,6 +12,7 @@ filterAllButton = document.querySelector('#filter-all')
 
 shared = false
 filterType = 'all'
+applicationID = null
 
 
 remove = (element) ->
@@ -41,19 +41,21 @@ addNote = (note) ->
 		noteDeleteButton = document.createElement('span')
 		noteDeleteButton.classList.add('button')
 		noteDeleteButton.innerHTML = 'Delete'
-		noteDeleteButton.addEventListener('click',->
-			res = await fetch('/console/notes/',
-				method: 'delete',
-				headers:
-					'Content-Type': 'application/json',
-				body: JSON.stringify(
-					id: note.id
+		noteDeleteButton.addEventListener('click', ->
+			if confirm("Are you sure you want to delete the following note?
+					\n\n\"#{note.message}\"")
+				res = await fetch('/console/notes/',
+					method: 'delete',
+					headers:
+						'Content-Type': 'application/json',
+					body: JSON.stringify(
+						id: note.id
+					)
+				).catch(->
+					alert('Could not delete a note. Please check your internet connection.')
 				)
-			)
-			if not res.ok
-				alert('Could not delete a note. Please check your internet connection.')
-			else
-				remove(noteElement)
+				if res.ok
+					remove(noteElement)
 		)
 		noteElement.appendChild(noteDeleteButton)
 
@@ -69,20 +71,6 @@ addNote = (note) ->
 	else
 		noteElement.classList.add('shared')
 		noteSenderElement.innerHTML = "#{note.author} wrote at #{time.toLocaleString('en-GB')}:"
-
-
-update = ->
-	oldNotes = document.querySelectorAll('#note-container .note')
-
-	res = await fetch('/console/get-notes/')
-	notes = await res.json()
-
-	for oldNote in oldNotes
-		remove(oldNote)
-
-	for note in notes
-		addNote(note)
-	filter()
 
 
 filter = (type = filterType) ->
@@ -112,13 +100,21 @@ filter = (type = filterType) ->
 			document.querySelectorAll('.note.private').forEach((note) ->
 				note.classList.add('hidden')
 			)
-	window.scrollTo(0, document.body.offsetHeight)
-
 
 
 addEventListener('load', ->
-	await update()
-	window.scrollTo(0, document.body.offsetHeight)
+	params = new URLSearchParams(window.location.search)
+	applicationID = params.get('id')
+
+	res = await fetch('/console/get-notes/' + if applicationID
+	then "?applicationID=#{applicationID}" else '').catch(->
+		alert('Could not get notes. Please check your internet connection.')
+	)
+	notes = await res.json()
+
+	for note in notes
+		addNote(note)
+	filter()
 )
 
 
@@ -151,22 +147,38 @@ filterSharedButton.addEventListener('click', ->
 )
 
 
+'keyup change paste'.split(' ').forEach((event) ->
+	noteTextarea.addEventListener(event, ->
+		if not noteTextarea.value
+			noteSubmitButton.classList.add('disabled')
+		else
+			noteSubmitButton.classList.remove('disabled')
+	)
+)
+
+
 noteSubmitButton.addEventListener('click', ->
 	filterType = if shared then 'shared' else 'private'
 
-	res = await fetch('/console/notes/',
-		method: 'post'
-		headers:
-			'Content-Type': 'application/json'
-		body: JSON.stringify(
-			shared: shared
-			message: noteTextarea.value
-		)
-	)
-
-	if not res.ok
-		alert('Failed to save the note. Please check your internet connection.')
+	if not noteTextarea.value
+		alert('Please enter a message')
 	else
+		res = await fetch('/console/notes/',
+			method: 'post'
+			headers:
+				'Content-Type': 'application/json'
+			body: JSON.stringify(
+				shared: shared
+				message: noteTextarea.value
+				applicationID: applicationID
+			)
+		).catch(->
+			alert('Could not save the note. Please check your internet connection.')
+		)
+
+	if res.ok
+		noteTextarea.value = ''
+		noteSubmitButton.classList.add('disabled')
 		note = await res.json();
 		addNote(note)
 		filter()

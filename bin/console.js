@@ -254,8 +254,8 @@ router.get('/get-applications', async (req, res) => {
 });
 
 
-router.get('/get-application/:applicationID', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.params.applicationID);
+router.get('/get-application', async (req, res) => {
+	const application = await libApplication.getApplicationByID(req.query.applicationID);
 
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
@@ -340,8 +340,9 @@ router.delete('/stars', async (req, res) => {
 
 router.post('/notes', async (req, res) => {
 	let application = null;
+
 	if (req.body.applicationID) {
-		application = libApplication
+		application = await libApplication
 			.getApplicationByID(req.body.applicationID);
 
 		if (application === 'NO_APPLICATION') {

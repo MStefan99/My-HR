@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Develop with cache" type="NodeJSConfigurationType" path-to-js-file="app.js" working-dir="$PROJECT_DIR$">
+    <envs>
+      <env name="NO_HTTPS" value="true" />
+      <env name="NO_MAIL" value="true" />
+      <env name="USER_AUTH" value="true" />
+    </envs>
+    <method v="2" />
+  </configuration>
+</component>

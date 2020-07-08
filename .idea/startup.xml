@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectStartupSharedConfiguration">
     <configurations>
-      <configuration id="Node.js.Run (develop)" name="Run (develop)" />
+      <configuration id="Node.js.Develop" name="Develop" />
     </configurations>
   </component>
 </project>

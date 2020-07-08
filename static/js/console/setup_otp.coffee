@@ -24,7 +24,10 @@ validate = ->
 
 
 addEventListener('load', ->
-	res = await fetch('/console/get-otp/')
+	res = await fetch('/console/get-otp/').catch(->
+		alert('Could not download the 2FA code.
+			Please check your internet connection.')
+	)
 	secret = await res.json()
 
 	qrElement.setAttribute('src', secret.qr)

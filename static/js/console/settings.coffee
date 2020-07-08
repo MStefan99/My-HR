@@ -27,8 +27,11 @@ addEventListener('load', ->
 		lightRadio.checked = true
 
 
-	res = await fetch('/console/get-sessions/')
-	sessions = await res.json();
+	res = await fetch('/console/get-sessions/').catch(->
+		alert('Could not download session list.
+			Please check your internet connection.')
+	)
+	sessions = await res.json()
 
 	for session in sessions
 		sessionRow = document.createElement('tr')

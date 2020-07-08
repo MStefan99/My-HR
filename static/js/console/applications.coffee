@@ -22,8 +22,10 @@ addEventListener('load', ->
 		when 'pending' then title = 'Pending applications'
 	applicationsHeader.innerHTML = title
 
-	res = await fetch(path);
-	applications = await res.json();
+	res = await fetch(path).catch(->
+		alert('Could not download application list. Please check your internet connection.')
+	)
+	applications = await res.json()
 
 	oldCells = document.querySelectorAll('td')
 	if (oldCells.length > 0)
