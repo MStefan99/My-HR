@@ -3,8 +3,11 @@
 const header = document.querySelector('header');
 const main = document.querySelector('main');
 const body = document.querySelector('body');
+const desktop = document.querySelector('#desktop');
 const dock = document.querySelector('#dock');
-const shortcuts = document.querySelectorAll('footer .shortcut');
+const dockShortcutContainer = document.querySelector('#dock-shortcut-container');
+const dockIconContainer = document.querySelector('#dock-icon-container');
+const dockSeparator = document.querySelector('#dock-separator')
 
 const settingsIcon = document.querySelector('#settings-icon');
 const settingsPanel = document.querySelector('#settings-panel');
@@ -15,12 +18,51 @@ const settingsLink = document.querySelector('#button-settings');
 const helpLink = document.querySelector('#button-help');
 
 
-let appLeft = 50;
+let appLeft = 100;
 let appTop = 50;
 const appShift = 20;
 
 const Storage = window.localStorage;
 const apps = [];
+const dockShortcuts = JSON.parse(Storage.getItem('desktop_dock-shortcuts')) || [];
+const shortcutData = [
+	{
+		id: 0,
+		src: '/console/applications',
+		name: 'All applications',
+		img: '/img/applications.svg',
+	}, {
+		id: 1,
+		src: '/console/applications/?type=stars',
+		name: 'Your stars',
+		img: '/img/star-active.svg',
+	}, {
+		id: 2,
+		src: '/console/applications/?type=pending',
+		name: 'Pending applications',
+		img: '/img/progress.svg',
+	}, {
+		id: 3,
+		src: '/console/applications/?type=accepted',
+		name: 'Accepted applications',
+		img: '/img/checkmark.svg',
+	}, {
+		id: 4,
+		src: '/console/applications/?type=rejected',
+		name: 'Rejected applications',
+		img: '/img/cross.svg',
+	}, {
+		id: 5,
+		src: '/console/notes/',
+		name: 'Notes',
+		img: '/img/sticky-note.svg',
+	}, {
+		id: 6,
+		src: '/console/feedback/',
+		name: 'Feedback',
+		img: '/img/chat-bubble.svg',
+	}
+];
 
 
 function clamp(val, min, max) {
@@ -142,9 +184,10 @@ class AppWindow {
 
 		// Creating shortcut in dock
 		this.shortcut = document.createElement('div');
-		this.shortcut.classList.add('dock-shortcut', 'hidden');
+		this.shortcut.classList.add('shortcut', 'hidden');
 		const icon = document.createElement('img');
 		icon.src = this.img;
+		icon.draggable = false;
 		setTimeout(() => {
 			this.shortcut.classList.remove('hidden')
 		}, 10);
@@ -198,7 +241,7 @@ class AppWindow {
 		this.windowIconGroup.appendChild(this.closeIcon);
 		this.window.appendChild(this.content);
 		this.content.appendChild(this.iframe);
-		dock.appendChild(this.shortcut);
+		dockIconContainer.appendChild(this.shortcut);
 		this.shortcut.appendChild(icon);
 
 		// Adding created app to app list
@@ -241,7 +284,7 @@ class AppWindow {
 	maximize() {
 		if (this.window.classList.contains('maximized')) {
 			header.classList.remove('hidden');
-			dock.classList.remove('hidden');
+			dockIconContainer.classList.remove('hidden');
 
 			for (const app of apps) {
 				app.window.classList.remove('hidden');
@@ -251,7 +294,7 @@ class AppWindow {
 			}, 250);
 		} else {
 			header.classList.add('hidden');
-			dock.classList.add('hidden');
+			dockIconContainer.classList.add('hidden');
 
 			for (const app of apps) {
 				if (this !== app) {
@@ -316,22 +359,70 @@ function modifyAppStyle(iframeDocument) {
 		iframeMain.style['border-radius'] = '0';
 		iframeMain.style.margin = '0';
 	}
-};
+}
 
 
 // Setting event listeners for shortcuts
-shortcuts.forEach((shortcut) => {
+shortcutData.forEach((data) => {
+	const dockShortcuts = Storage.getItem('desktop_dock-shortcuts') || [];
+
+	const shortcut = document.createElement('div');
+	shortcut.classList.add('shortcut');
+	shortcut.draggable = true;
+	shortcut.title = data.name;
+	shortcut.id = 'shortcut-' + data.id;
+
 	const image = document.createElement('img');
-	image.src = shortcut.getAttribute('data-img');
+	image.src = data.img;
+	image.draggable = false;
 	shortcut.appendChild(image);
 
-	shortcut.addEventListener('click', () => {
-		const src = shortcut.getAttribute('data-src');
-		const name = shortcut.getAttribute('data-name');
-		const img = shortcut.getAttribute('data-img');
+	if (dockShortcuts.includes(data.id)) {
+		dockShortcutContainer.appendChild(shortcut);
+		dockSeparator.classList.remove('hidden');
+	} else {
+		desktop.appendChild(shortcut);
+	}
 
-		const app = new AppWindow(src, name, img);
+	shortcut.addEventListener('click', () => {
+		new AppWindow(data.src, data.name, data.img);
 	});
+
+	shortcut.addEventListener('dragstart', (e) => {
+		e.dataTransfer.setData('text/id', data.id);
+	});
+});
+
+
+[dock, main].forEach((element) => {
+	element.addEventListener('dragover', (e) => {
+		if (e.dataTransfer.types.includes('text/id')) {
+			e.preventDefault();
+		}
+	})
+});
+
+
+dock.addEventListener('drop', (e) => {
+	e.stopPropagation();
+	const id = e.dataTransfer.getData('text/id');
+	const shortcut = document.querySelector('#shortcut-' + id);
+
+	dockShortcuts.push(id);
+	dockShortcutContainer.appendChild(shortcut);
+
+	Storage.setItem('desktop_dock-shortcuts', JSON.stringify(dockShortcuts));
+});
+
+
+main.addEventListener('drop', (e) => {
+	const id = e.dataTransfer.getData('text/id');
+	const shortcut = document.querySelector('#shortcut-' + id);
+
+	dockShortcuts.splice(dockShortcuts.indexOf(id), 1);
+	desktop.appendChild(shortcut);
+
+	Storage.setItem('desktop_dock-shortcuts', JSON.stringify(dockShortcuts));
 });
 
 
@@ -364,7 +455,7 @@ menuCheckbox.addEventListener('click', () => {
 });
 
 
-dockCheckbox.addEventListener('click', (e) => {
+dockCheckbox.addEventListener('click', () => {
 	if (dockCheckbox.checked) {
 		dock.classList.add('auto-hide');
 	} else {
@@ -398,7 +489,7 @@ addEventListener('popstate', () => {
 
 
 // Initial setup when Desktop is opened
-addEventListener('load',() => {
+addEventListener('load', () => {
 	if (screen.width < 1024) {
 		alert('Desktop is not supported on devices with small screen sizes. ' +
 			'You will have to return back.');

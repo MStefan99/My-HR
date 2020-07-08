@@ -35,29 +35,12 @@ html(lang='en')
 			label(for='cb-dock') Hide Dock automatically
 
 		main
+			div#desktop
 
 		footer
 			div#dock
-				div.shortcut(data-src='/console/applications/'
-					data-name='All applications' data-img='/img/applications.svg'
-					title='All applications')
-				div.shortcut(data-src='/console/applications/?type=stars'
-					data-name='Your stars' data-img='/img/star-active.svg'
-					title='Your stars')
-				div.shortcut(data-src='/console/applications/?type=pending'
-					data-name='Pending applications' data-img='/img/progress.svg'
-					title='Pending applications')
-				div.shortcut(data-src='/console/applications/?type=accepted'
-					data-name='Accepted applications' data-img='/img/checkmark.svg'
-					title='Accepted applications')
-				div.shortcut(data-src='/console/applications/?type=rejected'
-					data-name='Rejected applications' data-img='/img/cross.svg'
-					title='Rejected applications')
-				div.shortcut(data-src='/console/feedback/'
-					data-name='Feedback' data-img='/img/chat-bubble.svg'
-					title='Feedback')
-				div.shortcut(data-src='/console/notes/'
-					data-name='Notes' data-img='/img/sticky-note.svg'
-					title='Notes')
+				div#dock-shortcut-container.dock-container
 				div#dock-separator
+				div#dock-icon-container.dock-container
+
 		script(async type='text/javascript' src='/js/console/desktop.js')

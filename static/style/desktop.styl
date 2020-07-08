@@ -122,8 +122,16 @@ html
 
 		main
 			height 100vh
-			padding 5% 2%
+			padding 50px 40px 90px
 			box-sizing border-box
+
+			#desktop
+				display flex
+				flex-flow column wrap
+				align-items flex-start
+				width min-content
+				max-height 100%
+				max-width 100%
 
 			.app-window
 				position absolute
@@ -227,8 +235,8 @@ html
 						user-select auto
 
 		.shortcut
-			width 8vh
-			height 8vh
+			width 64px
+			height 64px
 			margin 10px 10px
 			flex-shrink 0
 			background var(--icon-color)
@@ -237,6 +245,7 @@ html
 			display flex
 			justify-content center
 			align-items center
+			backdrop-filter blur(8px)
 			box-shadow 0 .2vh .5vh var(--shadow-color)
 			transition filter .1s ease-in,
 			background-color .1s ease-in,
@@ -252,7 +261,7 @@ html
 				transform translateY(120%)
 
 			img
-				width 5vh
+				width 38px
 				filter drop-shadow(0 .3vh .2vh var(--shadow-color))
 
 		footer
@@ -291,11 +300,15 @@ html
 					transform none
 					transition transform .2s ease-in
 
+				.dock-container
+					display flex
+					flex-flow row nowrap
+
 				#dock-separator
 					width 5px
-					height 8vh
+					height 64px
+					margin 10px 20px
 					flex-shrink 0
 					background var(--icon-color)
 					border-radius 2px
-					margin 0 2em
 					box-shadow 0 .2vh .5vh var(--shadow-color)
