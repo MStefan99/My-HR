@@ -7,9 +7,9 @@ const path = require('path');
 
 const sendMail = require('./lib/mail');
 const middleware = require('./lib/console/middleware');
+const libSetup = require('./lib/console/setup');
 const libFeedback = require('./lib/feedback');
 const libApplication = require('./lib/application');
-const libSetup = require('./lib/console/setup');
 const libSession = require('./lib/console/session');
 const libUser = require('./lib/console/user');
 const libNote = require('./lib/console/note');
@@ -174,6 +174,22 @@ router.get('/logout', async (req, res) => {
 });
 
 
+router.delete('/sessions', async (req, res) => {
+	const session = await libSession.getSessionByUUID(req.body.sessionID)
+
+	switch (session) {
+		case 'NO_SESSION':
+			res.status(400).send('NO_SESSION');
+			break;
+		default:
+			await session.delete();
+
+			res.sendStatus(200);
+			break;
+	}
+});
+
+
 router.get('/exit', async (req, res) => {
 	await req.user.deleteAllSessions();
 
@@ -313,7 +329,7 @@ router.post('/stars', async (req, res) => {
 				res.status(400).send('ALREADY_STARRED');
 				break;
 			case 'OK':
-				res.send('OK');
+				res.sendStatus(200);
 				break;
 		}
 	}
@@ -331,7 +347,7 @@ router.delete('/stars', async (req, res) => {
 				res.status(400).send('NOT_STARRED');
 				break;
 			case 'OK':
-				res.send('OK');
+				res.sendStatus(200);
 				break;
 		}
 	}
@@ -378,7 +394,7 @@ router.delete('/notes', async (req, res) => {
 		res.status(403).send('NOT_ALLOWED');
 	} else {
 		await note.delete();
-		res.send('OK');
+		res.sendStatus(200);
 	}
 });
 
@@ -397,12 +413,17 @@ router.post('/applications/accept', async (req, res) => {
 				res.status(400).send('ALREADY_REJECTED');
 				break;
 			case 'OK':
+				await libNote.createNote(await libUser.getUserByID(0),
+					application,
+					true,
+					'Application was accepted by ' + req.user.username);
+
 				await sendMail(application.email,
 					'Welcome to Mine Eclipse!',
 					'accepted.html',
 					{name: application.firstName});
 
-				res.send('OK');
+				res.sendStatus(200);
 				break;
 		}
 	}
@@ -423,12 +444,17 @@ router.post('/applications/reject', async (req, res) => {
 				res.status(400).send('ALREADY_REJECTED');
 				break;
 			case 'OK':
+				await libNote.createNote(await libUser.getUserByID(0),
+					application,
+					true,
+					'Application was rejected by ' + req.user.username);
+
 				await sendMail(application.email,
 					'Your Mine Eclipse application',
 					'rejected.html',
 					{name: application.firstName});
 
-				res.send('OK');
+				res.sendStatus(200);
 				break;
 		}
 	}
@@ -437,6 +463,11 @@ router.post('/applications/reject', async (req, res) => {
 
 router.get('/get-sessions', async (req, res) => {
 	const sessions = await libSession.getUserSessions(req.user);
+
+	for (const session of sessions) {
+		delete session.id;
+		delete session.userID;
+	}
 
 	res.json(sessions);
 });
@@ -505,7 +536,7 @@ router.delete('/users', async (req, res) => {
 			res.status(403).send('CANNOT_DELETE_ADMIN');
 			break;
 		case 'OK':
-			res.send('OK');
+			res.sendStatus(200);
 			break;
 	}
 });

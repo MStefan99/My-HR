@@ -5,13 +5,16 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const multer = require('multer');
-const sendMail = require('./lib/mail');
 
-const libSetup = require('./lib/user/setup');
+const sendMail = require('./lib/mail');
 const middleware = require('./lib/user/middleware');
+const libSetup = require('./lib/user/setup');
 const libFeedback = require('./lib/feedback');
 const libSession = require('./lib/user/session');
 const libApplication = require('./lib/application');
+
+const libUser = require('./lib/console/user');
+const libNote = require('./lib/console/note');
 
 
 const router = express.Router();
@@ -111,18 +114,23 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 				'form are missing, please return and try again.'
 		});
 	} else {
-		await libApplication.createApplication(req.session, {
-			firstName: req.body.firstName,
-			lastName: req.body.lastName,
-			backupEmail: req.body.backupEmail,
-			phone: req.body.phone,
-			backupPhone: req.body.backupPhone,
-			team: req.body.team,
-			links: req.body.links,
-			freeForm: req.body.freeForm,
-			fileName: req.file.originalname,
-			filePath: req.file.filename
-		});
+		const application = await libApplication
+			.createApplication(req.session, {
+				firstName: req.body.firstName,
+				lastName: req.body.lastName,
+				backupEmail: req.body.backupEmail,
+				phone: req.body.phone,
+				backupPhone: req.body.backupPhone,
+				team: req.body.team,
+				links: req.body.links,
+				freeForm: req.body.freeForm,
+				fileName: req.file.originalname,
+				filePath: req.file.filename
+			});
+		await libNote.createNote(await libUser.getUserByID(0),
+			application,
+			true,
+			'Application created');
 		res.render('user/status', {
 			title: 'Thank you',
 			info: 'We have received your application and will contact you as soon as possible.'

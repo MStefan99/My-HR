@@ -26,31 +26,50 @@ html
 		--very-gray #555
 		--shadow-color #00000022
 
+		&::-webkit-scrollbar
+			background-color var(--light)
+			width 10px
+
+		&::-webkit-scrollbar-thumb
+			background-color var(--pretty-gray)
+			border-radius 10px
+
 		&.dark-theme
-			--primary-color #973c00
-			--secondary-color #780027
-			--background-color #393b3d
+			--primary-color #532000
+			--secondary-color #40000d
+			--background-color #1c1c1d
 			--boring-red #793f3f
 			--not-very-green #35532a
-			--light #222
-			--dark #ccc
-			--light-gray #444
-			--just-gray #999
-			--pretty-gray #777
-			--very-gray #111
+			--light #0a0a0a
+			--dark #aca491
+			--light-gray #262524
+			--just-gray #3b3937
+			--pretty-gray #807971
+			--very-gray #101010
 
 			header, footer
 				color var(--dark)
 
-			main a
-				&:hover
-					color var(--just-gray)
+			header a:hover
+				color var(--pretty-gray)
 
-				&:active
-					color var(--pretty-gray)
+			main
+				table thead
+					color var(--dark)
+					background var(--light-gray)
 
-			img
-				filter saturate(.7) brightness(2)
+				#tab-container .tab.selected
+					border 1px solid var(--dark)
+
+				a
+					&:hover
+						color var(--pretty-gray)
+
+					&:active
+						color var(--just-gray)
+
+			img:not(.icon)
+				filter opacity(.4) !important
 
 		a
 			color inherit
@@ -367,11 +386,18 @@ html
 				textarea
 					display block
 					width 100%
-					height 3em
 					color var(--dark)
 					background var(--light)
+					height 3em
 					resize vertical
 					font-family sans-serif
+
+			input
+				border 1px solid var(--dark)
+				border-radius 5px
+				padding .25em
+				color var(--dark)
+				background var(--light)
 
 			.button
 				display inline-block

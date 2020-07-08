@@ -23,6 +23,14 @@ html(lang='en')
 					img(src='/img/help-applications.jpg')
 				div.cell#img-application
 					img(src='/img/help-application.jpg')
+				div.cell#img-notes
+					img(src='/img/help-notes.jpg')
+				div.cell#img-note-editor
+					img(src='/img/help-note-editor.jpg')
+				div.cell#img-feedback
+					img(src='/img/help-feedback.jpg')
+				div.cell#img-settings
+					img(src='/img/help-settings.jpg')
 				div.cell#img-desktop
 					img(src='/img/help-desktop.jpg')
 				div.cell#img-dock
@@ -57,14 +65,55 @@ html(lang='en')
 						|  will be removed. You can also use your browser's back button to undo the filtering.
 				div.cell#text-application
 					h2 Application viewer
-					p When you click on a row in the table, an application viewer will open. Here you can read all the information
-						|  about an applicant, download their cv, view links they submitted. From this
+					p When you click on a row in the table, an application viewer will open. Here you can read
+						|  all the information about an applicant, download their cv, view links they submitted. From this
 						|  page you can also star the application (meaning to add it to the list of your favorites
 						|  to return later), share the link, accept or reject the application. Please remember at all times
 						|  that you cannot mark accepted or rejected application as pending again.
 						|  Corresponding action buttons can be found under 'Actions' section.
 						|  Please note that share button may not work on all devices, so if
 						|  that's the case for you, please copy the URL of the page. All URLs at My HR are shareable.
+						|  On the bottom of the page you will see a note section. This section is identical
+						|  to the general notes page which is described below.
+				div.cell#text-notes
+					h2 Notes
+					p Notes is a feature of My HR that allows you to store and communicate important info about
+						|  applications with other My HR users. Notes page is identical to the notes section on the
+						|  application page and allows you to view, post and delete notes. In the upper part of the page
+						|  you will see the notes themselves (if present). Notes aligned to the right were posted by you,
+						|  those aligned to the left were posted by other users. On the top of the note you can see
+						|  who posted that note and the time of posting. Important system notes begin with "System".
+						|  These notes are posted automatically when certain events happen, like an application being
+						|  added or rejected. The note itself will have more details.
+						|  Below the header you will see the note text itself.
+						|  Below that for your notes you will see the delete button and the message saying whether the
+						|  note is public and visible by all users or private and visible only by you. You can filter
+						|  notes by type using the buttons below. By default, all notes are shown.
+						b  Please keep in mind that Notes were not built for chatting and feature no real-time connection
+							|  so you have to refresh the page to update the notes.
+				div.cell#text-note-editor
+					h2 Note editor
+					p On the bottom of Notes page you will see the note editor. It is used to post a new note.
+						|  For this, select the type of your note, type the note text and click "Send".
+						|  New notes are private by default. After a new note is sent, the list of notes will be filtered
+						|  according to your selection so that the newly posted note will be displayed.
+				div.cell#text-feedback
+					h2 User feedback
+					p After submitting their application on the Mine Eclipse website, users are asked to provide a feedback
+						|  on their experience using the website. This feedback is visible on a feedback page in My HR.
+						|  This page consists of a single table with all feedback. Please note that leaving name
+						|  and email is optional and is a sign that a person wants to be contacted about their feedback.
+						|  Please do your best to contact all such users.
+				div.cell#text-settings
+					h2 Settings and security
+					p Privacy and security of user data are the most important goals of My HR. Because of that, every user
+						|  is required to use Two-Factor authentication. This way, even if the user's password
+						|  is compromised, attackers will not be able to login into the system without a valid
+						|  one-time password. On the Settings page of My HR you can see all of your active sessions
+						|  and sign out from any active device or all of them at the same time. Your old sessions
+						|  are deleted automatically so you don't have to worry about signing out of My HR except when
+						|  using public computers. Always remember to sign out when using those. If you notice anything
+						|  suspicious or you find a device that you do not remember, change your password IMMEDIATELY.
 				div.cell#text-desktop
 					h2 My HR Desktop
 					p My HR Desktop is a convenient way to view multiple applications in a single browser window
@@ -90,9 +139,10 @@ html(lang='en')
 					p The Dock is a very important panel in Desktop workflow. It allows you to open new windows,
 						|  restore minimized ones and close the ones you don't need anymore. The Dock is separated into
 						|  two parts. The left part contains shortcuts to the most used apps. By clicking the
-						|  shortcut, a new window of the app will open. The right half shows open applications.
+						|  shortcut, a new window of the app will open. You can drag shortcuts between desktop and
+						|  the Dock. The right half shows icons of open applications.
 						|  by clicking an icon here you can bring the corresponding window to the front or minimize it.
-						|  Also, you can right-click icons on the right to close the window completely.
+						|  Also, you can right-click icons to close the window completely.
 				div.cell#text-window
 					h3 Apps
 					p The main feature of the Desktop is the option to open many My HR windows at the same time.

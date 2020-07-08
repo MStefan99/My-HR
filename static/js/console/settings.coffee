@@ -8,6 +8,71 @@ darkRadio = document.querySelector('#theme-dark')
 Storage = window.localStorage;
 
 
+remove = (element) ->
+	element.parentNode.removeChild(element)
+
+
+addSession = (session) ->
+	sessionRow = document.createElement('tr')
+	sessionTable.appendChild(sessionRow)
+
+	ipCell = document.createElement('td')
+	ipCell.innerHTML = session.ip.replace('::ffff:', '')
+	sessionRow.appendChild(ipCell)
+
+	osCell = document.createElement('td')
+	res = session.ua.match(/.*? \((.*?); (.*?)(;|\)).*/)
+	if res[1] is 'Linux'
+		os = res[2]
+	else if res[2] is 'Win64'
+		os = res[1].replace('NT ', '').replace('.0', '')
+	else if res[1] is 'Macintosh'
+		os = 'macOS ' + res[2].replace(/.*Mac OS X (.*?)$/, '$1').replace(/_/g, '.')
+	else if res[1] is 'iPhone'
+		os = 'iPhone (iOS ' + res[2].replace(/.*OS (.*?) like.*/, '$1)').replace(/_/g, '.')
+	else if res[1] is 'iPad'
+		os = 'iPad (iPadOS ' + res[2].replace(/.*OS (.*?) like.*/, '$1)').replace(/_/g, '.')
+	else
+		os = res[1]
+	osCell.innerHTML = os
+	sessionRow.appendChild(osCell)
+
+	browserCell = document.createElement('td')
+	browserCell.innerHTML = session.ua.replace(/.*(Chrome|Firefox|EdgA?|OPR)\/(.*?)\..*/, '$1 $2')
+		.replace(/.*(Safari)\/(.*?)\..*/, '$1 $2')
+		.replace(/EdgA?/, 'Edge')
+		.replace(/OPR/, 'Opera')
+	sessionRow.appendChild(browserCell)
+
+	timeCell = document.createElement('td')
+	timeCell.innerHTML = new Date(session.time).toLocaleString('en-GB')
+	sessionRow.appendChild(timeCell)
+
+	logoutCell = document.createElement('td')
+	sessionRow.appendChild(logoutCell);
+	logoutLink = document.createElement('span')
+	logoutLink.classList.add('clickable')
+	logoutLink.innerHTML = 'Sign out'
+	logoutCell.appendChild(logoutLink)
+	logoutLink.addEventListener('click', ->
+		if confirm('Are you sure you want to delete this sesison?')
+			res = await fetch('/console/sessions/'
+				method: 'delete'
+				headers:
+					'Content-Type': 'application/json'
+				body: JSON.stringify(
+					sessionID: session.uuid
+				)
+			).catch(->
+				alert('Could not sign you out. Please check your internet connection.')
+			)
+
+			if res.ok
+				remove(sessionRow)
+	)
+
+
+
 lightRadio.addEventListener('click', ->
 	body.classList.remove('dark-theme')
 	Storage.setItem('mh_theme', 'light')
@@ -34,38 +99,5 @@ addEventListener('load', ->
 	sessions = await res.json()
 
 	for session in sessions
-		sessionRow = document.createElement('tr')
-		sessionTable.appendChild(sessionRow)
-
-		ipCell = document.createElement('td')
-		ipCell.innerHTML = session.ip
-		sessionRow.appendChild(ipCell)
-
-		osCell = document.createElement('td')
-		res = session.ua.match(/.*? \((.*?); (.*?)(;|\)).*/)
-		if res[1] is 'Linux'
-			os = res[2]
-		else if res[2] is 'Win64'
-			os = res[1].replace('NT ', '').replace('.0', '')
-		else if res[1] is 'Macintosh'
-			os = 'macOS ' + res[2].replace(/.*Mac OS X (.*?)$/, '$1').replace(/_/g, '.')
-		else if res[1] is 'iPhone'
-			os = 'iPhone (iOS ' + res[2].replace(/.*OS (.*?) like.*/, '$1)').replace(/_/g, '.')
-		else if res[1] is 'iPad'
-			os = 'iPad (iPadOS ' + res[2].replace(/.*OS (.*?) like.*/, '$1)').replace(/_/g, '.')
-		else
-			os = res[1]
-		osCell.innerHTML = os
-		sessionRow.appendChild(osCell)
-
-		browserCell = document.createElement('td')
-		browserCell.innerHTML = session.ua.replace(/.*(Chrome|Firefox|EdgA?|OPR)\/(.*?)\..*/, '$1 $2')
-			.replace(/.*(Safari)\/(.*?)\..*/, '$1 $2')
-			.replace(/EdgA?/, 'Edge')
-			.replace(/OPR/, 'Opera')
-		sessionRow.appendChild(browserCell)
-
-		timeCell = document.createElement('td')
-		timeCell.innerHTML = new Date(session.time).toLocaleString('en-GB')
-		sessionRow.appendChild(timeCell)
+		addSession(session)
 )
