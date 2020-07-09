@@ -1,13 +1,13 @@
 'use strict';
 
 formElement = document.querySelector('form')
-
 qrElement = document.querySelector('#qr')
-secretElement = document.querySelector('#secret')
+secretLabel = document.querySelector('#secret')
 otpElement = document.querySelector('#otp')
 otpLabel = document.querySelector('#otp-label')
+submitButton = document.querySelector('#submit-button')
 
-submitButton = document.querySelector('#submit')
+secret = null
 
 
 validate = ->
@@ -28,19 +28,43 @@ addEventListener('load', ->
 		alert('Could not download the 2FA code.
 			Please check your internet connection.')
 	)
-	secret = await res.json()
+	secretObj = await res.json()
 
-	qrElement.setAttribute('src', secret.qr)
-	secretElement.innerHTML = secret.secret
-	secretLabel = document.createElement('input')
-	secretLabel.type = 'hidden'
-	secretLabel.name = 'secret'
-	secretLabel.value = secret.secret
-	formElement.appendChild(secretLabel)
+	qrElement.setAttribute('src', secretObj.qr)
+	secretLabel.innerHTML = secret = secretObj.secret
+
+	secretInput = document.createElement('input')
+	secretInput.type = 'hidden'
+	secretInput.name = 'secret'
+	secretInput.value = secret
+	formElement.appendChild(secretInput)
 
 	validate()
 )
 
 
-addEventListener('keyup', validate)
-setInterval(validate, 1000)
+formElement.addEventListener('submit', (e) ->
+	e.preventDefault()
+	res = await fetch('/console/verify-otp/'
+		method: 'post'
+		headers:
+			'Content-Type': 'application/json'
+		body: JSON.stringify(
+			secret: secret
+			token: otpElement.value
+		)
+	).catch(->
+		alert('Could not check your code. Please check your internet connection.')
+	)
+
+	if not await res.ok
+		otpLabel.innerHTML = 'Wrong code'
+		otpElement.classList.add('status-bad')
+		submitButton.disabled = true
+	else
+		formElement.submit()
+)
+
+
+addEventListener('load', validate)
+addEventListener('input', validate)

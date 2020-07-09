@@ -209,7 +209,7 @@ class AppWindow {
 				this.minimize();
 			}
 		});
-		this.shortcut.addEventListener('contextmenu', (e) => {
+		this.shortcut.addEventListener('contextmenu', e => {
 			this.close();
 			e.preventDefault();
 		});

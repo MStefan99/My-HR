@@ -19,12 +19,13 @@ html(lang='en')
 				label(for='password') Password
 				input.text#password(type='password' name='password'
 					title='Your password')
+				label.label-status#p-label
 				label(for='otp') Authenticator code
 				input.text#otp(type='text' name='token'
 					title='Your 6-digit authenticator code'
 					autocomplete='off')
 				label.label-status#otp-label
-				input#submit(type='submit' value='Log in')
+				input#submit-button(type='submit' value='Log in')
 				label.label-info.required-info * Required fields
 		script(async type='text/javascript' src='/js/console/login.js')
 

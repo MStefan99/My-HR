@@ -12,7 +12,7 @@ function generateSecret(user) {
 }
 
 
-function verifyOtp(secret, token) {
+function verifyOtp(secret, token) {  //TODO: move to user library
 	if (secret && token) {
 		const delta = twoFactor.verifyToken(secret, token);
 

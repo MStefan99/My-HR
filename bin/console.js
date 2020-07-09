@@ -68,13 +68,60 @@ router.get('/get-otp', async (req, res) => {
 });
 
 
+router.post('/verify-login', async (req, res) => {
+	req.user = await libUser.getUserByUsername(req.body.username);
+
+	if (req.user === 'NO_USER') {
+		res.status(400).send('NO_USER');
+	} else if (!req.user.passwordHash) {
+		res.sendStatus(200);
+	} else if (!req.user.verifyPassword(req.body.password)) {
+		res.status(403).send('WRONG_PASSWORD');
+	} else if (!req.user.secret) {
+		res.sendStatus(200);
+	} else if (!lib2FA.verifyOtp(req.user.secret, req.body.token)) {
+		res.status(403).send('WRONG_TOKEN');
+	} else {
+		res.sendStatus(200);
+	}
+});
+
+
+router.post('/verify-setup-code', async (req, res) => {
+	// User is retrieved using CUID cookie
+
+	if (req.user === 'NO_USER') {
+		res.status(400).send('NO_USER');
+	} else if (!req.body.setupCode) {
+		res.status(400).send('NO_CODE');
+	} else if (req.body.setupCode !== req.user.setupCode) {
+		res.status(403).send('WRONG_CODE');
+	} else {
+		res.sendStatus(200);
+	}
+});
+
+
+router.post('/verify-otp', (req, res) => {
+	if (!req.body.secret) {
+		res.status(400).send('NO_SECRET');
+	} else if (!req.body.token) {
+		res.status(400).send('NO_TOKEN');
+	} else if (!lib2FA.verifyOtp(req.body.secret, req.body.token)) {
+		res.status(403).send('WRONG_TOKEN');
+	} else {
+		res.sendStatus(200);
+	}
+});
+
+
 router.post('/login', async (req, res) => {
 	req.user = await libUser.getUserByUsername(req.body.username);
 
 	if (req.user === 'NO_USER') {
 		res.status(400).render('console/status', {
-			title: 'No such user', info: 'Please check if the username you entered is correct ' +
-				'and try again.'
+			title: 'No such user', info: 'Please check if the username you entered ' +
+				'is correct and try again.'
 		});
 	} else if (!req.user.passwordHash) {
 		res.cookie('CUID', req.user.uuid, consoleCookieOptions);
@@ -109,6 +156,8 @@ router.post('/login', async (req, res) => {
 
 
 router.post('/register/', async (req, res) => {
+	// User is retrieved using CUID cookie
+
 	if (req.user === 'NO_USER') {
 		res.redirect(303, '/console/login/');
 	} else if (req.user.setupCode !== req.body.setupCode) {
@@ -145,6 +194,8 @@ router.post('/register/', async (req, res) => {
 
 
 router.post('/setup-otp/', async (req, res) => {
+	// User is retrieved using CUID cookie
+
 	if (req.user === 'NO_USER') {
 		res.redirect(303, '/console/login/');
 	} else if (!lib2FA.verifyOtp(req.body.secret, req.body.token)) {
@@ -475,7 +526,7 @@ router.get('/get-sessions', async (req, res) => {
 
 router.post('/settings', async (req, res) => {
 	if (req.body.password !== req.body.passwordRepeat) {
-		res.render('console/status', {
+		res.status(400).render('console/status', {
 			title: 'Passwords do not match', info: 'Please return to ' +
 				'settings page and retype your password.'
 		});

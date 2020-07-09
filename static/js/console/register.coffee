@@ -1,15 +1,14 @@
 'use strict';
 
+formElement = document.querySelector('form')
 usernameElement = document.querySelector('#username')
 codeElement = document.querySelector('#code')
 passwordElement = document.querySelector('#password')
 passwordRepeatElement = document.querySelector('#password-repeat')
-
 codeLabel = document.querySelector('#sc-label')
 passwordLabel = document.querySelector('#pwd-label')
 passwordRepeatLabel = document.querySelector('#pwdr-label')
-
-submitButton = document.querySelector('#submit')
+submitButton = document.querySelector('#submit-button')
 
 
 validate = ->
@@ -52,5 +51,26 @@ addEventListener('load', ->
 )
 
 
-addEventListener('keyup', validate)
-setInterval(validate, 1000)
+formElement.addEventListener('submit', (e) ->
+	e.preventDefault()
+	res = await fetch('/console/verify-setup-code/'
+		method: 'post'
+		headers:
+			'Content-Type': 'application/json'
+		body: JSON.stringify(
+			setupCode: codeElement.value
+		)
+	).catch(->
+		alert('Could not check your code. Please check your internet connection.')
+	)
+
+	if not res.ok
+		codeLabel.innerHTML = 'Wrong setup code'
+		codeElement.classList.add('status-bad')
+		submitButton.disabled = true
+	else
+		formElement.submit()
+)
+
+
+addEventListener('input', validate)

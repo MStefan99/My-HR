@@ -1,9 +1,9 @@
 'use strict';
 
+formElement = document.querySelector('form')
 usersTable = document.querySelector('#users-table')
 usernameInput = document.querySelector('#username')
 userAdminCheckbox = document.querySelector('#admin')
-submitButton = document.querySelector('#submit')
 
 
 remove = (element) ->
@@ -76,7 +76,8 @@ addEventListener('load', ->
 )
 
 
-submitButton.addEventListener('click', ->
+formElement.addEventListener('submit', (e) ->
+	e.preventDefault();
 	username = usernameInput.value
 	admin = userAdminCheckbox.checked
 

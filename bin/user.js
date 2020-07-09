@@ -68,7 +68,7 @@ router.post('/feedback', async (req, res) => {
 			req.body.message);
 		res.render('user/status', {
 			title: 'Thank you', info: 'Thank you for your feedback! We will carefully ' +
-				'read it and improve in the future!'
+				'study it and improve our website in the future!'
 		});
 	}
 });
@@ -134,9 +134,10 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 			application,
 			true,
 			'Application created');
-		res.render('user/status', {
-			title: 'Thank you',
-			info: 'We have received your application and will contact you as soon as possible.'
+		res.render('user/status', { title: 'Thank you', info: 'We have received ' +
+				'your application and will contact you as soon as possible. ' +
+				'In the meantime, would you mind telling us about your ' +
+				'experience on our website <a href="/feedback/">here</a>?'
 		});
 	}
 });
@@ -167,7 +168,7 @@ router.get('/download/:path', async (req, res) => {
 		res.status(403).render('user/status', {
 			title: 'Not allowed', info: 'The file requested was submitted by another user ' +
 				'and you are not allowed to view or download it. If you think this is a ' +
-				'mistake, please check if the address you\'ve entered is correct'
+				'mistake, please check whether the address you\'ve entered is correct'
 		});
 	} else {
 		res.download(path.join(__dirname, '..', '/uploads/', req.params.path), application.fileName);
