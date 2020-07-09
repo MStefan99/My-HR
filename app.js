@@ -10,13 +10,14 @@ const {consoleRouter} = require('./bin/console');
 const {internalRouter} = require('./bin/lib/internal');
 
 
-const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=604800';  // 1 week in seconds
+const publicCache = process.env.NO_CACHE ?
+	'no-cache' : 'public, max-age=604800';  // 1 week in seconds
 const app = express();
 
 
 const cacheOptions = {
 	setHeaders: (res, path, stat) => {
-		res.set('Cache-control', publicCache);
+		res.set('Cache-Control', publicCache);
 	}
 };
 
@@ -25,13 +26,13 @@ app.set('x-powered-by', false);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use((req, res, next) => {
-	res.set('Vary', 'Cookie');
+	res.set('Cache-Control', 'no-cache');
 	res.set('Referrer-Policy', 'same-origin');
 	res.set('Content-Security-Policy', 'default-src \'self\'; img-src \'self\' https://*.googleapis.com');
 	res.set('X-Content-Type-Options', 'nosniff');
 	res.set('X-Frame-Options', 'SAMEORIGIN');
 	if (!process.env.NO_HTTPS) {
-		res.set('Strict-Transport-Security', 'max-age=' + 60 * 60 * 24 * 365);
+		res.set('Strict-Transport-Security', 'max-age=31536000'); // 1 year in seconds
 	}
 	next();
 });

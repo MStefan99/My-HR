@@ -28,7 +28,7 @@ const privateCache = process.env.NO_CACHE ? 'no-cache' :
 
 router.use('/favicon.ico', express.static(path.join(__dirname, '..', 'static', 'img', 'mh-logo.svg'), {
 	setHeaders: (res, path, stat) => {
-		res.set('Cache-control', publicCache);
+		res.set('Cache-Control', publicCache);
 	}
 }));
 router.use(bodyParser.urlencoded({extended: true}));
@@ -42,19 +42,19 @@ libSetup.init();
 
 
 router.get('/login', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/login');
 });
 
 
 router.get('/register', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/register');
 });
 
 
 router.get('/setup-otp', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/setup_otp');
 });
 
@@ -199,61 +199,61 @@ router.get('/exit', async (req, res) => {
 
 
 router.get('/', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/home');
 });
 
 
 router.get('/desktop', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/desktop');
 });
 
 
 router.get('/applications', async (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/applications');
 });
 
 
 router.get('/application', async (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/application');
 });
 
 
 router.get('/settings', (req, res) => {
-	res.set('Cache-control', privateCache);
+	res.set('Cache-Control', privateCache);
 	res.render('console/settings', {user: req.user});
 });
 
 
 router.get('/feedback', (req, res) => {
-	res.set('Cache-control', privateCache);
+	res.set('Cache-Control', privateCache);
 	res.render('console/feedback');
 });
 
 
 router.get('/notes', (req, res) => {
-	res.set('Cache-control', privateCache);
+	res.set('Cache-Control', privateCache);
 	res.render('console/notes');
 });
 
 
 router.get('/versions', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/versions');
 });
 
 
 router.get('/about', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/about');
 });
 
 
 router.get('/help', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/help');
 });
 
@@ -508,7 +508,7 @@ router.post('/settings', async (req, res) => {
 
 
 router.get('/file/:path', async (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	const application = await libApplication.getApplicationByFilePath(req.params.path);
 
 	if (application === 'NO_APPLICATION') {
@@ -523,7 +523,7 @@ router.use(middleware.redirectIfNotAdmin);
 
 
 router.get('/users', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('console/users');
 });
 

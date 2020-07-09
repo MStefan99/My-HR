@@ -1,9 +1,4 @@
-theme-color = #ffc14b
-healthy-red = #c00
-kinda-gray = #888
-background-color = #28282f
-background-color-dark = #232329
-panel-color = #00000088
+
 
 
 html
@@ -17,7 +12,17 @@ html
 		flex-direction column
 		min-height 100vh
 		margin 0
-		background background-color
+		background var(--background-color)
+		--theme-color #ffc14b
+		--healthy-red #c00
+		--kinda-gray #888
+		--background-color #28282f
+		--background-color-dark #232329
+		--panel-color #00000088
+
+		::selection
+			background var(--theme-color)
+			color white
 
 		.hidden
 			display none !important
@@ -27,7 +32,7 @@ html
 			color white
 
 			&:hover
-				color kinda-gray
+				color var(--kinda-gray)
 
 		header
 			height 10vh
@@ -36,7 +41,7 @@ html
 			top 0
 			left 0
 			right 0
-			background panel-color
+			background var(--panel-color)
 			display flex
 			flex-flow row wrap
 			align-items center
@@ -86,7 +91,7 @@ html
 						height 4em
 						top 1em
 						z-index 1
-						filter drop-shadow(0 0 10vh theme-color)
+						filter var(--drop-shadow(0 0 5em theme-color))
 						transition transform cubic-bezier(0, 0, 0, 1) 1.5s,
 						opacity linear .5s .5s
 
@@ -163,11 +168,11 @@ html
 							display inline
 
 						&.label-info.required-info
-							color healthy-red
+							color var(--healthy-red)
 
 						&.required:after
 							content "*"
-							color healthy-red
+							color var(--healthy-red)
 
 					input, textarea
 						width 100%
@@ -177,20 +182,20 @@ html
 						border none
 						outline none
 						background none
-						border-bottom 2px solid kinda-gray
+						border-bottom 2px solid var(--kinda-gray)
 						border-radius 0
 						color white
-						transition border-bottom-color .2s linear
+						transition var(--border-bottom-color) .2s linear
 
 						&:hover
 							border-bottom-color white
 
 						&:focus
-							border-bottom-color theme-color
+							border-bottom-color var(--theme-color)
 
 						&[type="radio"]
 							display inline-block
-							width fit-content
+							width max-content
 							margin .5rem .5rem .5rem 0
 							cursor: pointer
 
@@ -201,7 +206,7 @@ html
 							font-weight bold
 							padding .2em .5em
 							cursor pointer
-							width fit-content
+							width max-content
 
 							&:hover
 								background white
@@ -214,7 +219,7 @@ html
 
 						&[disabled]
 							cursor not-allowed
-							color kinda-gray
+							color var(--kinda-gray)
 
 							&:active
 								pointer-events none
@@ -230,7 +235,7 @@ html
 
 					#username, #metropolia-domain
 						max-width 50%
-						width fit-content
+						width max-content
 						display inline
 
 				table
@@ -244,10 +249,10 @@ html
 							cursor pointer
 
 							&:hover
-								color kinda-gray
+								color var(--kinda-gray)
 
 					thead tr
-						background panel-color-opaque
+						background var(--panel-color)-opaque
 
 					@media screen and (max-width 768px)
 						td, tr, th
@@ -257,7 +262,7 @@ html
 			display flex
 			flex-flow row wrap
 			justify-content space-between
-			background background-color-dark
+			background var(--background-color)-dark
 			padding .5em 0
 
 			p

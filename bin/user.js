@@ -19,7 +19,10 @@ const libNote = require('./lib/console/note');
 
 const router = express.Router();
 const upload = multer({dest: 'uploads/'});
-const publicCache = process.env.NO_CACHE ? 'no-cache' : 'public, max-age=86400';  // 1 day in seconds
+const publicCache = process.env.NO_CACHE ?
+	'no-cache' : 'public, max-age=86400';  // 1 day in seconds
+const privateCache = process.env.NO_CACHE ?
+	'no-cache' : 'private, max-age=86400';  // 1 day in seconds
 
 
 router.use(bodyParser.urlencoded({extended: true}));
@@ -43,12 +46,12 @@ libSetup.init();
 
 
 router.get('/', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('user/home');
 });
 
 router.get('/feedback', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('user/feedback');
 });
 
@@ -57,7 +60,7 @@ router.post('/feedback', async (req, res) => {
 	if (!req.body.message) {
 		res.status(400).render('user/status', {
 			title: 'No message', info: 'You have submitted a feedback without a ' +
-				'message but empty feedbacks are not allowed. Please return and try again.'
+				'message. Please return and try again.'
 		});
 	} else {
 		await libFeedback.createFeedback(req.body.name,
@@ -65,7 +68,7 @@ router.post('/feedback', async (req, res) => {
 			req.body.message);
 		res.render('user/status', {
 			title: 'Thank you', info: 'Thank you for your feedback! We will carefully ' +
-				'read it and improve things in the future!'
+				'read it and improve in the future!'
 		});
 	}
 });
@@ -140,7 +143,7 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 
 
 router.get('/manage', (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	res.render('user/manage');
 });
 
@@ -152,7 +155,7 @@ router.get('/applications', async (req, res) => {
 
 
 router.get('/download/:path', async (req, res) => {
-	res.set('Cache-control', publicCache);
+	res.set('Cache-Control', publicCache);
 	const application = await libApplication.getApplicationByFilePath(req.params.path);
 
 	if (application === 'NO_APPLICATION') {
@@ -193,6 +196,7 @@ router.delete('/applications/:id', async (req, res) => {
 
 
 router.get('/join', (req, res) => {
+	res.set('Cache-Control', privateCache);
 	res.render('user/join', {email: req.session.email});
 });
 

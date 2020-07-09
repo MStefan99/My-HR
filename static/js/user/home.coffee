@@ -7,7 +7,7 @@ splashText = document.querySelector('#splash-text')
 welcomeContainer = document.querySelector('#welcome-container')
 contentContainer = document.querySelector('#content-container')
 
-applicationPeriodEnd = 1600473600000
+applicationPeriodEnd = 1603054800000
 
 
 addEventListener('load', ->
@@ -24,8 +24,8 @@ addEventListener('load', ->
 		contentContainer.classList.remove('hidden')
 
 		setTimeout(->
-				welcomeContainer.classList.remove('invisible')
-			, 1600)
+			welcomeContainer.classList.remove('invisible')
+		1600)
 		splashText.classList.remove('hidden')
 		setInterval(->
 			timeLeft = applicationPeriodEnd - Date.now()
@@ -36,5 +36,5 @@ addEventListener('load', ->
 			days = (timeLeft // 1000 // 60 // 60 // 24);
 			splashText.innerHTML = "Application period ends in
 				#{days} days, #{hours} hours, #{minutes} minutes and #{seconds} seconds"
-		, 1000)
+		1000)
 )

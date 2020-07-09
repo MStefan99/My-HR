@@ -5,7 +5,7 @@ const libAuth = require('./auth');
 
 const {userCookieOptions} = require('../cookie');
 
-const applicationPeriodEnd = 1600473600000;
+const applicationPeriodEnd = 1603054800000;
 
 
 async function getSession(req, res, next) {

@@ -28,11 +28,16 @@ html
 
 		&::-webkit-scrollbar
 			background-color var(--light)
+			border-radius 10px
 			width 10px
 
 		&::-webkit-scrollbar-thumb
 			background-color var(--pretty-gray)
 			border-radius 10px
+
+		::selection
+			background var(--simply-red)
+			color var(--light)
 
 		&.dark-theme
 			--primary-color #532000
@@ -128,6 +133,7 @@ html
 				white-space nowrap
 				box-shadow 0 .5vh 1vh var(--shadow-color)
 				transition filter .1s ease-in
+				user-select none
 
 				@media screen and (max-width 425px)
 					display block

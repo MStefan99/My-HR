@@ -284,7 +284,7 @@ class AppWindow {
 	maximize() {
 		if (this.window.classList.contains('maximized')) {
 			header.classList.remove('hidden');
-			dockIconContainer.classList.remove('hidden');
+			dock.classList.remove('hidden');
 
 			for (const app of apps) {
 				app.window.classList.remove('hidden');
@@ -294,7 +294,7 @@ class AppWindow {
 			}, 250);
 		} else {
 			header.classList.add('hidden');
-			dockIconContainer.classList.add('hidden');
+			dock.classList.add('hidden');
 
 			for (const app of apps) {
 				if (this !== app) {
@@ -353,7 +353,7 @@ function modifyAppStyle(iframeDocument) {
 	remove(iframeHeader);
 	remove(iframeFooter);
 
-	iframeBody.style.background = '#ffffff33';
+	iframeBody.style.background = '#00000000';
 	if (iframeMain) {
 		iframeMain.style.background = 'none';
 		iframeMain.style['border-radius'] = '0';
