@@ -204,6 +204,7 @@ static/style/**/*.css
 static/js/**/*.js
 static/js/**/*.map
 uploads
+cert
 package-lock.json
 
 

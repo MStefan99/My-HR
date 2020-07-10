@@ -26,7 +26,14 @@ const privateCache = process.env.NO_CACHE ? 'no-cache' :
 	'private, max-age=86400';  // 1 day in seconds
 
 
-router.use('/favicon.ico', express.static(path.join(__dirname, '..', 'static', 'img', 'mh-logo.svg'), {
+router.use('/favicon.ico', express.static(
+	path.join(__dirname, '..', 'static', 'img', 'mh-logo.svg'), {
+	setHeaders: (res, path, stat) => {
+		res.set('Cache-Control', publicCache);
+	}
+}));
+router.use('/manifest.webmanifest', express.static(
+	path.join(__dirname, '..', 'static', 'manifest.webmanifest'), {
 	setHeaders: (res, path, stat) => {
 		res.set('Cache-Control', publicCache);
 	}
@@ -56,6 +63,12 @@ router.get('/register', (req, res) => {
 router.get('/setup-otp', (req, res) => {
 	res.set('Cache-Control', publicCache);
 	res.render('console/setup_otp');
+});
+
+
+router.get('/not-connected', (req, res) => {
+	res.set('Cache-Control', publicCache);
+	res.render('console/not-connected');
 });
 
 
@@ -293,7 +306,7 @@ router.get('/notes', (req, res) => {
 
 router.get('/versions', (req, res) => {
 	res.set('Cache-Control', publicCache);
-	res.render('console/versions');
+	res.render('console/versions', {require: require});
 });
 
 

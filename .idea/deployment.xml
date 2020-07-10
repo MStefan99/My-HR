@@ -12,6 +12,7 @@
             <excludedPath local="true" path="$PROJECT_DIR$/node_modules" />
             <excludedPath local="true" path="$PROJECT_DIR$/.idea" />
             <excludedPath local="true" path="$PROJECT_DIR$/database/db.sqlite" />
+            <excludedPath local="true" path="$PROJECT_DIR$/cert" />
           </excludedPaths>
         </serverdata>
       </paths>

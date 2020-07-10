@@ -16,7 +16,7 @@ addEventListener('load', ->
 
 	switch params.get('type')
 		when null then title = 'All applications'
-		when 'stars' then title = 'Your stars'
+		when 'stars' then title = 'My stars'
 		when 'accepted' then title = 'Accepted applications'
 		when 'rejected' then title = 'Rejected applications'
 		when 'pending' then title = 'Pending applications'

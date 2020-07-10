@@ -5,6 +5,7 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+
 const {applicationRouter} = require('./bin/user');
 const {consoleRouter} = require('./bin/console');
 const {internalRouter} = require('./bin/lib/internal');
@@ -28,9 +29,12 @@ app.set('views', path.join(__dirname, 'views'));
 app.use((req, res, next) => {
 	res.set('Cache-Control', 'no-cache');
 	res.set('Referrer-Policy', 'same-origin');
+	res.set('Service-Worker-Allowed', '/');
 	res.set('Content-Security-Policy', 'default-src \'self\'; img-src \'self\' https://*.googleapis.com');
 	res.set('X-Content-Type-Options', 'nosniff');
 	res.set('X-Frame-Options', 'SAMEORIGIN');
+	res.set('Vary', 'Origin');
+	res.set('Access-Control-Allow-Origin', '"null"');
 	if (!process.env.NO_HTTPS) {
 		res.set('Strict-Transport-Security', 'max-age=31536000'); // 1 year in seconds
 	}
@@ -52,9 +56,9 @@ if (process.env.NO_HTTPS) {
 	const serverOptions = {
 		hostname: 'apply.mineeclipse.com',
 		path: '/',
-		key: fs.readFileSync('/etc/letsencrypt/live/apply.mineeclipse.com/privkey.pem'),
-		cert: fs.readFileSync('/etc/letsencrypt/live/apply.mineeclipse.com/cert.pem'),
-		ca: fs.readFileSync('/etc/letsencrypt/live/apply.mineeclipse.com/fullchain.pem')
+		key: fs.readFileSync(process.env.KEYFILE),
+		cert: fs.readFileSync(process.env.CERTFILE),
+		ca: fs.readFileSync(process.env.CA)
 	};
 
 	https.createServer(serverOptions, app).listen(443);

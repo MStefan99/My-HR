@@ -1,0 +1,47 @@
+{
+	"name": "My HR",
+	"description": "Collect and manage applications with ease!",
+	"icons": [
+		{
+			"src": "/img/mh-logo.svg",
+			"sizes": "150x150"
+		}
+	],
+	"start_url": "/console/",
+	"background_color": "#fff",
+	"display": "standalone",
+	"scope": "/console/",
+	"theme_color": "#3795e2",
+	"shortcuts": [
+		{
+			"name": "View all applications",
+			"short_name": "All applications",
+			"description": "Open all applications submitted for Mine Eclipse",
+			"url": "/console/applications/"
+		},
+		{
+			"name": "View my stars",
+			"short_name": "My stars",
+			"description": "Open all applications that you've starred",
+			"url": "/console/applications/?type=stars"
+		},
+		{
+			"name": "View pending applications",
+			"short_name": "Pending applications",
+			"description": "Open all applications that haven't been accepted or rejected yet",
+			"url": "/console/applications/?type=pending"
+		},
+		{
+			"name": "View accepted applications",
+			"short_name": "Accepted applications",
+			"description": "Open all applications that have been already accepted",
+			"url": "/console/applications/?type=accepted"
+		},
+		{
+			"name": "View rejected applications",
+			"short_name": "Rejected applications",
+			"description": "Open all applications that have been already rejected",
+			"url": "/console/applications/?type=rejected"
+		}
+	]
+}

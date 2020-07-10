@@ -55,7 +55,7 @@ addSession = (session) ->
 	logoutLink.innerHTML = 'Sign out'
 	logoutCell.appendChild(logoutLink)
 	logoutLink.addEventListener('click', ->
-		if confirm('Are you sure you want to delete this sesison?')
+		if confirm('Are you sure you want to sign out on this device?')
 			res = await fetch('/console/sessions/'
 				method: 'delete'
 				headers:
