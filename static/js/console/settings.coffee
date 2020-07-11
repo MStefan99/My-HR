@@ -8,6 +8,9 @@ darkRadio = document.querySelector('#theme-dark')
 Storage = window.localStorage;
 
 
+import {saveRequest} from '/js/console/main.js'
+
+
 remove = (element) ->
 	element.parentNode.removeChild(element)
 
@@ -56,15 +59,15 @@ addSession = (session) ->
 	logoutCell.appendChild(logoutLink)
 	logoutLink.addEventListener('click', ->
 		if confirm('Are you sure you want to sign out on this device?')
-			res = await fetch('/console/sessions/'
+			init =
 				method: 'delete'
 				headers:
 					'Content-Type': 'application/json'
 				body: JSON.stringify(
 					sessionID: session.uuid
 				)
-			).catch(->
-				alert('Could not sign you out. Please check your internet connection.')
+			res = await fetch('/console/sessions/', init).catch(->
+				saveRequest('/console/sessions', init)
 			)
 
 			if res.ok

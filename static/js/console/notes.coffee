@@ -15,6 +15,9 @@ filterType = 'all'
 applicationID = null
 
 
+import {saveRequest} from '/js/console/main.js'
+
+
 remove = (element) ->
 	element.parentNode.removeChild(element)
 
@@ -44,15 +47,15 @@ addNote = (note) ->
 		noteDeleteButton.addEventListener('click', ->
 			if confirm("Are you sure you want to delete the following note?
 					\n\n\"#{note.message}\"")
-				res = await fetch('/console/notes/',
-					method: 'delete',
+				init =
+					method: 'delete'
 					headers:
-						'Content-Type': 'application/json',
+						'Content-Type': 'application/json'
 					body: JSON.stringify(
 						id: note.id
 					)
-				).catch(->
-					alert('Could not delete a note. Please check your internet connection.')
+				res = await fetch('/console/notes/', init).catch(->
+					saveRequest('/console/notes', init)
 				)
 				if res.ok
 					remove(noteElement)
@@ -163,7 +166,7 @@ noteSubmitButton.addEventListener('click', ->
 	if not noteTextarea.value
 		alert('Please enter a message')
 	else
-		res = await fetch('/console/notes/',
+		init =
 			method: 'post'
 			headers:
 				'Content-Type': 'application/json'
@@ -172,14 +175,17 @@ noteSubmitButton.addEventListener('click', ->
 				message: noteTextarea.value
 				applicationID: applicationID
 			)
-		).catch(->
-			alert('Could not save the note. Please check your internet connection.')
+
+		res = await fetch('/console/notes/', init).catch(->
+			saveRequest('/console/notes/', init)
+			noteTextarea.value = ''
+			noteSubmitButton.classList.add('disabled')
 		)
 
-	if res.ok
-		noteTextarea.value = ''
-		noteSubmitButton.classList.add('disabled')
-		note = await res.json();
-		addNote(note)
-		filter()
+		if res.ok
+			noteTextarea.value = ''
+			noteSubmitButton.classList.add('disabled')
+			note = await res.json();
+			addNote(note)
+			filter()
 )

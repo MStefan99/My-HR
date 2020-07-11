@@ -22,6 +22,9 @@ fileLinkElement = document.querySelector('#file-link')
 application = {}
 
 
+import {saveRequest} from '/js/console/main.js'
+
+
 addEventListener('load', ->
 	if not navigator.clipboard?
 		shareButton.classList.add('hidden');
@@ -91,30 +94,30 @@ updateStar = (starred) ->
 
 
 star = ->
-	res = await fetch('/console/stars/',
+	init =
 		method: 'post'
 		headers:
 			'Content-Type': 'application/json'
 		body: JSON.stringify(
 			applicationID: application.id
 		)
-	).catch(->
-		alert('Could not star the application. Please check your internet connection.')
+	res = await fetch('/console/stars/', init).catch(->
+		saveRequest('/console/stars', init)
 	)
 	if res.ok
 		updateStar(true)
 
 
 unstar = ->
-	res = await fetch('/console/stars/',
+	init =
 		method: 'delete'
 		headers:
 			'Content-Type': 'application/json'
 		body: JSON.stringify(
 			applicationID: application.id
 		)
-	).catch(->
-		alert('Could not unstar the application. Please check your internet connection.')
+	res = await fetch('/console/stars/', init).catch(->
+		saveRequest('/console/stars/', init)
 	)
 	if res.ok
 		updateStar(false)
@@ -138,16 +141,17 @@ accept = ->
 			\nIf you are still unsure about this application, it is recommended that you star it and
 			return later for a final decision.
 			\n\nAre you ABSOLUTELY sure you want to continue?")
-		res = await fetch('/console/applications/accept/',
+		init =
 			method: 'post'
 			headers:
 				'Content-Type': 'application/json'
 			body: JSON.stringify(
 				applicationID: application.id
 			)
-		).catch(->
-			alert('Could not accept the application. Please check your internet connection.')
+		res = await fetch('/console/applications/accept/', init).catch(->
+			saveRequest('/console/applications/accept/', init)
 		)
+
 		if not res.ok
 			switch await res.text()
 				when 'NO_APPLICATION'
@@ -167,6 +171,13 @@ accept = ->
 
 
 reject = ->
+	init =
+		method: 'post'
+		headers:
+			'Content-Type': 'application/json'
+		body: JSON.stringify(
+			applicationID: application.id
+		)
 	if confirm("Are you sure you want to reject #{firstNameElement.innerHTML}\'s application?
 			\n\nTHIS ACTION IS FINAL AND CANNOT BE UNDONE!
 			\n\nIf you choose to continue, this application will be marked as rejected and
@@ -174,15 +185,8 @@ reject = ->
 			\nIf you are still unsure about this application, it is recommended that you leave this
 			application for a final decision.
 			\n\nAre you ABSOLUTELY sure you want to continue?")
-		res = await fetch('/console/applications/reject/',
-			method: 'post'
-			headers:
-				'Content-Type': 'application/json'
-			body: JSON.stringify(
-				applicationID: application.id
-			)
-		).catch(->
-			alert('Could not reject the application. Please check your internet connection.')
+		res = await fetch('/console/applications/reject/', init).catch(->
+			saveRequest('/console/applications/reject/', init)
 		)
 		if not res.ok
 			switch await res.text()

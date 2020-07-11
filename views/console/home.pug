@@ -37,10 +37,10 @@ html(lang='en')
 					h3
 						a(href='/console/settings/') Settings
 					h3
-						a(href='/console/logout/') Sign out
+						a.logout(href='/console/logout/') Sign out
 					h3
-						a(href='/console/exit/') Sign out everywhere
-			script(async type='text/javascript' src='/js/console/home.js')
+						a.exit(href='/console/exit/') Sign out everywhere
+			script(async type='module' src='/js/console/home.js')
 
 		footer
 			include footer

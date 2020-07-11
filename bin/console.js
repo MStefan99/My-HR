@@ -68,7 +68,7 @@ router.get('/setup-otp', (req, res) => {
 
 router.get('/not-connected', (req, res) => {
 	res.set('Cache-Control', publicCache);
-	res.render('console/not-connected');
+	res.status(503).render('console/not-connected');
 });
 
 

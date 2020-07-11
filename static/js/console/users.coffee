@@ -6,6 +6,9 @@ usernameInput = document.querySelector('#username')
 userAdminCheckbox = document.querySelector('#admin')
 
 
+import {saveRequest} from '/js/console/main.js'
+
+
 remove = (element) ->
 	element.parentNode.removeChild(element)
 
@@ -41,16 +44,15 @@ addUser = (user) ->
 			if confirm("If you continue,
 							user \"#{user.username}\" will be deleted.
 							\nAre you sure you want to continue?")
-				res = await fetch('/console/users/',
+				init =
 					method: 'delete'
 					headers:
 						'Content-Type': 'application/json'
 					body: JSON.stringify(
 						username: user.username
 					)
-				).catch(->
-					alert('Could not remove the user.
-						Please check your internet connection.')
+				res = await fetch('/console/users/', init).catch(->
+					saveRequest('/console/users/', init)
 				)
 				if not res.ok
 					if await res.text() is 'CANNOT_DELETE_ADMIN'
@@ -81,7 +83,7 @@ formElement.addEventListener('submit', (e) ->
 	username = usernameInput.value
 	admin = userAdminCheckbox.checked
 
-	res = await fetch('/console/users/',
+	init =
 		method: 'post'
 		headers:
 			'Content-Type': 'application/json'
@@ -89,8 +91,8 @@ formElement.addEventListener('submit', (e) ->
 			username: username
 			admin: admin
 		)
-	).catch(->
-		alert('Could not add the user. Please check your internet connection.')
+	res = await fetch('/console/users/', init).catch(->
+		saveRequest('/console/users/', init)
 	)
 
 	if not res.ok
