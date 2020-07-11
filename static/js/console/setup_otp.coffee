@@ -24,7 +24,7 @@ validate = ->
 
 
 addEventListener('load', ->
-	res = await fetch('/console/get-otp/').catch(->
+	res = await fetch('/console/api/v0.1/otp/').catch(->
 		alert('Could not download the 2FA code.
 			Please check your internet connection.')
 	)
@@ -45,7 +45,7 @@ addEventListener('load', ->
 
 formElement.addEventListener('submit', (e) ->
 	e.preventDefault()
-	res = await fetch('/console/verify-otp/'
+	res = await fetch('/console/api/v0.1/verify-otp/'
 		method: 'post'
 		headers:
 			'Content-Type': 'application/json'

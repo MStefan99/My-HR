@@ -66,8 +66,8 @@ addSession = (session) ->
 				body: JSON.stringify(
 					sessionID: session.uuid
 				)
-			res = await fetch('/console/sessions/', init).catch(->
-				saveRequest('/console/sessions', init)
+			res = await fetch('/console/api/v0.1/sessions/', init).catch(->
+				saveRequest('/console/api/v0.1/sessions', init)
 			)
 
 			if res.ok
@@ -95,7 +95,7 @@ addEventListener('load', ->
 		lightRadio.checked = true
 
 
-	res = await fetch('/console/get-sessions/').catch(->
+	res = await fetch('/console/api/v0.1/sessions/').catch(->
 		alert('Could not download session list.
 			Please check your internet connection.')
 	)

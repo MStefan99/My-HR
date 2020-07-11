@@ -5,15 +5,14 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const path = require('path');
 
-const sendMail = require('./lib/mail');
+
 const middleware = require('./lib/console/middleware');
 const libSetup = require('./lib/console/setup');
-const libFeedback = require('./lib/feedback');
 const libApplication = require('./lib/application');
 const libSession = require('./lib/console/session');
 const libUser = require('./lib/console/user');
-const libNote = require('./lib/console/note');
 const lib2FA = require('./lib/console/2fa');
+
 const {consoleCookieOptions} = require('./lib/cookie');
 
 
@@ -69,62 +68,6 @@ router.get('/setup-otp', (req, res) => {
 router.get('/not-connected', (req, res) => {
 	res.set('Cache-Control', publicCache);
 	res.status(503).render('console/not-connected');
-});
-
-
-router.get('/get-otp', async (req, res) => {
-	if (req.user === 'NO_USER') {
-		res.redirect(303, '/console/login/');
-	} else {
-		res.json(lib2FA.generateSecret(req.user));
-	}
-});
-
-
-router.post('/verify-login', async (req, res) => {
-	req.user = await libUser.getUserByUsername(req.body.username);
-
-	if (req.user === 'NO_USER') {
-		res.status(400).send('NO_USER');
-	} else if (!req.user.passwordHash) {
-		res.sendStatus(200);
-	} else if (!req.user.verifyPassword(req.body.password)) {
-		res.status(403).send('WRONG_PASSWORD');
-	} else if (!req.user.secret) {
-		res.sendStatus(200);
-	} else if (!lib2FA.verifyOtp(req.user.secret, req.body.token)) {
-		res.status(403).send('WRONG_TOKEN');
-	} else {
-		res.sendStatus(200);
-	}
-});
-
-
-router.post('/verify-setup-code', async (req, res) => {
-	// User is retrieved using CUID cookie
-
-	if (req.user === 'NO_USER') {
-		res.status(400).send('NO_USER');
-	} else if (!req.body.setupCode) {
-		res.status(400).send('NO_CODE');
-	} else if (req.body.setupCode !== req.user.setupCode) {
-		res.status(403).send('WRONG_CODE');
-	} else {
-		res.sendStatus(200);
-	}
-});
-
-
-router.post('/verify-otp', (req, res) => {
-	if (!req.body.secret) {
-		res.status(400).send('NO_SECRET');
-	} else if (!req.body.token) {
-		res.status(400).send('NO_TOKEN');
-	} else if (!lib2FA.verifyOtp(req.body.secret, req.body.token)) {
-		res.status(403).send('WRONG_TOKEN');
-	} else {
-		res.sendStatus(200);
-	}
 });
 
 
@@ -238,22 +181,6 @@ router.get('/logout', async (req, res) => {
 });
 
 
-router.delete('/sessions', async (req, res) => {
-	const session = await libSession.getSessionByUUID(req.body.sessionID)
-
-	switch (session) {
-		case 'NO_SESSION':
-			res.status(400).send('NO_SESSION');
-			break;
-		default:
-			await session.delete();
-
-			res.sendStatus(200);
-			break;
-	}
-});
-
-
 router.get('/exit', async (req, res) => {
 	await req.user.deleteAllSessions();
 
@@ -306,7 +233,7 @@ router.get('/notes', (req, res) => {
 
 router.get('/versions', (req, res) => {
 	res.set('Cache-Control', publicCache);
-	res.render('console/versions', {require: require});
+	res.render('console/versions');
 });
 
 
@@ -319,221 +246,6 @@ router.get('/about', (req, res) => {
 router.get('/help', (req, res) => {
 	res.set('Cache-Control', publicCache);
 	res.render('console/help');
-});
-
-
-router.get('/get-applications', async (req, res) => {
-	let applications;
-	if (req.query.type === 'stars') {
-		applications = await req.user.getStarredApplications();
-	} else {
-		applications = await libApplication.getApplicationsByType(req.query.type);
-	}
-
-	res.json(applications);
-});
-
-
-router.get('/get-application', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.query.applicationID);
-
-	if (application === 'NO_APPLICATION') {
-		res.status(404).send('NO_APPLICATION');
-	} else {
-		application.starred = await req.user.hasStarredApplication(application);
-
-		res.json(application);
-	}
-});
-
-
-router.get('/get-feedback', async (req, res) => {
-	const feedback = await libFeedback.getAllFeedback();
-
-	res.json(feedback);
-});
-
-
-router.get('/get-notes', async (req, res) => {
-	let notes = [];
-
-	if (!req.query.applicationID) {
-		notes = await libNote.getCommonNotes(req.user);
-	} else {
-		const application = await libApplication
-			.getApplicationByID(req.query.applicationID);
-
-		if (application !== 'NO_APPLICATION') {
-			notes = await libNote.getApplicationNotes(req.user, application);
-		}
-	}
-
-	for (const note of notes) {
-		//TODO: optimize username fetching
-		const author = await libUser.getUserByID(note.userID);
-
-		note.my = note.userID === req.user.id;
-		note.author = author.username;
-		delete note.userID;
-		delete note.applicationID;
-	}
-
-	res.json(notes);
-});
-
-
-router.post('/stars', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.body.applicationID);
-
-	if (application === 'NO_APPLICATION') {
-		res.status(404).send('NO_APPLICATION');
-	} else {
-		switch (await req.user.starApplication(application)) {
-			case 'ALREADY_STARRED':
-				res.status(400).send('ALREADY_STARRED');
-				break;
-			case 'OK':
-				res.sendStatus(200);
-				break;
-		}
-	}
-});
-
-
-router.delete('/stars', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.body.applicationID);
-
-	if (application === 'NO_APPLICATION') {
-		res.status(404).send('NO_APPLICATION');
-	} else {
-		switch (await req.user.unstarApplication(application)) {
-			case 'NOT_STARRED':
-				res.status(400).send('NOT_STARRED');
-				break;
-			case 'OK':
-				res.sendStatus(200);
-				break;
-		}
-	}
-});
-
-
-router.post('/notes', async (req, res) => {
-	let application = null;
-
-	if (req.body.applicationID) {
-		application = await libApplication
-			.getApplicationByID(req.body.applicationID);
-
-		if (application === 'NO_APPLICATION') {
-			application = null;
-		}
-	}
-
-	const note = await libNote.createNote(req.user,
-		application,
-		req.body.shared,
-		req.body.message);
-	switch (note) {
-		case 'NO_MESSAGE':
-			res.status(400).send('NO_MESSAGE');
-			break;
-		default:
-			delete note.userID;
-			delete note.applicationID;
-
-			note.my = true;
-			note.author = req.user.username;
-
-			res.json(note);
-			break;
-	}
-});
-
-
-router.delete('/notes', async (req, res) => {
-	const note = await libNote.getNoteByID(req.body.id);
-
-	if (note.userID !== req.user.id) {
-		res.status(403).send('NOT_ALLOWED');
-	} else {
-		await note.delete();
-		res.sendStatus(200);
-	}
-});
-
-
-router.post('/applications/accept', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.body.applicationID);
-
-	if (application === 'NO_APPLICATION') {
-		res.status(404).send('NO_APPLICATION');
-	} else {
-		switch (await application.accept()) {
-			case 'ALREADY_ACCEPTED':
-				res.status(400).send('ALREADY_ACCEPTED');
-				break;
-			case 'ALREADY_REJECTED':
-				res.status(400).send('ALREADY_REJECTED');
-				break;
-			case 'OK':
-				await libNote.createNote(await libUser.getUserByID(0),
-					application,
-					true,
-					'Application was accepted by ' + req.user.username);
-
-				await sendMail(application.email,
-					'Welcome to Mine Eclipse!',
-					'accepted.html',
-					{name: application.firstName});
-
-				res.sendStatus(200);
-				break;
-		}
-	}
-});
-
-
-router.post('/applications/reject', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.body.applicationID);
-
-	if (application === 'NO_APPLICATION') {
-		res.status(404).send('NO_APPLICATION');
-	} else {
-		switch (await application.reject()) {
-			case 'ALREADY_ACCEPTED':
-				res.status(400).send('ALREADY_ACCEPTED');
-				break;
-			case 'ALREADY_REJECTED':
-				res.status(400).send('ALREADY_REJECTED');
-				break;
-			case 'OK':
-				await libNote.createNote(await libUser.getUserByID(0),
-					application,
-					true,
-					'Application was rejected by ' + req.user.username);
-
-				await sendMail(application.email,
-					'Your Mine Eclipse application',
-					'rejected.html',
-					{name: application.firstName});
-
-				res.sendStatus(200);
-				break;
-		}
-	}
-});
-
-
-router.get('/get-sessions', async (req, res) => {
-	const sessions = await libSession.getUserSessions(req.user);
-
-	for (const session of sessions) {
-		delete session.id;
-		delete session.userID;
-	}
-
-	res.json(sessions);
 });
 
 
@@ -589,52 +301,6 @@ router.use(middleware.redirectIfNotAdmin);
 router.get('/users', (req, res) => {
 	res.set('Cache-Control', publicCache);
 	res.render('console/users');
-});
-
-
-router.delete('/users', async (req, res) => {
-	const user = await libUser.getUserByUsername(req.body.username);
-
-	switch (await user.delete()) {
-		case 'CANNOT_DELETE_ADMIN':
-			res.status(403).send('CANNOT_DELETE_ADMIN');
-			break;
-		case 'OK':
-			res.sendStatus(200);
-			break;
-	}
-});
-
-
-router.post('/users', async (req, res) => {
-	const user = await libUser.createUser(req.body.username,
-		!!req.body.admin);
-	switch (user) {
-		case 'DUPLICATE_USERNAME':
-			res.status(400).send('DUPLICATE_USERNAME');
-			break;
-		default:
-			user.otpSetup = !!user.secret;
-			delete user.id;
-			delete user.passwordHash;
-			delete user.secret;
-
-			res.json(user);
-			break;
-	}
-});
-
-
-router.get('/get-users', async (req, res) => {
-	const users = await libUser.getAllUsers();
-
-	for (const user of users) {
-		user.otpSetup = !!user.secret;
-		delete user.id;
-		delete user.passwordHash;
-		delete user.secret;
-	}
-	res.json(users);
 });
 
 

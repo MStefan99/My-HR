@@ -53,7 +53,7 @@ addEventListener('load', ->
 
 formElement.addEventListener('submit', (e) ->
 	e.preventDefault()
-	res = await fetch('/console/verify-setup-code/'
+	res = await fetch('/console/api/v0.1/verify-setup-code/'
 		method: 'post'
 		headers:
 			'Content-Type': 'application/json'

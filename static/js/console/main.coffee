@@ -1,7 +1,5 @@
 Storage = window.localStorage;
 body = document.querySelector('body')
-logoutElements = document.querySelectorAll('.logout')
-exitElements = document.querySelectorAll('.exit')
 
 
 export saveRequest = (path, init) ->
@@ -23,24 +21,6 @@ export saveRequest = (path, init) ->
 
 if Storage.getItem('mh_theme') is 'dark'
 	body.classList.add('dark-theme')
-
-
-logoutElements.forEach((e) ->
-	e.addEventListener('click', ->
-		if not navigator.onLine
-			document.cookie = 'CSID=;'
-			window.location.href = '/console/login'
-	)
-)
-
-exitElements.forEach((e) ->
-	e.addEventListener('click', ->
-		if not navigator.onLine
-			document.cookie = 'CSID=;'
-			alert('We could not log you out on other devices because you are offline')
-			window.location.href = '/console/login'
-	)
-)
 
 
 addEventListener('load', ->

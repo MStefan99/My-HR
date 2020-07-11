@@ -30,7 +30,7 @@ addEventListener('load', ->
 		shareButton.classList.add('hidden');
 
 	params = new URLSearchParams(window.location.search)
-	res = await fetch('/console/get-application/?applicationID=' + params.get('id')).catch(->
+	res = await fetch('/console/api/v0.1/application/?applicationID=' + params.get('id')).catch(->
 		alert('Could not download application data. Please check your internet connection.')
 	)
 
@@ -101,8 +101,8 @@ star = ->
 		body: JSON.stringify(
 			applicationID: application.id
 		)
-	res = await fetch('/console/stars/', init).catch(->
-		saveRequest('/console/stars', init)
+	res = await fetch('/console/api/v0.1/stars/', init).catch(->
+		saveRequest('/console/api/v0.1/stars', init)
 	)
 	if res.ok
 		updateStar(true)
@@ -116,8 +116,8 @@ unstar = ->
 		body: JSON.stringify(
 			applicationID: application.id
 		)
-	res = await fetch('/console/stars/', init).catch(->
-		saveRequest('/console/stars/', init)
+	res = await fetch('/console/api/v0.1/stars/', init).catch(->
+		saveRequest('/console/api/v0.1/stars/', init)
 	)
 	if res.ok
 		updateStar(false)
@@ -148,8 +148,8 @@ accept = ->
 			body: JSON.stringify(
 				applicationID: application.id
 			)
-		res = await fetch('/console/applications/accept/', init).catch(->
-			saveRequest('/console/applications/accept/', init)
+		res = await fetch('/console/api/v0.1/applications/accept/', init).catch(->
+			saveRequest('/console/api/v0.1/applications/accept/', init)
 		)
 
 		if not res.ok
@@ -185,8 +185,8 @@ reject = ->
 			\nIf you are still unsure about this application, it is recommended that you leave this
 			application for a final decision.
 			\n\nAre you ABSOLUTELY sure you want to continue?")
-		res = await fetch('/console/applications/reject/', init).catch(->
-			saveRequest('/console/applications/reject/', init)
+		res = await fetch('/console/api/v0.1/applications/reject/', init).catch(->
+			saveRequest('/console/api/v0.1/applications/reject/', init)
 		)
 		if not res.ok
 			switch await res.text()

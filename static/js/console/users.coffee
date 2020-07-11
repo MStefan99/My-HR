@@ -51,8 +51,8 @@ addUser = (user) ->
 					body: JSON.stringify(
 						username: user.username
 					)
-				res = await fetch('/console/users/', init).catch(->
-					saveRequest('/console/users/', init)
+				res = await fetch('/console/api/v0.1/users/', init).catch(->
+					saveRequest('/console/api/v0.1/users/', init)
 				)
 				if not res.ok
 					if await res.text() is 'CANNOT_DELETE_ADMIN'
@@ -67,7 +67,7 @@ addUser = (user) ->
 
 
 addEventListener('load', ->
-	res = await fetch('/console/get-users/').catch(->
+	res = await fetch('/console/api/v0.1/users/').catch(->
 		alert('Could not download the user list.
 			Please check your internet connection.')
 	)
@@ -91,8 +91,8 @@ formElement.addEventListener('submit', (e) ->
 			username: username
 			admin: admin
 		)
-	res = await fetch('/console/users/', init).catch(->
-		saveRequest('/console/users/', init)
+	res = await fetch('/console/api/v0.1/users/', init).catch(->
+		saveRequest('/console/api/v0.1/users/', init)
 	)
 
 	if not res.ok

@@ -8,7 +8,7 @@ remove = (element) ->
 
 
 addEventListener('load', ->
-	res = await fetch('/console/get-feedback/').catch(->
+	res = await fetch('/console/api/v0.1/feedback/').catch(->
 		alert('Could not download feedback. Please check your internet connection.')
 	)
 	feedbacks = await res.json()

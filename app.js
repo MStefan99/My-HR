@@ -9,6 +9,7 @@ const path = require('path');
 const {applicationRouter} = require('./bin/user');
 const {consoleRouter} = require('./bin/console');
 const {internalRouter} = require('./bin/lib/internal');
+const {apiRouter0_1} = require('./bin/console_api/v0.1');
 
 
 const publicCache = process.env.NO_CACHE ?
@@ -45,6 +46,7 @@ app.use('/js', express.static(path.join(__dirname, 'static', 'js'), cacheOptions
 app.use('/img', express.static(path.join(__dirname, 'static', 'img'), cacheOptions));
 app.use('/favicon.ico', express.static(path.join(__dirname, 'static', 'img', 'me-logo.svg'), cacheOptions));
 app.use('/int', internalRouter);
+app.use('/console/api/v0.1', apiRouter0_1);
 app.use('/console', consoleRouter);
 app.use(applicationRouter);
 

@@ -54,8 +54,8 @@ addNote = (note) ->
 					body: JSON.stringify(
 						id: note.id
 					)
-				res = await fetch('/console/notes/', init).catch(->
-					saveRequest('/console/notes', init)
+				res = await fetch('/console/api/v0.1/notes/', init).catch(->
+					saveRequest('/console/api/v0.1/notes', init)
 				)
 				if res.ok
 					remove(noteElement)
@@ -109,7 +109,7 @@ addEventListener('load', ->
 	params = new URLSearchParams(window.location.search)
 	applicationID = params.get('id')
 
-	res = await fetch('/console/get-notes/' + if applicationID
+	res = await fetch('/console/api/v0.1/notes/' + if applicationID
 	then "?applicationID=#{applicationID}" else '').catch(->
 		alert('Could not get notes. Please check your internet connection.')
 	)
@@ -176,8 +176,8 @@ noteSubmitButton.addEventListener('click', ->
 				applicationID: applicationID
 			)
 
-		res = await fetch('/console/notes/', init).catch(->
-			saveRequest('/console/notes/', init)
+		res = await fetch('/console/api/v0.1/notes/', init).catch(->
+			saveRequest('/console/api/v0.1/notes/', init)
 			noteTextarea.value = ''
 			noteSubmitButton.classList.add('disabled')
 		)

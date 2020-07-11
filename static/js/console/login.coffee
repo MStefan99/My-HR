@@ -35,7 +35,7 @@ validate = ->
 
 formElement.addEventListener('submit', (e) ->
 	e.preventDefault()
-	res = await fetch('/console/verify-login/'
+	res = await fetch('/console/api/v0.1/verify-login/'
 		method: 'post'
 		headers:
 			'Content-Type': 'application/json'

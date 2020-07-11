@@ -12,7 +12,7 @@ remove = (element) ->
 
 addEventListener('load', ->
 	params = new URLSearchParams(window.location.search)
-	path = '/console/get-applications/?type=' + (params.get('type') || 'all')
+	path = '/console/api/v0.1/applications/?type=' + (params.get('type') || 'all')
 
 	switch params.get('type')
 		when null then title = 'All applications'
