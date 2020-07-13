@@ -6,6 +6,10 @@ const offlineResources = [
 	'/console/',
 	'/console/desktop/',
 	'/console/applications/',
+	'/console/applications/?type=stars',
+	'/console/applications/?type=pending',
+	'/console/applications/?type=accepted',
+	'/console/applications/?type=rejected',
 	'/console/application/',
 	'/console/settings/',
 	'/console/feedback/',
@@ -68,12 +72,19 @@ const offlineResources = [
 ];
 
 
+const currentVersion = 'v0.9.1-beta'
+
+
 addEventListener('install', async () => {
-	console.log('Service worker installing...');
+	caches.keys().then((keys) => {
+		for (const key of keys) {
+			if (key !== currentVersion) {
+				caches.delete(key);
+			}
+		}
+	});
 
-	await caches.delete('my-hr');
-	cache = await caches.open('my-hr');
-
+	cache = await caches.open(currentVersion);
 	for (const resource of offlineResources) {
 		fetch(resource).then(response => {
 			cache.put(resource, response);
@@ -119,7 +130,7 @@ function canBeCached(req) {
 		if (req.method !== 'GET') {
 			return 'NO';
 		} else if (req.url.match(/logout|exit/)) {
-			return 'MUST_UPDATE';
+			return 'NO';
 		} else {
 			return 'YES';
 		}
@@ -128,7 +139,7 @@ function canBeCached(req) {
 
 
 async function handleRequest(req) {
-	const cache = await caches.open('my-hr');
+	const cache = await caches.open(currentVersion);
 	const cachedRes = await cache.match(req);
 
 	switch (canBeCached(req)) {
@@ -165,6 +176,3 @@ async function handleRequest(req) {
 self.addEventListener('fetch', (e) => {
 	e.respondWith(handleRequest(e.request));
 });
-
-
-// Version: v0.9.1-beta
