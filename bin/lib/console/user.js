@@ -4,7 +4,6 @@ const uuid = require('uuid');
 const crypto = require('crypto');
 
 const openDB = require('../db');
-const libApplication = require('../application');
 
 
 const hashSecret = 'Your HR secret key';
@@ -153,20 +152,43 @@ class User {
 		return this.passwordHash === hash.digest('hex');
 	}
 
-	async resetPassword() {
-		const db = await openDB();
-		this.setupCode = uuid.v4();
-		this.passwordHash = null;
 
-		await db.run(`update console_users
+	async resetPassword() {
+		if (this.username === 'System') {
+			return 'CANNOT_RESET_SYSTEM';
+		} else {
+			const db = await openDB();
+			this.setupCode = uuid.v4();
+			this.passwordHash = null;
+
+			await db.run(`update console_users
                           set password_hash=null,
                               setup_code=$code
                           where id=$id`, {
-			$id: this.id,
-			$code: this.setupCode
-		});
-		await db.close();
-		return 'OK';
+				$id: this.id,
+				$code: this.setupCode
+			});
+			await db.close();
+			return 'OK';
+		}
+	}
+
+
+	async resetOTP() {
+		if (this.username === 'System') {
+			return 'CANNOT_RESET_SYSTEM';
+		} else {
+			const db = await openDB();
+			this.secret = null;
+
+			await db.run(`update console_users
+                          set secret=null
+                          where id=$id`, {
+				$id: this.id,
+			});
+			await db.close();
+			return 'OK';
+		}
 	}
 
 
@@ -205,54 +227,6 @@ class User {
                       where id=$id`, {$secret: secret, $id: this.id});
 		await db.close();
 		return 'OK';
-	}
-
-
-	async getStarredApplications() {
-		const applications = [];
-
-		const db = await openDB();
-		const allApplicationData = await db.all(`select a.id,
-                                                        first_name   as firstName,
-                                                        last_name    as lastName,
-                                                        email,
-                                                        backup_email as backupEmail,
-                                                        phone,
-                                                        backup_phone as backupPhone,
-                                                        team,
-                                                        links,
-                                                        free_form    as freeForm,
-                                                        file_name    as fileName,
-                                                        file_path    as filePath,
-                                                        accepted
-                                                 from applications a
-                                                          left join
-                                                      console_stars cs on a.id=cs.application_id
-                                                 where cs.user_id=$id
-                                                 order by cs.id desc`, {$id: this.id});
-
-		await db.close();
-
-		for (const applicationData of allApplicationData) {
-			const application = new libApplication();
-
-			Object.assign(application, applicationData);
-			applications.push(application)
-		}
-		return applications;
-	}
-
-
-	async hasStarredApplication(application) {
-		const db = await openDB();
-
-		const starred = await db.get(`select 1
-                                      from console_stars
-                                      where user_id=$uid
-                                        and application_id=$aid`,
-			{$aid: application.id, $uid: this.id});
-		await db.close();
-		return !!starred;
 	}
 
 
@@ -296,17 +270,6 @@ class User {
 			await db.close();
 			return 'OK';
 		}
-	}
-
-
-	async deleteAllSessions() {
-		//TODO: move to session library (important)
-		const db = await openDB();
-		await db.run(`delete
-                      from console_sessions
-                      where user_id=$id`, {$id: this.id});
-		await db.close();
-		return 'OK';
 	}
 
 

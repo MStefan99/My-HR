@@ -142,7 +142,14 @@ router.post('/register/', async (req, res) => {
 				});
 				break;
 			case 'OK':
-				res.redirect(303, '/console/setup-otp/');
+				if (!req.user.secret) {
+					res.redirect(303, '/console/setup-otp/');
+				} else {
+					res.clearCookie('CUID', consoleCookieOptions);
+					res.render('console/status', {
+						title: 'Account created!', info: 'You can log in with your new account now!'
+					});
+				}
 				break;
 		}
 	}
@@ -182,7 +189,7 @@ router.get('/logout', async (req, res) => {
 
 
 router.get('/exit', async (req, res) => {
-	await req.user.deleteAllSessions();
+	await libSession.deleteAllUserSessions(req.user);
 
 	res.clearCookie('CSID', consoleCookieOptions);
 	res.redirect('/console/login/');
@@ -270,7 +277,7 @@ router.post('/settings', async (req, res) => {
 				});
 				break;
 			case 'OK':
-				await req.user.deleteAllSessions();
+				await libSession.deleteAllUserSessions(req.user);
 
 				res.clearCookie('CSID', consoleCookieOptions);
 				res.render('console/status', {

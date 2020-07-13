@@ -121,7 +121,7 @@ router.delete('/sessions', async (req, res) => {
 router.get('/applications', async (req, res) => {
 	let applications;
 	if (req.query.type === 'stars') {
-		applications = await req.user.getStarredApplications();
+		applications = await libApplication.getApplicationsStarredByUser(req.user);
 	} else {
 		applications = await libApplication.getApplicationsByType(req.query.type);
 	}
@@ -136,7 +136,7 @@ router.get('/application', async (req, res) => {
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
 	} else {
-		application.starred = await req.user.hasStarredApplication(application);
+		application.starred = await application.isStarredByUser(req.user);
 
 		res.json(application);
 	}
@@ -363,6 +363,30 @@ router.delete('/users', async (req, res) => {
 			res.sendStatus(200);
 			break;
 	}
+});
+
+
+router.patch('/users', async (req, res) => {
+	const user = await libUser.getUserByUsername(req.body.username);
+
+	if (req.body.resetPassword) {
+		if (await user.resetPassword() === 'CANNOT_RESET_SYSTEM') {
+			res.status.send('CANNOT_RESET_SYSTEM');
+			return;
+		}
+	}
+	if (req.body.resetOTP) {
+		if (await user.resetOTP() === 'CANNOT_RESET_SYSTEM') {
+			res.status.send('CANNOT_RESET_SYSTEM');
+			return;
+		}
+	}
+	user.otpSetup = !!user.secret;
+	delete user.id;
+	delete user.passwordHash;
+	delete user.secret;
+
+	res.json(user);
 });
 
 

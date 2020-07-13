@@ -94,7 +94,8 @@ describe('With test session and user', () => {
 
 
 	test('Delete all sessions', async () => {
-		expect(await user.deleteAllSessions()).toBe('OK');
+		expect(await libSession.deleteAllUserSessions(user))
+			.toBe('OK');
 
 		const sessions = await libSession.getUserSessions(user);
 		expect(sessions).toHaveLength(0);

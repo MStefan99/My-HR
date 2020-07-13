@@ -33,6 +33,44 @@ addUser = (user) ->
 	otpCell.innerHTML = if user.otpSetup then 'Yes' else 'No'
 	tableRow.appendChild(otpCell)
 
+	resetCell = document.createElement('td')
+	tableRow.appendChild(resetCell)
+	resetLink = document.createElement('span')
+	resetCell.appendChild(resetLink)
+	resetLink.classList.add('clickable')
+	resetLink.innerHTML = 'Reset'
+	if user.username isnt 'System'
+		resetLink.addEventListener('click', ->
+			if confirm("You are about to reset user #{user.username}.
+							\nAre you sure you want to continue?")
+				resetOTP = confirm('Do you also want to reset the 2FA?')
+				init =
+					method: 'PATCH'
+					headers:
+						'Content-Type': 'application/json'
+					body: JSON.stringify(
+						username: user.username
+						resetPassword: true
+						resetOTP: resetOTP
+					)
+				res = await fetch('/console/api/v0.1/users/', init).catch(->
+					saveRequest('/console/api/v0.1/users/', init)
+				)
+				if not res.ok
+					if await res.text() is 'CANNOT_RESET_SYSTEM'
+						alert('You cannot reset this user account
+							since it is required for proper system operation')
+					else
+						alert('An error occurred while removing a user.
+							Please check your internet connection and try again.')
+				else
+					updatedUser = await res.json()
+					registeredCell.innerHTML = updatedUser.setupCode
+					if resetOTP
+						otpCell.innerHTML = 'No'
+		)
+
+
 	removeCell = document.createElement('td')
 	tableRow.appendChild(removeCell)
 	removeLink = document.createElement('span')
@@ -56,7 +94,7 @@ addUser = (user) ->
 				)
 				if not res.ok
 					if await res.text() is 'CANNOT_DELETE_ADMIN'
-						alert('You cannot delete this user
+						alert('You cannot delete this user account
 							since it is required for proper system operation')
 					else
 						alert('An error occurred while removing a user.

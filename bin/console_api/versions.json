@@ -1,5 +1,11 @@
 [
 	{
+		"version": "v0.9.1-beta",
+		"logs": [
+			"Administrators can now reset user passwords and 2FA in case password/authenticator is lost or forgotten"
+		]
+	},
+	{
 		"version": "v0.9.0-beta",
 		"logs": [
 			"Some tables now have pages to simplify searching for information you need"

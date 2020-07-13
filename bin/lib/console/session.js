@@ -106,6 +106,16 @@ class Session {
 	}
 
 
+	static async deleteAllUserSessions(user) {
+		const db = await openDB();
+		await db.run(`delete
+                      from console_sessions
+                      where user_id=$id`, {$id: user.id});
+		await db.close();
+		return 'OK';
+	}
+
+
 	async delete() {
 		const db = await openDB();
 		await db.run(`delete

@@ -2,6 +2,7 @@
 
 const libUser = require('../../lib/console/user');
 const libSession = require('../../lib/user/session');
+const libApplication = require('../../lib/application');
 
 const testLibUser = require('../testLib/console/user');
 const testLibSession = require('../testLib/user/session');
@@ -149,15 +150,31 @@ describe('With test user', () => {
 	});
 
 
+	test('Reset OTP', async () => {
+		const system = await libUser.getUserByID(0);
+
+		expect(await system.resetOTP())
+			.toBe('CANNOT_RESET_SYSTEM');
+		expect(await user.resetOTP())
+			.toBe('OK');
+
+		expect(user.secret).toBeNull();
+		expect(await libUser.getUserByID(user.id))
+			.toEqual(user);
+	});
+
+
 	test('Reset password', async () => {
+		const system = await libUser.getUserByID(0);
+
+		expect(await system.resetPassword())
+			.toBe('CANNOT_RESET_SYSTEM');
 		expect(await user.resetPassword())
 			.toBe('OK');
-		const retrievedUser = await libUser.getUserByID(user.id);
 
 		expect(user.passwordHash).toBeNull();
 		expect(user.setupCode).not.toBeNull();
-		expect(retrievedUser.passwordHash).toBeNull();
-		expect(retrievedUser.setupCode).not.toBeNull();
+		expect(await libUser.getUserByID(user.id))
 	});
 
 
@@ -193,16 +210,16 @@ describe('With test user', () => {
 
 
 		test('Star application', async () => {
-			expect(await user.getStarredApplications())
+			expect(await libApplication.getApplicationsStarredByUser(user))
 				.toHaveLength(0);
-			expect(await user.hasStarredApplication(application))
+			expect(await application.isStarredByUser(user))
 				.toBe(false);
 
 			expect(await user.starApplication(application))
 				.toBe('OK');
-			expect(await user.getStarredApplications())
+			expect(await libApplication.getApplicationsStarredByUser(user))
 				.toContainEqual(application);
-			expect(await user.hasStarredApplication(application))
+			expect(await application.isStarredByUser(user))
 				.toBe(true);
 		});
 
@@ -210,22 +227,22 @@ describe('With test user', () => {
 		test('Star starred application', async () => {
 			expect(await user.starApplication(application))
 				.toBe('ALREADY_STARRED');
-			expect(await user.getStarredApplications())
+			expect(await libApplication.getApplicationsStarredByUser(user))
 				.toContainEqual(application);
 		});
 
 
 		test('Unstar application', async () => {
-			expect(await user.getStarredApplications())
+			expect(await libApplication.getApplicationsStarredByUser(user))
 				.toContainEqual(application);
-			expect(await user.hasStarredApplication(application))
+			expect(await application.isStarredByUser(user))
 				.toBe(true);
 
 			expect(await user.unstarApplication(application))
 				.toBe('OK');
-			expect(await user.getStarredApplications())
+			expect(await libApplication.getApplicationsStarredByUser(user))
 				.toHaveLength(0);
-			expect(await user.hasStarredApplication(application))
+			expect(await application.isStarredByUser(user))
 				.toBe(false);
 		});
 
@@ -233,7 +250,7 @@ describe('With test user', () => {
 		test('Unstar not-starred application', async () => {
 			expect(await user.unstarApplication(application))
 				.toBe('NOT_STARRED');
-			expect(await user.getStarredApplications())
+			expect(await libApplication.getApplicationsStarredByUser(user))
 				.toHaveLength(0);
 		});
 	});
