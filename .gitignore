@@ -210,3 +210,4 @@ package-lock.json
 
 # Exceptions
 !static/js/console/desktop.js
+!static/js/console/worker.js
