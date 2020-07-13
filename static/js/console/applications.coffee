@@ -100,12 +100,16 @@ addEventListener('load', ->
 	res = await fetch(path).catch(->
 		alert('Could not download application list. Please check your internet connection.')
 	)
-	applications = await res.json()
 
-	applicationCountElement.innerHTML = "Total: #{applications.length} applications in all teams"
-	for application in applications
-		addApplication(application)
+	if res.status is 403
+		alert('You have been logged out. Please sign in again.')
+	else
+		applications = await res.json()
 
-	paginate()
-	filter(params.get('team') || 'all', false)
+		applicationCountElement.innerHTML = "Total: #{applications.length} applications in all teams"
+		for application in applications
+			addApplication(application)
+
+		paginate()
+		filter(params.get('team') || 'all', false)
 )

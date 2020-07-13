@@ -99,8 +99,12 @@ addEventListener('load', ->
 		alert('Could not download session list.
 			Please check your internet connection.')
 	)
-	sessions = await res.json()
 
-	for session in sessions
-		addSession(session)
+	if res.status is 403
+		alert('You have been logged out. Please sign in again.')
+	else
+		sessions = await res.json()
+
+		for session in sessions
+			addSession(session)
 )

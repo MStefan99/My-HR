@@ -109,10 +109,14 @@ addEventListener('load', ->
 		alert('Could not download the user list.
 			Please check your internet connection.')
 	)
-	users = await res.json()
 
-	for user in users
-		addUser(user)
+	if res.status is 403
+		alert('You have been logged out. Please sign in again.')
+	else
+		users = await res.json()
+
+		for user in users
+			addUser(user)
 )
 
 

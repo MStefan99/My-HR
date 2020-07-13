@@ -34,8 +34,10 @@ addEventListener('load', ->
 		alert('Could not download application data. Please check your internet connection.')
 	)
 
-	if not res.ok
-		alert('An application was not found. It may have been removed or the URL is wrong.')
+	if res.status is 403
+		alert('You have been logged out. Please sign in again.')
+	else if res.status is 404
+		alert('Application not found. It may have been deleted or the link may be invalid.')
 	else
 		application = await res.json()
 

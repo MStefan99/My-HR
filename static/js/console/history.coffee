@@ -22,11 +22,17 @@ addVersion = (version) ->
 
 
 addEventListener('load', ->
-	res = await fetch('/console/api/v0.1/versions')
-	versions = await res.json()
+	res = await fetch('/console/api/v0.1/versions').catch(->
+		alert('Could not download version list. Please check your internet connection.')
+	)
 
-	for version in versions
-		addVersion(version)
+	if res.status is 403
+		alert('You have been logged out. Please sign in again.')
+	else
+		versions = await res.json()
 
-	paginate(8)
+		for version in versions
+			addVersion(version)
+
+		paginate(8)
 )

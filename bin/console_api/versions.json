@@ -20,7 +20,7 @@
 	{
 		"version": "v0.8.0-beta",
 		"logs": [
-			"You can install My HR now by following a prompt in browser and even use it offline after it's installed!",
+			"My HR now works offline and you can also install it as an app by following a prompt in your browser!",
 			"Major performance improvements"
 		]
 	},

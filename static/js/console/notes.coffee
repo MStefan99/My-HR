@@ -113,11 +113,15 @@ addEventListener('load', ->
 	then "?applicationID=#{applicationID}" else '').catch(->
 		alert('Could not get notes. Please check your internet connection.')
 	)
-	notes = await res.json()
 
-	for note in notes
-		addNote(note)
-	filter()
+	if res.status is 403
+		alert('You have been logged out. Please sign in again.')
+	else
+		notes = await res.json()
+
+		for note in notes
+			addNote(note)
+		filter()
 )
 
 

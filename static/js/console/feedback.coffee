@@ -14,23 +14,27 @@ addEventListener('load', ->
 	res = await fetch('/console/api/v0.1/feedback/').catch(->
 		alert('Could not download feedback. Please check your internet connection.')
 	)
-	feedbacks = await res.json()
 
-	for feedback in feedbacks
-		tableRow = document.createElement('tr')
-		table.appendChild(tableRow)
+	if res.status is 403
+		alert('You have been logged out. Please sign in again.')
+	else
+		feedbacks = await res.json()
 
-		nameCell = document.createElement('td')
-		nameCell.innerHTML = feedback.name || '[Not provided]'
-		tableRow.appendChild(nameCell)
+		for feedback in feedbacks
+			tableRow = document.createElement('tr')
+			table.appendChild(tableRow)
 
-		emailCell = document.createElement('td')
-		emailCell.innerHTML = feedback.email || '[Not provided]'
-		tableRow.appendChild(emailCell)
+			nameCell = document.createElement('td')
+			nameCell.innerHTML = feedback.name || '[Not provided]'
+			tableRow.appendChild(nameCell)
 
-		messageCell = document.createElement('td')
-		messageCell.innerHTML = feedback.message
-		tableRow.appendChild(messageCell)
+			emailCell = document.createElement('td')
+			emailCell.innerHTML = feedback.email || '[Not provided]'
+			tableRow.appendChild(emailCell)
 
-	paginate()
+			messageCell = document.createElement('td')
+			messageCell.innerHTML = feedback.message
+			tableRow.appendChild(messageCell)
+
+		paginate()
 )

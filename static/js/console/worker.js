@@ -87,7 +87,9 @@ addEventListener('install', async () => {
 	cache = await caches.open(currentVersion);
 	for (const resource of offlineResources) {
 		fetch(resource).then(response => {
-			cache.put(resource, response);
+			if (!response.status in [400, 404]) {
+				cache.put(resource, response);
+			}
 		});
 	}
 });
@@ -114,7 +116,6 @@ addEventListener('sync', async () => {
 		store.clear();
 	});
 });
-
 
 
 function canBeCached(req) {
@@ -150,7 +151,9 @@ async function handleRequest(req) {
 				try {
 					const res = await fetch(req);
 
-					await cache.put(req, res.clone());
+					if (res.ok) {
+						await cache.put(req, res.clone());
+					}
 					return res;
 				} catch (e) {
 					return cache.match('/console/not-connected/');
@@ -161,7 +164,9 @@ async function handleRequest(req) {
 			try {
 				const res = await fetch(req);
 
-				await cache.put(req, res.clone());
+				if (res.ok) {
+					await cache.put(req, res.clone());
+				}
 				return res;
 			} catch (e) {
 				return cache.match(req);
