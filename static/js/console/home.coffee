@@ -4,8 +4,8 @@ Storage = window.localStorage;
 
 
 addEventListener('load', ->
-	versionElement = document.querySelector('#version-number')
-	version = versionElement.innerHTML
+	versionElement = document.querySelector('meta[name="version"]')
+	version = versionElement.content
 
 	if Storage.getItem('mh_about-read') isnt 'true'
 		if confirm('Hi, it\'s great to meet you!

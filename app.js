@@ -59,8 +59,7 @@ if (process.env.NO_HTTPS) {
 		hostname: 'apply.mineeclipse.com',
 		path: '/',
 		key: fs.readFileSync(process.env.KEYFILE),
-		cert: fs.readFileSync(process.env.CERTFILE),
-		ca: fs.readFileSync(process.env.CA)
+		cert: fs.readFileSync(process.env.CERTFILE)
 	};
 
 	https.createServer(serverOptions, app).listen(443);

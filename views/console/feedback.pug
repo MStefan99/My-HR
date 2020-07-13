@@ -11,13 +11,13 @@ html(lang='en')
 
 		main
 			h1 User feedback
-			table
+			table.paginated
 				thead
 					tr
 						th Name
 						th Email
-						th Message
-				tbody#feedback-table
+							th Message
+					tbody#feedback-table
 		script(async type='module', src='/js/console/feedback.js')
 
 		footer

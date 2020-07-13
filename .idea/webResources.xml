@@ -5,16 +5,7 @@
       <entry url="file://$PROJECT_DIR$">
         <entryData>
           <resourceRoots>
-            <path value="file://$PROJECT_DIR$/database" />
-            <path value="file://$PROJECT_DIR$/bin/mail" />
-            <path value="file://$PROJECT_DIR$/database/ddl" />
-            <path value="file://$PROJECT_DIR$/database/test_data" />
             <path value="file://$PROJECT_DIR$/static" />
-            <path value="file://$PROJECT_DIR$/static/img" />
-            <path value="file://$PROJECT_DIR$/static/js" />
-            <path value="file://$PROJECT_DIR$/static/style" />
-            <path value="file://$PROJECT_DIR$/static/js/console" />
-            <path value="file://$PROJECT_DIR$/static/js/user" />
           </resourceRoots>
         </entryData>
       </entry>

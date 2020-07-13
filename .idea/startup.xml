@@ -3,6 +3,7 @@
   <component name="ProjectStartupSharedConfiguration">
     <configurations>
       <configuration id="Node.js.Run" name="Run" />
+      <configuration id="npm.Test all" name="Test all" />
     </configurations>
   </component>
 </project>

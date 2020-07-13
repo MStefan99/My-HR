@@ -25,8 +25,8 @@ async function sendMail(email, subject, template, params = {}) {
 			port: 465,
 			secure: true,
 			auth: {
-				user: 'AKIA6G2A3BYBHJBIBXKE',
-				pass: 'BKMG1/6xZ4pzftcqUkp/k3vRwVTvRabjIoasoS/yjsfF',
+				user: process.env.SMTP_USERNAME,
+				pass: process.env.SMTP_PASSWORD,
 			},
 		});
 

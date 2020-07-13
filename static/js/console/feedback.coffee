@@ -3,6 +3,9 @@
 table = document.querySelector('#feedback-table')
 
 
+import {paginate} from '/js/console/pages.js'
+
+
 remove = (element) ->
 	element.parentNode.removeChild(element)
 
@@ -28,6 +31,6 @@ addEventListener('load', ->
 		messageCell = document.createElement('td')
 		messageCell.innerHTML = feedback.message
 		tableRow.appendChild(messageCell)
+
+	paginate()
 )
-
-

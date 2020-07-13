@@ -3,6 +3,9 @@
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const path = require('path');
+const fs = require('fs');
+const util = require('util');
 
 const middleware = require('../lib/console/middleware');
 const libAuth = require('../lib/console/auth');
@@ -15,6 +18,8 @@ const lib2FA = require('../lib/console/2fa');
 
 const sendMail = require('../lib/mail');
 const {consoleCookieOptions} = require('../lib/cookie');
+
+const readFile = util.promisify(fs.readFile);
 
 
 const router = express.Router();
@@ -135,6 +140,14 @@ router.get('/application', async (req, res) => {
 
 		res.json(application);
 	}
+});
+
+
+router.get('/versions', async (req, res) => {
+	res.set('Content-Type', 'application/json');
+	const feedback = await readFile(path.join(__dirname, 'versions.json'));
+
+	res.send(feedback);
 });
 
 

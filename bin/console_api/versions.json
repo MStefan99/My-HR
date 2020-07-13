@@ -1,0 +1,193 @@
+[
+	{
+		"version": "v0.9.0-beta",
+		"logs": [
+			"Some tables now have pages to simplify searching for information you need"
+		]
+	},
+	{
+		"version": "v0.8.1-beta",
+		"logs": [
+			"Offline mode now supports all actions, including accepting/rejecting applications, adding notes, etc."
+		]
+	},
+	{
+		"version": "v0.8.0-beta",
+		"logs": [
+			"You can install My HR now by following a prompt in browser and even use it offline after it's installed!",
+			"Major performance improvements"
+		]
+	},
+	{
+		"version": "v0.7.4-beta",
+		"logs": [
+			"Sign-in forms now feature advanced validation",
+			"Performance improvements",
+			"Minor usability fixes"
+		]
+	},
+	{
+		"version": "v0.7.3-beta",
+		"logs": [
+			"Dark mode is very dark now!",
+			"You can now sign out individual devices in settings",
+			"Security patch"
+		]
+	},
+	{
+		"version": "v0.7.2-beta",
+		"logs": [
+			"You can now add and remove icons from Dock in Desktop"
+		]
+	},
+	{
+		"version": "v0.7.1-beta",
+		"logs": [
+			"Applications also have notes now"
+		]
+	},
+	{
+		"version": "v0.7.0-beta",
+		"logs": [
+			"My HR now collects user feedback",
+			"You can read it on a feedback page",
+			"On a new note page you can now leave notes for yourself and other users of My HR",
+			"Notes can be private or public"
+		]
+	},
+	{
+		"version": "v0.6.0-beta",
+		"logs": [
+			"Dark mode!"
+		]
+	},
+	{
+		"version": "v0.5.4-beta",
+		"logs": [
+			"Help page was added",
+			"New Desktop background"
+		]
+	},
+	{
+		"version": "v0.5.3-beta",
+		"logs": [
+			"Desktop windows are now restored at launch"
+		]
+	},
+	{
+		"version": "v0.5.2-beta",
+		"logs": [
+			"Desktop now has settings panel",
+			"You can now choose to hide Desktop menu and Dock",
+			"You will now see welcome messages on first login and after updates",
+			"Minor design updates"
+		]
+	},
+	{
+		"version": "v0.5.1-beta",
+		"logs": [
+			"Design overhaul",
+			"Improved login and registration experience"
+		]
+	},
+	{
+		"version": "v0.5.0-beta",
+		"logs": [
+			"My HR Desktop was added"
+		]
+	},
+	{
+		"version": "v0.4.0-beta",
+		"logs": [
+			"Migrated to the new core libraries"
+		]
+	},
+	{
+		"version": "v0.3.1-beta",
+		"logs": [
+			"Links in applications are now clickable"
+		]
+	},
+	{
+		"version": "v0.3.0-beta",
+		"logs": [
+			"Filtering improvements",
+			"Performance overhaul"
+		]
+	},
+	{
+		"version": "v0.2.0-beta",
+		"logs": [
+			"Applications can now be filtered by team"
+		]
+	},
+	{
+		"version": "v0.1.4-beta",
+		"logs": [
+			"An email is now sent when an application is accepted/rejected",
+			"Security patch"
+		]
+	},
+	{
+		"version": "v0.1.3-beta",
+		"logs": [
+			"Applications can now be accepted or rejected",
+			"New home page"
+		]
+	},
+	{
+		"version": "v0.1.2-beta",
+		"logs": [
+			"You can now star applications",
+			"Share button was added",
+			"Pages now have different titles"
+		]
+	},
+	{
+		"version": "v0.1.1-beta",
+		"logs": [
+			"This page was added",
+			"404 page was added"
+		]
+	},
+	{
+		"version": "v0.1.0-beta",
+		"logs": [
+			"You can now view your active sessions in settings",
+			"Version number was added at the bottom of the page"
+		]
+	},
+	{
+		"version": "v0.0.5-alpha",
+		"logs": [
+			"Admins can now add and delete users"
+		]
+	},
+	{
+		"version": "v0.0.4-alpha",
+		"logs": [
+			"You can now change your password in settings"
+		]
+	},
+	{
+		"version": "v0.0.3-alpha",
+		"logs": [
+			"Moved application view onto a separate page",
+			"2FA fixes and improvements"
+		]
+	},
+	{
+		"version": "v0.0.2-alpha",
+		"logs": [
+			"Two-Factor authentication is introduced",
+			"Applications can now be viewed on the home page"
+		]
+	},
+	{
+		"version": "v0.0.1-alpha",
+		"logs": [
+			"Initial My HR release",
+			"Users can register and log in with their password now"
+		]
+	}
+]
