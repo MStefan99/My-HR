@@ -89,7 +89,11 @@ addEventListener('install', async () => {
 
 	cache = await caches.open(currentVersion);
 	for (const resource of offlineResources) {
-		fetch(resource).then(response => {
+		fetch(resource, {
+			headers: {
+				'Cache-control': 'no-cache'
+			}
+		}).then(response => {
 			if (!(response.status in [303, 400, 403, 500])) {
 				cache.put(resource, response);
 			}
