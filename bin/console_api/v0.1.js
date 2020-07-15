@@ -34,7 +34,7 @@ router.use(middleware.getUser)
 
 router.get('/otp', async (req, res) => {
 	if (req.user === 'NO_USER') {
-		res.status(400).send('NO_USER');
+		res.status(401).send('NO_USER');
 	} else {
 		res.json(lib2FA.generateSecret(req.user));
 	}
@@ -64,7 +64,7 @@ router.post('/verify-setup-code', async (req, res) => {
 	// User is retrieved using CUID cookie
 
 	if (req.user === 'NO_USER') {
-		res.status(400).send('NO_USER');
+		res.status(401).send('NO_USER');
 	} else if (!req.body.setupCode) {
 		res.status(400).send('NO_CODE');
 	} else if (req.body.setupCode !== req.user.setupCode) {
@@ -94,7 +94,9 @@ router.use((req, res, next) => {
 		req.headers['user-agent'],
 		req.headers['x-forwarded-for'] || req.connection.remoteAddress,
 		consoleCookieOptions.maxAge);
-	if (status !== 'OK') {
+	if (status === 'NO_SESSION') {
+		res.status(401).send(status);
+	} if (status !== 'OK') {
 		res.status(403).send(status);
 	} else {
 		next();
@@ -197,7 +199,7 @@ router.post('/stars', async (req, res) => {
 				res.status(400).send('ALREADY_STARRED');
 				break;
 			case 'OK':
-				res.sendStatus(200);
+				res.sendStatus(201);
 				break;
 		}
 	}
@@ -249,7 +251,7 @@ router.post('/notes', async (req, res) => {
 			note.my = true;
 			note.author = req.user.username;
 
-			res.json(note);
+			res.status(201).json(note);
 			break;
 	}
 });
@@ -403,7 +405,7 @@ router.post('/users', async (req, res) => {
 			delete user.passwordHash;
 			delete user.secret;
 
-			res.json(user);
+			res.status(201).json(user);
 			break;
 	}
 });

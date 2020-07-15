@@ -45,6 +45,7 @@ const offlineResources = [
 	'/img/checkmark.svg',
 	'/img/cross.svg',
 	'/img/desktop.jpg',
+	'/img/desktop.svg',
 	'/img/help-application.jpg',
 	'/img/help-desktop.jpg',
 	'/img/help-feedback.jpg',
@@ -72,7 +73,7 @@ const offlineResources = [
 ];
 
 
-const currentVersion = 'v0.9.1-beta'
+const currentVersion = 'v0.9.2-beta'
 
 
 addEventListener('install', async () => {
@@ -87,7 +88,7 @@ addEventListener('install', async () => {
 	cache = await caches.open(currentVersion);
 	for (const resource of offlineResources) {
 		fetch(resource).then(response => {
-			if (!response.status in [400, 404]) {
+			if (!(response.status in [303, 400, 403, 500])) {
 				cache.put(resource, response);
 			}
 		});

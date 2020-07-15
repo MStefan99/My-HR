@@ -16,30 +16,41 @@ html(lang='en')
 				div.section
 					h3
 						a(href='/console/applications/') All applications
+						img.icon.inline-icon(src='/img/applications.svg' alt='All applications')
 					h3
 						a(href='/console/applications/?type=stars') My stars
+						img.icon.inline-icon(src='/img/star-active.svg' alt='My stars')
 					h3
 						a(href='/console/applications/?type=pending') Pending applications
+						img.icon.inline-icon(src='/img/progress.svg' alt='Pending applications')
 					h3
 						a(href='/console/applications/?type=accepted') Accepted applications
+						img.icon.inline-icon(src='/img/checkmark.svg' alt='Accepted applications')
 					h3
 						a(href='/console/applications/?type=rejected') Rejected applications
+						img.icon.inline-icon(src='/img/cross.svg' alt='Rejected applications')
 				h2 Tools
 				div.section
 					h3
 						a(href='/console/feedback/') User feedback
+						img.icon.inline-icon(src='/img/chat-bubble.svg' alt='User feedback')
 					h3
 						a(href='/console/notes/') Notes
+						img.icon.inline-icon(src='/img/sticky-note.svg' alt='Notes')
 					h3.desktop-only
 						a(href='/console/desktop/') Desktop
+						img.icon.inline-icon(src='/img/desktop.svg' alt='Desktop')
 				h2 Security
 				div.section
 					h3
 						a(href='/console/settings/') Settings
+						img.icon.inline-icon(src='/img/settings.svg' alt='Settings')
 					h3
 						a(href='/console/logout/') Sign out
+						img.icon.inline-icon(src='/img/exit.svg' alt='Sign out')
 					h3
 						a(href='/console/exit/') Sign out everywhere
+						img.icon.inline-icon(src='/img/close.svg' alt='Sign out everywhere')
 			script(async type='module' src='/js/console/home.js')
 
 		footer

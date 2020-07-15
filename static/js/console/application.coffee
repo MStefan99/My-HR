@@ -5,6 +5,7 @@ starIcon = document.querySelector('#star-icon')
 statusIcon = document.querySelector('#status-icon')
 starButton = document.querySelector('#star-button')
 shareButton = document.querySelector('#share-button')
+desktopButton = document.querySelector('#desktop-button')
 acceptButton = document.querySelector('#accept-button')
 rejectButton = document.querySelector('#reject-button')
 
@@ -35,7 +36,7 @@ addEventListener('load', ->
 	)
 
 	if res.status is 403
-		alert('You have been logged out. Please sign in again.')
+		alert('You have been signed out. Please sign in again to continue using My HR.')
 	else if res.status is 404
 		alert('Application not found. It may have been deleted or the link may be invalid.')
 	else
@@ -43,6 +44,9 @@ addEventListener('load', ->
 
 		document.title = application.firstName + '\'s application - My HR'
 		updateStar(application.starred)
+		desktopButton.addEventListener('click', ->
+			window.location.href = "/console/desktop/?src=#{window.location.pathname + window.location.search}"
+		)
 
 		if application.accepted
 			acceptButton.classList.add('disabled')

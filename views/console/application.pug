@@ -10,8 +10,9 @@ html(lang='en')
 			include header-full
 
 		main
-			h1 Application
-				img#status-icon.icon
+			h1
+				span Application
+				img#status-icon.icon.inline-icon.baseline
 			div.section
 				h2 Actions
 				div.section
@@ -22,6 +23,9 @@ html(lang='en')
 						span#share-button.button(title='Share this application')
 							span.text Share
 							img.icon(alt='Share icon' src='/img/share.svg')
+						span#desktop-button.button.desktop-only(title='Open in Desktop')
+							span.text Open in Desktop
+							img.icon(alt='Share icon' src='/img/desktop.svg')
 						span#accept-button.button(title='Accept this application')
 							span.text Accept
 							img.icon(alt='Accept icon' src='/img/checkmark.svg')

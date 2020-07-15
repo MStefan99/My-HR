@@ -1,5 +1,13 @@
 [
 	{
+		"version": "v0.9.2-beta",
+		"logs": [
+			"Date/time in Notes is more readable now",
+			"Home page now features same icons as Desktop shortcuts",
+			"Application viewer now includes \"Open in Desktop\" button"
+		]
+	},
+	{
 		"version": "v0.9.1-beta",
 		"logs": [
 			"Administrators can now reset user passwords and 2FA in case password/authenticator is lost or forgotten"

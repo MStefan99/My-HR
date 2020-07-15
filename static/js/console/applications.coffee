@@ -102,7 +102,7 @@ addEventListener('load', ->
 	)
 
 	if res.status is 403
-		alert('You have been logged out. Please sign in again.')
+		alert('You have been signed out. Please sign in again to continue using My HR.')
 	else
 		applications = await res.json()
 

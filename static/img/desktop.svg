@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="100%" height="100%" viewBox="0 0 1000 1000" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;">
+    <g id="Display">
+        <g transform="matrix(1.50968,0,0,1.20819,-278.46,-83.1889)">
+            <path d="M589.309,786.18L441.982,786.18L464.081,620.643L567.21,620.643L589.309,786.18Z" style="fill:rgb(56,56,56);stroke:rgb(56,56,56);stroke-width:31.5px;"/>
+        </g>
+        <g transform="matrix(0.915821,0,0,0.846929,46.2687,43.8923)">
+            <rect x="58.67" y="105.606" width="873.533" height="629.726" style="fill:none;stroke:rgb(56,56,56);stroke-width:94.48px;"/>
+        </g>
+    </g>
+    <g id="Cursor" transform="matrix(2.10723,0,0,2.11778,-498.296,-497.886)">
+        <g transform="matrix(0.46445,-0.46445,1.95423,1.95423,-631.468,-222.053)">
+            <path d="M528.458,457.142C528.458,454.69 520.083,452.699 509.767,452.699C499.451,452.699 491.076,454.69 491.076,457.142L491.076,480.896C491.076,483.348 499.451,485.338 509.767,485.338C520.083,485.338 528.458,483.348 528.458,480.896L528.458,457.142Z" style="fill:rgb(56,56,56);"/>
+        </g>
+        <g transform="matrix(0.855275,-0.855275,0.536163,0.536163,-168.25,604.698)">
+            <path d="M488.934,374.54L524.788,500C500.383,484.74 476.507,485.553 453.08,500L488.934,374.54Z" style="fill:rgb(56,56,56);"/>
+        </g>
+    </g>
+</svg>

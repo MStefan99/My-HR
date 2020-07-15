@@ -15,6 +15,12 @@ filterType = 'all'
 applicationID = null
 
 
+Months = Object.freeze([
+	'January', 'February', 'March', 'April', 'May', 'June',
+	'July', 'August', 'September', 'October', 'November', 'December'
+]);
+
+
 import {saveRequest} from '/js/console/main.js'
 
 
@@ -39,6 +45,7 @@ addNote = (note) ->
 	noteElement.appendChild(noteMessageElement)
 
 	if note.my
+		note.author = 'I'
 		noteElement.classList.add('my')
 
 		noteDeleteButton = document.createElement('span')
@@ -73,7 +80,14 @@ addNote = (note) ->
 		noteElement.appendChild(noteSharedText)
 	else
 		noteElement.classList.add('shared')
-		noteSenderElement.innerHTML = "#{note.author} wrote at #{time.toLocaleString('en-GB')}:"
+
+	noteSenderElement.innerHTML = "#{note.author} wrote "
+	now = new Date()
+	if now.getMonth() isnt time.getMonth() or now.getDate() isnt time.getDate()
+		noteSenderElement.innerHTML += "on #{Months[time.getMonth()]} #{time.getDate()} "
+	if now.getFullYear() isnt time.getFullYear()
+		noteSenderElement.innerHTML += "#{time.getFullYear()} "
+	noteSenderElement.innerHTML += "at #{time.getHours()}:#{time.getMinutes().toString().padStart(2, '0')}"
 
 
 filter = (type = filterType) ->
@@ -115,7 +129,7 @@ addEventListener('load', ->
 	)
 
 	if res.status is 403
-		alert('You have been logged out. Please sign in again.')
+		alert('You have been signed out. Please sign in again to continue using My HR.')
 	else
 		notes = await res.json()
 

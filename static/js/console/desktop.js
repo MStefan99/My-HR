@@ -359,6 +359,11 @@ function modifyAppStyle(iframeDocument) {
 		iframeMain.style['border-radius'] = '0';
 		iframeMain.style.margin = '0';
 	}
+
+	const desktopButton = iframeDocument.querySelector('#desktop-button')
+	if (desktopButton) {
+		remove(desktopButton);
+	}
 }
 
 
@@ -509,9 +514,18 @@ addEventListener('load', () => {
 	}
 	if (Storage.getItem('desktop_help-viewed') !== 'true') {
 		Storage.setItem('desktop_help-viewed', 'true');
-		new AppWindow('/console/help/',
+		new AppWindow('/console/help/#text-desktop',
 			'Welcome to Desktop!'
 		);
+	}
+	const params = new URLSearchParams(window.location.search);
+	if (params.get('src')) {
+		new AppWindow(params.get('src'),
+			'Application',
+			'/img/applications.svg');
+
+		window.history.replaceState({},
+			'Removing src parameter', '/console/desktop/');
 	}
 
 	menuCheckbox.checked = Storage.getItem('desktop_hide-menu') === 'true';

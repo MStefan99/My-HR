@@ -23,7 +23,24 @@ addEventListener('load', ->
 		if confirm("My HR has been updated to version #{version}!
 				\nWould you like to know what's new?
 				\nYou can always view version history
-				by clicking the version number at the bottom of the page.")
+				by clicking the version history at the bottom of the page.")
 			window.location.href = '/console/versions/'
 			return
+)
+
+
+addEventListener('load', ->
+	req = indexedDB.open('my-hr', 1)
+	req.onupgradeneeded = (e) ->
+		db = e.target.result
+		db.createObjectStore('unfinishedRequests'
+			autoIncrement: true)
+
+	if 'serviceWorker' of navigator
+		registration = await navigator.serviceWorker.register('/js/console/worker.js'
+			scope: '/console/'
+		)
+		await navigator.serviceWorker.ready;
+		if 'sync' of registration
+			registration.sync.register('sync');
 )
