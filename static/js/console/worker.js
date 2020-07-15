@@ -71,11 +71,11 @@ const offlineResources = [
 	'/img/settings.svg',
 	'/img/star-active.svg',
 	'/img/sticky-note.svg',
-	'/img/verification-checkmark.svg'
+	'/img/verification_checkmark.svg'
 ];
 
 
-const currentVersion = 'v0.9.2-beta'
+const currentVersion = 'v0.9.3-beta'
 
 
 addEventListener('install', async () => {

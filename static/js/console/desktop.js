@@ -226,7 +226,7 @@ class AppWindow {
 		this.minimizeIcon.addEventListener('click', () => this.minimize());
 		this.maximizeIcon.addEventListener('click', () => this.maximize());
 		this.iframe.addEventListener('load', () => {
-			modifyAppStyle(this.iframe.contentDocument);
+			modifyAppStyle(this.iframe);
 		});
 
 		// Adding created app and shortcut to DOM
@@ -345,25 +345,51 @@ class AppWindow {
 }
 
 
-function modifyAppStyle(iframeDocument) {
-	const iframeBody = iframeDocument.querySelector('body');
-	const iframeHeader = iframeDocument.querySelector('header');
-	const iframeMain = iframeDocument.querySelector('main');
-	const iframeFooter = iframeDocument.querySelector('footer');
+// This function is used to to modify the iframe content
+function modifyAppStyle(iframe) {
+	const document = iframe.contentDocument;
+	const window = iframe.contentWindow;
 
-	remove(iframeHeader);
-	remove(iframeFooter);
+	const body = document.querySelector('body');
+	const header = document.querySelector('header');
+	const main = document.querySelector('main');
+	const footer = document.querySelector('footer');
 
-	iframeBody.style.background = '#00000000';
-	if (iframeMain) {
-		iframeMain.style.background = 'none';
-		iframeMain.style['border-radius'] = '0';
-		iframeMain.style.margin = '0';
+	// Styling the page to look like an app
+	remove(header);
+	remove(footer);
+	body.style.background = 'none';
+	if (main) {
+		main.style.background = 'none';
+		main.style['border-radius'] = '0';
+		main.style.margin = '0';
 	}
 
-	const desktopButton = iframeDocument.querySelector('#desktop-button')
-	if (desktopButton) {
+	// Replacing 'Open in desktop' with 'Open in a new window' button on application page
+	if (window.location.href.match(/application(?!s)/)) {
+		const desktopButton = document.querySelector('#desktop-button');
 		remove(desktopButton);
+
+		const newButton = document.createElement('span');
+		newButton.classList.add('button');
+		document.querySelector('.button-container').appendChild(newButton);
+
+		const buttonText = document.createElement('span');
+		buttonText.classList.add('text');
+		newButton.appendChild(buttonText);
+
+		const buttonImage = document.createElement('img');
+		buttonImage.classList.add('icon');
+		buttonImage.src = '/img/desktop.svg';
+		buttonImage.alt = buttonText.innerHTML = newButton.title = 'Open in a new window';
+		newButton.appendChild(buttonImage)
+
+		newButton.addEventListener('click', () => {
+			new AppWindow(window.location.href,
+				document.title.replace(' - My HR', ''),
+				'/img/application.svg'
+				)
+		});
 	}
 }
 

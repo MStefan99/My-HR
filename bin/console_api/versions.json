@@ -1,5 +1,11 @@
 [
 	{
+		"version": "v0.9.3-beta",
+		"logs": [
+			"Application app on Desktop now has \"Open in a new window\" button"
+		]
+	},
+	{
 		"version": "v0.9.2-beta",
 		"logs": [
 			"Date/time in Notes is more readable now",
