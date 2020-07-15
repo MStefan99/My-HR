@@ -185,6 +185,7 @@ class AppWindow {
 		// Creating shortcut in dock
 		this.shortcut = document.createElement('div');
 		this.shortcut.classList.add('shortcut', 'hidden');
+		this.shortcut.title = this.name;
 		const icon = document.createElement('img');
 		icon.src = this.img;
 		icon.draggable = false;
@@ -518,14 +519,13 @@ addEventListener('load', () => {
 			'Welcome to Desktop!'
 		);
 	}
-	const params = new URLSearchParams(window.location.search);
-	if (params.get('src')) {
-		new AppWindow(params.get('src'),
-			'Application',
-			'/img/applications.svg');
+	if (Storage.getItem('desktop_autorun')) {
+		const app = JSON.parse(Storage.getItem('desktop_autorun'));
+		new AppWindow(app.src,
+			app.name,
+			app.img);
 
-		window.history.replaceState({},
-			'Removing src parameter', '/console/desktop/');
+		Storage.removeItem('desktop_autorun');
 	}
 
 	menuCheckbox.checked = Storage.getItem('desktop_hide-menu') === 'true';

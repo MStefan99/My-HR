@@ -42,6 +42,7 @@ const offlineResources = [
 	// Images
 	'/favicon.ico',
 	'/img/applications.svg',
+	'/img/application.svg',
 	'/img/checkmark.svg',
 	'/img/cross.svg',
 	'/img/desktop.jpg',
@@ -131,7 +132,7 @@ function canBeCached(req) {
 	} else {
 		if (req.method !== 'GET') {
 			return 'NO';
-		} else if (req.url.match(/logout|exit/)) {
+		} else if (req.url.match(/(logout|exit)\/?$/)) {
 			return 'NO';
 		} else {
 			return 'YES';

@@ -21,6 +21,7 @@ freeFormElement = document.querySelector('#free-form')
 fileLinkElement = document.querySelector('#file-link')
 
 application = {}
+Storage = window.localStorage
 
 
 import {saveRequest} from '/js/console/main.js'
@@ -45,7 +46,12 @@ addEventListener('load', ->
 		document.title = application.firstName + '\'s application - My HR'
 		updateStar(application.starred)
 		desktopButton.addEventListener('click', ->
-			window.location.href = "/console/desktop/?src=#{window.location.pathname + window.location.search}"
+			Storage.setItem('desktop_autorun', JSON.stringify(
+				src: window.location.pathname + window.location.search,
+				name: application.firstName + '\'s application'
+				img: '/img/application.svg'
+			))
+			window.location.href = '/console/desktop/'
 		)
 
 		if application.accepted
