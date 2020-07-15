@@ -70,7 +70,8 @@ const offlineResources = [
 	'/img/progress.svg',
 	'/img/settings.svg',
 	'/img/star-active.svg',
-	'/img/sticky-note.svg'
+	'/img/sticky-note.svg',
+	'/img/verification-checkmark.svg'
 ];
 
 
