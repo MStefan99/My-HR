@@ -34,8 +34,7 @@ app.use((req, res, next) => {
 	res.set('Content-Security-Policy', 'default-src \'self\'; img-src \'self\' https://*.googleapis.com');
 	res.set('X-Content-Type-Options', 'nosniff');
 	res.set('X-Frame-Options', 'SAMEORIGIN');
-	res.set('Vary', 'Origin');
-	res.set('Access-Control-Allow-Origin', '"null"');
+	res.set('X-XSS-Protection', '1');
 	if (!process.env.NO_HTTPS) {
 		res.set('Strict-Transport-Security', 'max-age=31536000'); // 1 year in seconds
 	}

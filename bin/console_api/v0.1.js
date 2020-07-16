@@ -91,8 +91,8 @@ router.post('/verify-otp', (req, res) => {
 router.use((req, res, next) => {
 	const status = libAuth.checkAuthStatus(req.session,
 		req.user,
-		req.headers['user-agent'],
-		req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+		req.get('user-agent'),
+		req.ip,
 		consoleCookieOptions.maxAge);
 	if (status === 'NO_SESSION') {
 		res.status(401).send(status);

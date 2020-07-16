@@ -28,8 +28,8 @@ async function getUser(req, res, next) {
 async function redirectIfNotAuthorized(req, res, next) {
 	switch (libAuth.checkAuthStatus(req.session,
 		req.user,
-		req.headers['user-agent'],
-		req.headers['x-forwarded-for'] || req.connection.remoteAddress,
+		req.get('user-agent'),
+		req.ip,
 		consoleCookieOptions.maxAge)) {
 		case 'NO_SESSION':
 			res.clearCookie('CSID', consoleCookieOptions);

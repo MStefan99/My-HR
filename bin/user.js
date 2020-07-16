@@ -85,7 +85,7 @@ router.post('/register', async (req, res) => {
 		});
 	} else {
 		const session = await libSession.createSession(req.body.username,
-			req.headers['x-forwarded-for'] || req.connection.remoteAddress);
+			req.ip);
 
 		await sendMail(session.email,
 			'Complete your application for Mine Eclipse',

@@ -24,7 +24,7 @@ async function getSession(req, res, next) {
 
 
 function redirectIfNotAuthorized(req, res, next) {
-	const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+	const ip = req.ip;
 
 	switch (libAuth.checkAuthStatus(req.session, ip)) {
 		case 'NO_SESSION':

@@ -103,7 +103,7 @@ router.post('/login', async (req, res) => {
 			}
 		}
 		req.session = await libSession.createSession(req.user,
-			req.headers['user-agent'], req.connection.remoteAddress);
+			req.get('user-agent'), req.ip);
 
 		res.cookie('CSID', req.session.uuid, consoleCookieOptions);
 		res.redirect(303, '/console/');
@@ -192,7 +192,7 @@ router.get('/exit', async (req, res) => {
 	await libSession.deleteAllUserSessions(req.user);
 
 	res.clearCookie('CSID', consoleCookieOptions);
-	res.redirect('/console/login/');
+	res.redirect(303, '/console/login/');
 });
 
 
