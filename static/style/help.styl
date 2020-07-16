@@ -5,6 +5,7 @@
 	grid-template-areas \
 	'text-intro text-intro img-intro'\
 	'img-statuses text-statuses text-statuses'\
+	'text-proposals text-proposals img-proposals'\
 	'text-applications img-applications img-applications'\
 	'img-application text-application text-application'\
 	'text-notes text-notes img-notes'\
@@ -24,6 +25,8 @@
 		grid-template-areas \
 		'img-intro text-intro'\
 		'text-statuses img-statuses'\
+		'text-proposals text-proposals'\
+		'img-proposals img-proposals'\
 		'text-applications text-applications'\
 		'img-applications img-applications'\
 		'img-application text-application'\
@@ -71,6 +74,9 @@
 			margin .5em 2em
 			height 50px
 
+	#img-proposals
+		grid-area img-proposals
+
 	#img-applications
 		grid-area img-applications
 
@@ -107,6 +113,9 @@
 
 	#text-statuses
 		grid-area text-statuses
+
+	#text-proposals
+		grid-area text-proposals
 
 	#text-applications
 		grid-area text-applications

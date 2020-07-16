@@ -19,6 +19,8 @@ html(lang='en')
 					img(src='/img/progress.svg' alt='Progress icon')
 					img(src='/img/checkmark.svg' alt='Checkmark icon')
 					img(src='/img/cross.svg' alt='Cross icon')
+				div.cell#img-proposals
+					img(src='/img/help-proposals.jpg' alt='Proposal badges screenshot')
 				div.cell#img-applications
 					img(src='/img/help-applications.jpg' alt='Application list screenshot')
 				div.cell#img-application
@@ -49,10 +51,16 @@ html(lang='en')
 					h2 Application status
 					p Each application can have one of three statuses: pending (indicated by three dots),
 						|  accepted (green checkmark) and rejected (red X sign). All applications are pending by default until
-						|  they are accepted or rejected by one of My HR users. When that happens, an email is
+						|  they are accepted or rejected by My HR users. When that happens, an email is
 						|  sent to an applicant to update them on their application and its status can't be changed anymore.
 						|  So please be careful when you decide which applications to accept or reject. This
 						|  cannot be undone.
+				div.cell#text-proposals
+					h2 Proposals
+					p In order for an application to become accepted or rejected, it must receive a certain number of
+						|  proposals from different My HR users. Current number of proposals is visible in a badge on
+						|  accept/reject buttons in application viewer (described below) and shows the number of proposals
+						|  currently received and the total amount required to change the status of an application.
 				div.cell#text-applications
 					h2 Viewing all applications
 					p If click any link in the application section on the home page, an applications page will open.

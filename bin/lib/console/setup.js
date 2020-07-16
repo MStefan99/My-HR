@@ -42,6 +42,9 @@ async function createTables() {
 	if (!tables.find(table => table.name === 'console_notes')) {
 		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'console_notes.sql'), 'utf-8'));
 	}
+	if (!tables.find(table => table.name === 'console_proposals')) {
+		await db.exec(fs.readFileSync(path.join('database', 'ddl', 'console_proposals.sql'), 'utf-8'));
+	}
 	await db.close();
 }
 

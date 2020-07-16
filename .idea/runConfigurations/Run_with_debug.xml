@@ -6,6 +6,7 @@
       <env name="NO_MAIL" value="true" />
       <env name="USER_AUTH" value="true" />
       <env name="DEBUG" value="express:*" />
+      <env name="PROPOSALS_NEEDED" value="2" />
     </envs>
     <method v="2" />
   </configuration>

@@ -1,5 +1,11 @@
 [
 	{
+		"version": "v0.10.0-beta",
+		"logs": [
+			"Proposals introduced"
+		]
+	},
+	{
 		"version": "v0.9.3-beta",
 		"logs": [
 			"Application app on Desktop now has \"Open in a new window\" button"

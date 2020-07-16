@@ -14,6 +14,7 @@ const libApplication = require('../lib/application');
 const libSession = require('../lib/console/session');
 const libUser = require('../lib/console/user');
 const libNote = require('../lib/console/note');
+const libProposal = require('../lib/console/proposal');
 const lib2FA = require('../lib/console/2fa');
 
 const sendMail = require('../lib/mail');
@@ -139,6 +140,11 @@ router.get('/application', async (req, res) => {
 		res.status(404).send('NO_APPLICATION');
 	} else {
 		application.starred = await application.isStarredByUser(req.user);
+		application.proposals = await libProposal
+			.getApplicationProposalCount(application);
+		application.proposals.needed = libProposal.proposalsNeeded;
+		application.proposals.my = (await libProposal
+			.getProposal(req.user, application)).status;
 
 		res.json(application);
 	}
@@ -269,20 +275,27 @@ router.delete('/notes', async (req, res) => {
 });
 
 
-router.post('/applications/accept', async (req, res) => {
+router.post('/approvals', async (req, res) => {
 	const application = await libApplication.getApplicationByID(req.body.applicationID);
+	const proposal = await libProposal.createProposal(req.user, application, req.body.status);
 
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
 	} else {
-		switch (await application.accept()) {
+		switch (proposal) {
+			case 'INVALID_STATUS':
+				res.status(400).send('INVALID_STATUS');
+				break;
 			case 'ALREADY_ACCEPTED':
 				res.status(400).send('ALREADY_ACCEPTED');
 				break;
 			case 'ALREADY_REJECTED':
 				res.status(400).send('ALREADY_REJECTED');
 				break;
-			case 'OK':
+			case 'ALREADY_EXISTS':
+				res.status(400).send('ALREADY_EXISTS');
+				break;
+			case 'ACCEPTED':
 				await libNote.createNote(await libUser.getUserByID(0),
 					application,
 					true,
@@ -293,20 +306,45 @@ router.post('/applications/accept', async (req, res) => {
 					'accepted.html',
 					{name: application.firstName});
 
-				res.sendStatus(200);
+				res.status(201).send('ACCEPTED');
+				break;
+			case 'REJECTED':
+				await libNote.createNote(await libUser.getUserByID(0),
+					application,
+					true,
+					'Application was rejected by ' + req.user.username);
+				res.status(201).send('REJECTED');
+
+				await sendMail(application.email,
+					'Your Mine Eclipse application',
+					'rejected.html',
+					{name: application.firstName});
+
+				break;
+			default:
+				await libNote.createNote(await libUser.getUserByID(0),
+					application,
+					true,
+					req.user.username + ' proposed to '
+					+ (req.body.status === 1? 'accept' : 'reject') + ' this application');
+
+				res.sendStatus(201);
 				break;
 		}
 	}
 });
 
 
-router.post('/applications/reject', async (req, res) => {
+router.delete('/approvals', async (req, res) => {
 	const application = await libApplication.getApplicationByID(req.body.applicationID);
+	const proposal = await libProposal.getProposal(req.user, application);
 
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
+	} else if (proposal === 'NO_PROPOSAL') {
+		res.status(404).send('NO_PROPOSAL');
 	} else {
-		switch (await application.reject()) {
+		switch (await proposal.delete()) {
 			case 'ALREADY_ACCEPTED':
 				res.status(400).send('ALREADY_ACCEPTED');
 				break;
@@ -317,12 +355,7 @@ router.post('/applications/reject', async (req, res) => {
 				await libNote.createNote(await libUser.getUserByID(0),
 					application,
 					true,
-					'Application was rejected by ' + req.user.username);
-
-				await sendMail(application.email,
-					'Your Mine Eclipse application',
-					'rejected.html',
-					{name: application.firstName});
+					req.user.username + ' took back his proposal');
 
 				res.sendStatus(200);
 				break;

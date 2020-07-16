@@ -16,6 +16,7 @@ html
 		--secondary-color #21dea9
 		--background-color #fff
 		--simply-red #a00
+		--just-as-green #090
 		--boring-red #ff8080
 		--not-very-green #99ec74
 		--light #fff
@@ -419,6 +420,7 @@ html
 				display inline-block
 				padding .25em .5em
 				margin .5em 1em .5em 0
+				position relative
 				width fit-content
 				text-decoration none
 				background var(--light-gray)
@@ -430,6 +432,23 @@ html
 				transition box-shadow .2s ease-in,
 				filter .2s ease-in,
 				border-color .2s ease-in
+
+				.badge
+					position absolute
+					right 0
+					top 0
+					transform translate(50%, -50%)
+					font-size .8em
+					padding 2px
+					font-weight bold
+					border-radius 50%
+					color var(--light)
+
+					&#accepted-badge
+						background var(--just-as-green)
+
+					&#rejected-badge
+						background var(--simply-red)
 
 				&:hover
 					filter brightness(.95)
