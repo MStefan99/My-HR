@@ -108,6 +108,9 @@ html
 			box-shadow 0 .5vh 2vh var(--shadow-color)
 			border-radius 0 0 20px 20px
 
+			@media screen and (max-width 425px)
+				padding .5em 1em
+
 			h1
 				font-size 2rem
 				margin 0
@@ -122,9 +125,15 @@ html
 				&:hover
 					color var(--just-gray)
 
+			.button-container
+				display flex
+				flex-flow row wrap
+				justify-content flex-end
+
 			.button
 				margin .5vh .5vw
 				padding .5em 1em
+				display inline-block
 				font-weight bold
 				background var(--very-gray)
 				text-align center
@@ -134,9 +143,6 @@ html
 				box-shadow 0 .5vh 1vh var(--shadow-color)
 				transition filter .1s ease-in
 				user-select none
-
-				@media screen and (max-width 425px)
-					display block
 
 				&:hover
 					filter brightness(.9)
