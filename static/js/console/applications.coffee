@@ -15,7 +15,7 @@ remove = (element) ->
 
 addApplication = (application) ->
 	tableRow = document.createElement('tr')
-	tableRow.classList.add('clickable', 'application-' + application.team.toLowerCase())
+	tableRow.classList.add('clickable', 'application', application.team.toLowerCase())
 	tableRow.onclick = ->
 		window.location = '/console/application/?id=' + application.id
 	table.appendChild(tableRow)
@@ -75,6 +75,11 @@ filter = (team, save=true) ->
 		if row.className.match(team) or team is 'all'
 			row.classList.remove('filter-hidden')
 		else row.classList.add('filter-hidden')
+
+	paginate(
+		filter: (row) ->
+			not row.classList.contains('filter-hidden')
+	)
 
 
 updateTabs = (team) ->

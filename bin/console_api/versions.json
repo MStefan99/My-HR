@@ -1,5 +1,13 @@
 [
 	{
+		"version": "v0.10.1-beta",
+		"logs": [
+			"A pagination bug was fixed which resulted in some rows not being shown",
+			"Pagination now works better with filtered tables",
+			"You will be automatically redirected to the sign in page now if your session has ended"
+		]
+	},
+	{
 		"version": "v0.10.0-beta",
 		"logs": [
 			"Proposals introduced"

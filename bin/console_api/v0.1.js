@@ -105,8 +105,13 @@ router.use((req, res, next) => {
 });
 
 
-router.get('/auth', async (req, res) => {
+router.get('/auth', (req, res) => {
 	res.sendStatus(200);
+});
+
+
+router.get('/access-level', (req, res) => {
+	res.send(libAuth.getPrivileges(req.user));
 });
 
 

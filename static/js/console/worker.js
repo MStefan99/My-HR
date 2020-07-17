@@ -75,7 +75,7 @@ const offlineResources = [
 ];
 
 
-const currentVersion = 'v0.10.0-beta'
+const currentVersion = 'v0.10.1-beta'
 
 
 addEventListener('install', async () => {

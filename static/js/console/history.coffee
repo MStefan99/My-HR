@@ -34,5 +34,7 @@ addEventListener('load', ->
 		for version in versions
 			addVersion(version)
 
-		paginate(8)
+		paginate(
+			pageSize: 8
+		)
 )

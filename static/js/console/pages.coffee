@@ -1,25 +1,41 @@
+'use strict';
+
+
+remove = (element) ->
+	element.parentNode.removeChild(element)
+
+
 insertAfter = (referenceNode, newNode) ->
 	referenceNode.parentNode
 	.insertBefore(newNode, referenceNode.nextSibling)
 
 
-filterPage = (pageNumber, nodes, elementCount) ->
+openPage = (pageNumber, nodes, pageSize) ->
 	nodes.forEach((node) ->
 		node.classList.add('page-hidden')
 	)
 
-	startIndex = if pageNumber then (nodes.length % elementCount) + (pageNumber - 1) * elementCount else 0
-	endIndex = (if pageNumber then pageNumber * elementCount else 0) + nodes.length % elementCount - 1
+	firstPageCount = nodes.length % pageSize || pageSize
+	if not pageNumber
+		startIndex = 0
+		endIndex = firstPageCount
+	else
+		startIndex = (pageNumber - 1) * pageSize + firstPageCount
+		endIndex = pageNumber * pageSize + firstPageCount
 
-	for i in [startIndex..endIndex]
+	for i in [startIndex..endIndex - 1]
 		nodes[i].classList.remove('page-hidden')
 
 
-setupPagination = (table, elementCount) ->
+setupPagination = (table, options = {}) ->
+	pageSize = options.pageSize || 10
+
 	# Counting rows
 	body = table.querySelector('tbody')
-	rows = body.childNodes
-	pageCount = Math.ceil(rows.length / elementCount)
+	rows = [...body.childNodes]
+	if 'filter' of options
+		rows = rows.filter((row) -> options.filter(row))
+	pageCount = Math.ceil(rows.length / pageSize)
 
 	# Creating and adding paginator div
 	paginator = document.createElement('div')
@@ -37,7 +53,7 @@ setupPagination = (table, elementCount) ->
 					pageButton.classList.add('pressed')
 
 				pageButton.addEventListener('click', ->
-					filterPage(i, rows, elementCount)
+					openPage(i, rows, pageSize)
 					pageButtons = document.querySelectorAll('.page-selector')
 					pageButtons.forEach((button) ->
 						button.classList.remove('pressed')
@@ -48,11 +64,19 @@ setupPagination = (table, elementCount) ->
 				pageButton.innerHTML = i + 1
 				paginator.appendChild(pageButton)
 
-	filterPage(0, rows, elementCount)
+	openPage(0, rows, pageSize)
 
 
-export paginate = (elementCount = 10) ->
+export paginate = (options) ->
+	# Removing old pagination in case table is re-paginated
+	document.querySelectorAll('.paginator').forEach((paginator) ->
+		remove(paginator)
+	)
+	document.querySelectorAll('.page-hidden').forEach((element) ->
+		element.classList.remove('page-hidden')
+	)
+
+	# Setting up new pagination
 	tables = document.querySelectorAll('.paginated')
-
 	for table in tables
-		setupPagination(table, elementCount)
+		setupPagination(table, options)
