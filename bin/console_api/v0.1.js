@@ -29,8 +29,8 @@ const router = express.Router();
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 router.use(cookieParser());
-router.use(middleware.getSession)
-router.use(middleware.getUser)
+router.use(middleware.getSession);
+router.use(middleware.getUser);
 
 
 router.get('/otp', async (req, res) => {
@@ -97,11 +97,16 @@ router.use((req, res, next) => {
 		consoleCookieOptions.maxAge);
 	if (status === 'NO_SESSION') {
 		res.status(401).send(status);
-	} if (status !== 'OK') {
+	} else if (status !== 'OK') {
 		res.status(403).send(status);
 	} else {
 		next();
 	}
+});
+
+
+router.get('/auth', async (req, res) => {
+	res.sendStatus(200);
 });
 
 

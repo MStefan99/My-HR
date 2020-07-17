@@ -19,5 +19,11 @@ export saveRequest = (path, init) ->
 		alert('You are not currently connected to internet. Please retry when online.')
 
 
-if Storage.getItem('mh_theme') is 'dark'
-	body.classList.add('dark-theme')
+(->
+	if Storage.getItem('mh_theme') is 'dark'
+		body.classList.add('dark-theme')
+
+	res = await fetch('/console/api/v0.1/auth/');
+	if not res.ok
+		window.location.href = '/console/login/'
+)()
