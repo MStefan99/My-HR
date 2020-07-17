@@ -1,4 +1,4 @@
-const offlineResources = [
+const resources = [
 	// Views
 	'/console/login/',
 	'/console/register/',
@@ -41,41 +41,114 @@ const offlineResources = [
 	'/js/console/users.js',
 	// Images
 	'/favicon.ico',
-	'/img/applications.svg',
 	'/img/application.svg',
+	'/img/applications.svg',
+	'/img/chat-bubble.svg',
 	'/img/checkmark.svg',
+	'/img/close.svg',
 	'/img/cross.svg',
+	'/img/desktop-dark.jpg',
 	'/img/desktop.jpg',
 	'/img/desktop.svg',
-	'/img/help-application.jpg',
-	'/img/help-desktop.jpg',
-	'/img/help-feedback.jpg',
-	'/img/help-notes.jpg',
-	'/img/help-window.jpg',
-	'/img/home.svg',
-	'/img/mh-logo.svg',
-	'/img/refresh.svg',
-	'/img/share.svg',
-	'/img/star-inactive.svg',
-	'/img/chat-bubble.svg',
-	'/img/close.svg',
-	'/img/desktop-dark.jpg',
 	'/img/exit.svg',
+	'/img/help-application.jpg',
 	'/img/help-applications.jpg',
+	'/img/help-desktop.jpg',
 	'/img/help-dock.jpg',
+	'/img/help-feedback.jpg',
 	'/img/help-note-editor.jpg',
+	'/img/help-notes.jpg',
+	'/img/help-proposals.jpg',
 	'/img/help-settings.jpg',
+	'/img/help-window.jpg',
 	'/img/help.svg',
+	'/img/home.svg',
 	'/img/me-logo.svg',
+	'/img/mh-logo.svg',
 	'/img/progress.svg',
+	'/img/refresh.svg',
 	'/img/settings.svg',
+	'/img/share.svg',
 	'/img/star-active.svg',
+	'/img/star-inactive.svg',
 	'/img/sticky-note.svg',
 	'/img/verification_checkmark.svg'
 ];
 
 
 const currentVersion = 'v0.10.1-beta'
+
+
+async function saveToCache(req, res) {
+	const cache = await caches.open(currentVersion);
+
+	if (!(res.status in [303, 400, 401, 403, 500])) {
+		await cache.put(req, res);
+	}
+}
+
+
+function canBeCached(req) {
+	if (req.url.match(/api/)) {
+		if (req.method !== 'GET') {
+			return 'NO';
+		} else if (req.url.match(/otp/)) {
+			return 'NO';
+		} else {
+			return 'MUST_UPDATE';
+		}
+	} else {
+		if (req.method !== 'GET') {
+			return 'NO';
+		} else if (req.url.match(/(logout|exit)\/?$/)) {
+			return 'NO_WITH_503';
+		} else {
+			return 'YES';
+		}
+	}
+}
+
+
+async function handleRequest(req) {
+	const cache = await caches.open(currentVersion);
+	const cachedRes = await cache.match(req);
+
+	switch (canBeCached(req)) {
+		case 'YES':
+			if (cachedRes) {
+				return cachedRes;
+			} else {
+				try {
+					const res = await fetch(req);
+
+					await saveToCache(req, res.clone());
+					return res;
+				} catch (e) {
+					return cache.match('/console/not-connected/');
+				}
+			}
+
+		case 'MUST_UPDATE':
+			try {
+				const res = await fetch(req);
+
+				await saveToCache(req, res.clone());
+				return res;
+			} catch (e) {
+				return cache.match(req);
+			}
+
+		case 'NO_WITH_503':
+			try {
+				return await fetch(req);
+			} catch (e) {
+				return cache.match('/console/not-connected/');
+			}
+
+		case 'NO':
+			return await fetch(req);
+	}
+}
 
 
 addEventListener('install', async () => {
@@ -88,17 +161,20 @@ addEventListener('install', async () => {
 	});
 
 	cache = await caches.open(currentVersion);
-	for (const resource of offlineResources) {
+	for (const resource of resources) {
 		fetch(resource, {
 			headers: {
 				'Cache-control': 'no-cache'
 			}
 		}).then(response => {
-			if (!(response.status in [303, 400, 403, 500])) {
-				cache.put(resource, response);
-			}
+			saveToCache(resource, response);
 		});
 	}
+});
+
+
+self.addEventListener('fetch', (e) => {
+	e.respondWith(handleRequest(e.request));
 });
 
 
@@ -122,69 +198,4 @@ addEventListener('sync', async () => {
 
 		store.clear();
 	});
-});
-
-
-function canBeCached(req) {
-	if (req.url.match(/api/)) {
-		if (req.method !== 'GET') {
-			return 'NO';
-		} else if (req.url.match(/otp/)) {
-			return 'NO';
-		} else {
-			return 'MUST_UPDATE';
-		}
-	} else {
-		if (req.method !== 'GET') {
-			return 'NO';
-		} else if (req.url.match(/(logout|exit)\/?$/)) {
-			return 'NO';
-		} else {
-			return 'YES';
-		}
-	}
-}
-
-
-async function handleRequest(req) {
-	const cache = await caches.open(currentVersion);
-	const cachedRes = await cache.match(req);
-
-	switch (canBeCached(req)) {
-		case 'YES':
-			if (cachedRes) {
-				return cachedRes;
-			} else {
-				try {
-					const res = await fetch(req);
-
-					if (res.ok) {
-						await cache.put(req, res.clone());
-					}
-					return res;
-				} catch (e) {
-					return cache.match('/console/not-connected/');
-				}
-			}
-
-		case 'MUST_UPDATE':
-			try {
-				const res = await fetch(req);
-
-				if (res.ok) {
-					await cache.put(req, res.clone());
-				}
-				return res;
-			} catch (e) {
-				return cache.match(req);
-			}
-
-		case 'NO':
-			return fetch(req);
-	}
-}
-
-
-self.addEventListener('fetch', (e) => {
-	e.respondWith(handleRequest(e.request));
 });
