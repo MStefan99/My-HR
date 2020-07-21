@@ -38,6 +38,7 @@ addUser = (user) ->
 	resetLink = document.createElement('span')
 	resetCell.appendChild(resetLink)
 	resetLink.classList.add('clickable')
+	resetLink.tabIndex = 0
 	resetLink.innerHTML = 'Reset'
 	if user.username isnt 'System'
 		resetLink.addEventListener('click', ->
@@ -70,11 +71,11 @@ addUser = (user) ->
 						otpCell.innerHTML = 'No'
 		)
 
-
 	removeCell = document.createElement('td')
 	tableRow.appendChild(removeCell)
 	removeLink = document.createElement('span')
 	removeLink.classList.add('clickable')
+	removeLink.tabIndex = 0
 	removeCell.appendChild(removeLink)
 	removeLink.innerHTML = 'Remove'
 	if user.username isnt 'admin' and user.username isnt 'System'

@@ -18,6 +18,7 @@ remove = (element) ->
 addApplication = (application) ->
 	tableRow = document.createElement('tr')
 	tableRow.classList.add('clickable', 'application', application.team.toLowerCase())
+	tableRow.tabIndex = 0
 	tableRow.onclick = ->
 		window.location = '/console/application/?id=' + application.id
 	table.appendChild(tableRow)
@@ -75,8 +76,8 @@ filterTeam = (team) ->
 
 	for application in applications
 		if application.team.toLowerCase().match(team) or team is 'all'
-			application.row.classList.remove('filter-hidden')
-		else application.row.classList.add('filter-hidden')
+			application.row.classList.remove('team-hidden')
+		else application.row.classList.add('team-hidden')
 
 	paginate(
 		filter: (row) ->
@@ -87,12 +88,12 @@ filterTeam = (team) ->
 filterSearch = (query) ->
 	path = new URLSearchParams(window.location.search)
 	path.set('q', query)
-	window.history.replaceState({q: query}, 'Team filtered', '?' + path)
+	window.history.replaceState({q: query}, 'Search filtered', '?' + path)
 
 	for application in applications
 		if search(application, query)
-			application.row.classList.remove('filter-hidden')
-		else application.row.classList.add('filter-hidden')
+			application.row.classList.remove('search-hidden')
+		else application.row.classList.add('search-hidden')
 
 	paginate(
 		filter: (row) ->

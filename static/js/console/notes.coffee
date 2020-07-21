@@ -51,9 +51,10 @@ addNote = (note) ->
 		noteDeleteButton = document.createElement('span')
 		noteDeleteButton.classList.add('button')
 		noteDeleteButton.innerHTML = 'Delete'
+		noteDeleteButton.tabIndex = 0
 		noteDeleteButton.addEventListener('click', ->
 			if confirm("Are you sure you want to delete the following note?
-					\n\n\"#{note.message}\"")
+					\n\"#{note.message}\"")
 				init =
 					method: 'delete'
 					headers:

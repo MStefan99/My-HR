@@ -49,6 +49,7 @@ setupPagination = (table, options = {}) ->
 			do (i) ->
 				pageButton = document.createElement('div')
 				pageButton.classList.add('button', 'page-selector')
+				pageButton.tabIndex = 0
 
 				if i is 0
 					pageButton.classList.add('pressed')

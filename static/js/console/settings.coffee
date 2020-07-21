@@ -55,6 +55,7 @@ addSession = (session) ->
 	sessionRow.appendChild(logoutCell);
 	logoutLink = document.createElement('span')
 	logoutLink.classList.add('clickable')
+	logoutLink.tabIndex = 0
 	logoutLink.innerHTML = 'Sign out'
 	logoutCell.appendChild(logoutLink)
 	logoutLink.addEventListener('click', ->

@@ -63,6 +63,7 @@ const resources = [
 	'/img/mh-logo.svg',
 	'/img/progress.svg',
 	'/img/refresh.svg',
+	'/img/search.svg',
 	'/img/settings.svg',
 	'/img/share.svg',
 	'/img/star-active.svg',
