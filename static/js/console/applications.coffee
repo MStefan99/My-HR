@@ -8,6 +8,8 @@ tabElements = document.querySelectorAll('.tab')
 
 import {paginate} from '/js/console/pages.js'
 
+applications = []
+
 
 remove = (element) ->
 	element.parentNode.removeChild(element)
@@ -50,36 +52,62 @@ addApplication = (application) ->
 	freeFormCell.innerHTML = text || '[No info]'
 	tableRow.appendChild(freeFormCell)
 
+	tableRow
+
 
 tabElements.forEach((e) ->
 	e.addEventListener('click', ->
 		team = e.id.replace('tab-', '')
-		filter(team);
+		filterTeam(team);
 	)
 )
 
 
-filter = (team, save=true) ->
+filterTeam = (team) ->
 	updateTabs(team)
 	if team isnt 'all' and team isnt 'embedded' and team isnt 'backend' \
 		and team isnt 'frontend' and team isnt 'android' and team isnt 'ios'
 		throw new Error('No such team')
 
-	if save
-		path = new URLSearchParams(window.location.search)
-		path.set('team', team)
-		window.history.replaceState({team: team}, 'Team filtered', '?' + path)
+	path = new URLSearchParams(window.location.search)
+	path.set('team', team)
+	window.history.replaceState({team: team}, 'Team filtered', '?' + path)
 
-	tableRows = document.querySelectorAll('tbody tr')
-	for row in tableRows
-		if row.className.match(team) or team is 'all'
-			row.classList.remove('filter-hidden')
-		else row.classList.add('filter-hidden')
+	for application in applications
+		if application.team.toLowerCase().match(team) or team is 'all'
+			application.row.classList.remove('filter-hidden')
+		else application.row.classList.add('filter-hidden')
 
 	paginate(
 		filter: (row) ->
-			not row.classList.contains('filter-hidden')
+			not row.className.match('hidden')
 	)
+
+
+filterSearch = (query) ->
+	path = new URLSearchParams(window.location.search)
+	path.set('q', query)
+	window.history.replaceState({q: query}, 'Team filtered', '?' + path)
+
+	for application in applications
+		if search(application, query)
+			application.row.classList.remove('filter-hidden')
+		else application.row.classList.add('filter-hidden')
+
+	paginate(
+		filter: (row) ->
+			not row.className.match('hidden')
+	)
+
+
+search = (application, query) ->
+	regex = query
+		.split(' ')
+		.map((word) -> '(?=.*' + word + ')')
+		.join('')
+	searchExp = new RegExp(regex, 'i')
+	searchExp.test(application.firstName) or searchExp.test(application.lastName)\
+		or searchExp.test(application.freeForm)
 
 
 updateTabs = (team) ->
@@ -100,6 +128,8 @@ addEventListener('load', ->
 		when 'accepted' then title = 'Accepted applications'
 		when 'rejected' then title = 'Rejected applications'
 		when 'pending' then title = 'Pending applications'
+	if params.has('q')
+		title = 'Search results'
 	applicationsHeader.innerHTML = title
 
 	res = await fetch(path).catch(->
@@ -113,8 +143,10 @@ addEventListener('load', ->
 
 		applicationCountElement.innerHTML = "Total: #{applications.length} applications in all teams"
 		for application in applications
-			addApplication(application)
+			application.row = addApplication(application)
 
 		paginate()
-		filter(params.get('team') || 'all', false)
+		filterTeam(params.get('team') || 'all', false)
+		if params.has('q')
+			filterSearch(params.get('q'))
 )

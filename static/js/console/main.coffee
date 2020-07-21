@@ -1,5 +1,8 @@
-Storage = window.localStorage;
 body = document.querySelector('body')
+searchIcon = document.querySelector('#search-icon')
+searchInput = document.querySelector('#search-input')
+
+Storage = window.localStorage
 
 
 export saveRequest = (path, init) ->
@@ -27,3 +30,19 @@ export saveRequest = (path, init) ->
 	if not res.ok
 		window.location.href = '/console/login/'
 )()
+
+
+searchIcon.addEventListener('click', (e) ->
+	e.stopPropagation()
+	searchInput.classList.add('shown')
+)
+
+
+searchInput.addEventListener('click', (e) ->
+	e.stopPropagation()
+)
+
+
+body.addEventListener('click', ->
+	searchInput.classList.remove('shown')
+)

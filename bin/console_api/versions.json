@@ -1,5 +1,12 @@
 [
 	{
+		"version": "v0.10.2-beta",
+		"logs": [
+			"You can now search applications!",
+			"Offline mode improvements"
+		]
+	},
+	{
 		"version": "v0.10.1-beta",
 		"logs": [
 			"A pagination bug was fixed which resulted in some rows not being shown",

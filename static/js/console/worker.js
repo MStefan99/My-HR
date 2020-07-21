@@ -6,10 +6,6 @@ const resources = [
 	'/console/',
 	'/console/desktop/',
 	'/console/applications/',
-	'/console/applications/?type=stars',
-	'/console/applications/?type=pending',
-	'/console/applications/?type=accepted',
-	'/console/applications/?type=rejected',
 	'/console/application/',
 	'/console/settings/',
 	'/console/feedback/',
@@ -76,7 +72,7 @@ const resources = [
 ];
 
 
-const currentVersion = 'v0.10.1-beta'
+const currentVersion = 'v0.10.2-beta'
 
 
 async function saveToCache(req, res) {
@@ -111,15 +107,18 @@ function canBeCached(req) {
 
 async function handleRequest(req) {
 	const cache = await caches.open(currentVersion);
-	const cachedRes = await cache.match(req);
 
 	switch (canBeCached(req)) {
 		case 'YES':
+			// NOTE: Query parameters are ignored!
+			const url = req.url.replace(/\?.*$/, '');
+
+			const cachedRes = await cache.match(url);
 			if (cachedRes) {
 				return cachedRes;
 			} else {
 				try {
-					const res = await fetch(req);
+					const res = await fetch(url);
 
 					await saveToCache(req, res.clone());
 					return res;

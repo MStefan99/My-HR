@@ -23,8 +23,9 @@ openPage = (pageNumber, nodes, pageSize) ->
 		startIndex = (pageNumber - 1) * pageSize + firstPageCount
 		endIndex = pageNumber * pageSize + firstPageCount
 
-	for i in [startIndex..endIndex - 1]
-		nodes[i].classList.remove('page-hidden')
+	if nodes.length
+		for i in [startIndex..endIndex - 1]
+			nodes[i].classList.remove('page-hidden')
 
 
 setupPagination = (table, options = {}) ->

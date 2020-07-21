@@ -4,6 +4,11 @@ noscript
 	span JavaScript is disabled in your browser.
 		|  This website will not work.
 
+div#search-form
+	form(action='/console/applications/', method='get')
+		img#search-icon(src='/img/search.svg')
+		input#search-input(placeholder='Search' name='q')
+
 div.button-container
 	a.button.desktop-only(href='/console/desktop/') Launch Desktop
 	a.button(href='/console/settings/') Settings

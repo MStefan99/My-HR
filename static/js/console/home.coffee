@@ -29,5 +29,5 @@ addEventListener('load', ->
 		)
 		await navigator.serviceWorker.ready;
 		if 'sync' of registration
-			registration.sync.register('sync');
+			registration.sync.register('request-sync');
 )
