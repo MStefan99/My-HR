@@ -202,7 +202,7 @@ router.get('/join', (req, res) => {
 });
 
 
-router.use((req, res, next) => {
+router.all('*', (req, res) => {
 	res.status(404).render('user/404');
 });
 
