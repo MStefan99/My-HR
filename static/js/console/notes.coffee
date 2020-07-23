@@ -12,7 +12,6 @@ filterAllButton = document.querySelector('#filter-all')
 
 shared = false
 filterType = 'all'
-applicationID = null
 
 
 Months = Object.freeze([
@@ -22,6 +21,14 @@ Months = Object.freeze([
 
 
 import {saveRequest} from '/js/console/main.js'
+
+
+getPath = ->
+	params = new URLSearchParams(window.location.search)
+	applicationID = params.get('id')
+
+	"/console/api/v0.1/#{if applicationID then \
+	'applications/' + applicationID + '/' else ''}notes/"
 
 
 remove = (element) ->
@@ -51,7 +58,6 @@ addNote = (note) ->
 		noteDeleteButton = document.createElement('span')
 		noteDeleteButton.classList.add('button')
 		noteDeleteButton.innerHTML = 'Delete'
-		noteDeleteButton.tabIndex = 0
 		noteDeleteButton.addEventListener('click', ->
 			if confirm("Are you sure you want to delete the following note?
 					\n\"#{note.message}\"")
@@ -121,11 +127,7 @@ filter = (type = filterType) ->
 
 
 addEventListener('load', ->
-	params = new URLSearchParams(window.location.search)
-	applicationID = params.get('id')
-
-	res = await fetch('/console/api/v0.1/notes/' + if applicationID
-	then "?applicationID=#{applicationID}" else '').catch(->
+	res = await fetch(getPath()).catch(->
 		alert('Could not get notes. Please check your internet connection.')
 	)
 
@@ -192,11 +194,10 @@ noteSubmitButton.addEventListener('click', ->
 			body: JSON.stringify(
 				shared: shared
 				message: noteTextarea.value
-				applicationID: applicationID
 			)
 
-		res = await fetch('/console/api/v0.1/notes/', init).catch(->
-			saveRequest('/console/api/v0.1/notes/', init)
+		res = await fetch(getPath(), init).catch(->
+			saveRequest(getPath(), init)
 			noteTextarea.value = ''
 			noteSubmitButton.classList.add('disabled')
 		)

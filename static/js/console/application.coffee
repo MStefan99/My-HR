@@ -30,6 +30,9 @@ Storage = window.localStorage
 import {saveRequest} from '/js/console/main.js'
 
 
+getBasePath = -> '/console/api/v0.1/applications/' + application.id
+
+
 remove = (element) ->
 	element.parentNode.removeChild(element)
 
@@ -42,11 +45,10 @@ propose = (status) ->
 			headers:
 				'Content-Type': 'application/json'
 			body: JSON.stringify(
-				applicationID: application.id
 				status: status
 			)
-		res = await fetch('/console/api/v0.1/approvals/', init).catch(->
-			saveRequest('/console/api/v0.1/approvals/', init)
+		res = await fetch(getBasePath() + '/proposals/', init).catch(->
+			saveRequest(getBasePath() + '/proposals/', init)
 		)
 
 		switch await res.text()
@@ -81,11 +83,8 @@ deleteProposal = ->
 			method: 'delete'
 			headers:
 				'Content-Type': 'application/json'
-			body: JSON.stringify(
-				applicationID: application.id
-			)
-		res = await fetch('/console/api/v0.1/approvals/', init).catch(->
-			saveRequest('/console/api/v0.1/approvals/', init)
+		res = await fetch(getBasePath() + '/proposals/', init).catch(->
+			saveRequest(getBasePath() + '/proposals/', init)
 		)
 
 		switch await res.text()
@@ -214,11 +213,8 @@ star = ->
 		method: 'post'
 		headers:
 			'Content-Type': 'application/json'
-		body: JSON.stringify(
-			applicationID: application.id
-		)
-	res = await fetch('/console/api/v0.1/stars/', init).catch(->
-		saveRequest('/console/api/v0.1/stars', init)
+	res = await fetch(getBasePath() + '/stars/', init).catch(->
+		saveRequest(getBasePath() + '/stars/', init)
 	)
 	if res.ok
 		application.starred = true
@@ -230,11 +226,8 @@ unstar = ->
 		method: 'delete'
 		headers:
 			'Content-Type': 'application/json'
-		body: JSON.stringify(
-			applicationID: application.id
-		)
-	res = await fetch('/console/api/v0.1/stars/', init).catch(->
-		saveRequest('/console/api/v0.1/stars/', init)
+	res = await fetch(getBasePath() + '/stars/', init).catch(->
+		saveRequest(getBasePath() + '/stars/', init)
 	)
 	if res.ok
 		application.starred = false
@@ -246,7 +239,7 @@ addEventListener('load', ->
 		shareButton.classList.add('hidden');
 
 	params = new URLSearchParams(window.location.search)
-	res = await fetch('/console/api/v0.1/application/?applicationID=' + params.get('id')).catch(->
+	res = await fetch('/console/api/v0.1/applications/' + params.get('id')).catch(->
 		alert('Could not download application data. Please check your internet connection.')
 	)
 

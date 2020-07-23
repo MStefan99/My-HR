@@ -105,29 +105,8 @@ router.use((req, res, next) => {
 });
 
 
-router.get('/auth', (req, res) => {
-	res.sendStatus(200);
-});
-
-
 router.get('/access-level', (req, res) => {
 	res.send(libAuth.getPrivileges(req.user));
-});
-
-
-router.delete('/sessions', async (req, res) => {
-	const session = await libSession.getSessionByUUID(req.body.sessionID)
-
-	switch (session) {
-		case 'NO_SESSION':
-			res.status(400).send('NO_SESSION');
-			break;
-		default:
-			await session.delete();
-
-			res.sendStatus(200);
-			break;
-	}
 });
 
 
@@ -143,8 +122,8 @@ router.get('/applications', async (req, res) => {
 });
 
 
-router.get('/application', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.query.applicationID);
+router.get('/applications/:applicationID', async (req, res) => {
+	const application = await libApplication.getApplicationByID(req.params.applicationID);
 
 	if (application === 'NO_APPLICATION') {
 		res.status(404).send('NO_APPLICATION');
@@ -163,9 +142,9 @@ router.get('/application', async (req, res) => {
 
 router.get('/versions', async (req, res) => {
 	res.set('Content-Type', 'application/json');
-	const feedback = await readFile(path.join(__dirname, 'versions.json'));
+	const versions = await readFile(path.join(__dirname, '..', '..', 'versions.json'));
 
-	res.send(feedback);
+	res.send(versions);
 });
 
 
@@ -176,14 +155,50 @@ router.get('/feedback', async (req, res) => {
 });
 
 
-router.get('/notes', async (req, res) => {
+router.post('/applications/:applicationID/stars', async (req, res) => {
+	const application = await libApplication.getApplicationByID(req.params.applicationID);
+
+	if (application === 'NO_APPLICATION') {
+		res.status(404).send('NO_APPLICATION');
+	} else {
+		switch (await req.user.starApplication(application)) {
+			case 'ALREADY_STARRED':
+				res.status(400).send('ALREADY_STARRED');
+				break;
+			case 'OK':
+				res.sendStatus(201);
+				break;
+		}
+	}
+});
+
+
+router.delete('/applications/:applicationID/stars', async (req, res) => {
+	const application = await libApplication.getApplicationByID(req.params.applicationID);
+
+	if (application === 'NO_APPLICATION') {
+		res.status(404).send('NO_APPLICATION');
+	} else {
+		switch (await req.user.unstarApplication(application)) {
+			case 'NOT_STARRED':
+				res.status(400).send('NOT_STARRED');
+				break;
+			case 'OK':
+				res.sendStatus(200);
+				break;
+		}
+	}
+});
+
+
+router.get('(/applications/:applicationID)?/notes', async (req, res) => {
 	let notes = [];
 
-	if (!req.query.applicationID) {
+	if (!req.params.applicationID) {
 		notes = await libNote.getCommonNotes(req.user);
 	} else {
 		const application = await libApplication
-			.getApplicationByID(req.query.applicationID);
+			.getApplicationByID(req.params.applicationID);
 
 		if (application !== 'NO_APPLICATION') {
 			notes = await libNote.getApplicationNotes(req.user, application);
@@ -204,48 +219,12 @@ router.get('/notes', async (req, res) => {
 });
 
 
-router.post('/stars', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.body.applicationID);
-
-	if (application === 'NO_APPLICATION') {
-		res.status(404).send('NO_APPLICATION');
-	} else {
-		switch (await req.user.starApplication(application)) {
-			case 'ALREADY_STARRED':
-				res.status(400).send('ALREADY_STARRED');
-				break;
-			case 'OK':
-				res.sendStatus(201);
-				break;
-		}
-	}
-});
-
-
-router.delete('/stars', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.body.applicationID);
-
-	if (application === 'NO_APPLICATION') {
-		res.status(404).send('NO_APPLICATION');
-	} else {
-		switch (await req.user.unstarApplication(application)) {
-			case 'NOT_STARRED':
-				res.status(400).send('NOT_STARRED');
-				break;
-			case 'OK':
-				res.sendStatus(200);
-				break;
-		}
-	}
-});
-
-
-router.post('/notes', async (req, res) => {
+router.post('(/applications/:applicationID)?/notes', async (req, res) => {
 	let application = null;
 
-	if (req.body.applicationID) {
+	if (req.params.applicationID) {
 		application = await libApplication
-			.getApplicationByID(req.body.applicationID);
+			.getApplicationByID(req.params.applicationID);
 
 		if (application === 'NO_APPLICATION') {
 			application = null;
@@ -285,8 +264,8 @@ router.delete('/notes', async (req, res) => {
 });
 
 
-router.post('/approvals', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.body.applicationID);
+router.post('/applications/:applicationID/proposals', async (req, res) => {
+	const application = await libApplication.getApplicationByID(req.params.applicationID);
 	const proposal = await libProposal.createProposal(req.user, application, req.body.status);
 
 	if (application === 'NO_APPLICATION') {
@@ -345,8 +324,8 @@ router.post('/approvals', async (req, res) => {
 });
 
 
-router.delete('/approvals', async (req, res) => {
-	const application = await libApplication.getApplicationByID(req.body.applicationID);
+router.delete('/applications/:applicationID/proposals', async (req, res) => {
+	const application = await libApplication.getApplicationByID(req.params.applicationID);
 	const proposal = await libProposal.getProposal(req.user, application);
 
 	if (application === 'NO_APPLICATION') {
@@ -386,6 +365,22 @@ router.get('/sessions', async (req, res) => {
 });
 
 
+router.delete('/sessions', async (req, res) => {
+	const session = await libSession.getSessionByUUID(req.body.sessionID)
+
+	switch (session) {
+		case 'NO_SESSION':
+			res.status(400).send('NO_SESSION');
+			break;
+		default:
+			await session.delete();
+
+			res.sendStatus(200);
+			break;
+	}
+});
+
+
 router.use((req, res, next) => {
 	const privileges = libAuth.getPrivileges(req.user);
 	
@@ -397,15 +392,33 @@ router.use((req, res, next) => {
 });
 
 
-router.delete('/users', async (req, res) => {
-	const user = await libUser.getUserByUsername(req.body.username);
+router.get('/users', async (req, res) => {
+	const users = await libUser.getAllUsers();
 
-	switch (await user.delete()) {
-		case 'CANNOT_DELETE_ADMIN':
-			res.status(403).send('CANNOT_DELETE_ADMIN');
+	for (const user of users) {
+		user.otpSetup = !!user.secret;
+		delete user.id;
+		delete user.passwordHash;
+		delete user.secret;
+	}
+	res.json(users);
+});
+
+
+router.post('/users', async (req, res) => {
+	const user = await libUser.createUser(req.body.username,
+		!!req.body.admin);
+	switch (user) {
+		case 'DUPLICATE_USERNAME':
+			res.status(400).send('DUPLICATE_USERNAME');
 			break;
-		case 'OK':
-			res.sendStatus(200);
+		default:
+			user.otpSetup = !!user.secret;
+			delete user.id;
+			delete user.passwordHash;
+			delete user.secret;
+
+			res.status(201).json(user);
 			break;
 	}
 });
@@ -435,35 +448,22 @@ router.patch('/users', async (req, res) => {
 });
 
 
-router.post('/users', async (req, res) => {
-	const user = await libUser.createUser(req.body.username,
-		!!req.body.admin);
-	switch (user) {
-		case 'DUPLICATE_USERNAME':
-			res.status(400).send('DUPLICATE_USERNAME');
-			break;
-		default:
-			user.otpSetup = !!user.secret;
-			delete user.id;
-			delete user.passwordHash;
-			delete user.secret;
+router.delete('/users', async (req, res) => {
+	const user = await libUser.getUserByUsername(req.body.username);
 
-			res.status(201).json(user);
+	switch (await user.delete()) {
+		case 'CANNOT_DELETE_ADMIN':
+			res.status(403).send('CANNOT_DELETE_ADMIN');
+			break;
+		case 'OK':
+			res.sendStatus(200);
 			break;
 	}
 });
 
 
-router.get('/users', async (req, res) => {
-	const users = await libUser.getAllUsers();
-
-	for (const user of users) {
-		user.otpSetup = !!user.secret;
-		delete user.id;
-		delete user.passwordHash;
-		delete user.secret;
-	}
-	res.json(users);
+router.all('*', (req, res) => {
+	res.sendStatus(404);
 });
 
 

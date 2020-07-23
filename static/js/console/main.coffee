@@ -1,6 +1,4 @@
 body = document.querySelector('body')
-searchIcon = document.querySelector('#search-icon')
-searchInput = document.querySelector('#search-input')
 
 Storage = window.localStorage
 
@@ -26,23 +24,7 @@ export saveRequest = (path, init) ->
 	if Storage.getItem('mh_theme') is 'dark'
 		body.classList.add('dark-theme')
 
-	res = await fetch('/console/api/v0.1/auth/');
+	res = await fetch('/console/api/v0.1/access-level/');
 	if not res.ok
 		window.location.href = '/console/login/'
 )()
-
-
-searchIcon.addEventListener('click', (e) ->
-	e.stopPropagation()
-	searchInput.classList.add('shown')
-)
-
-
-searchInput.addEventListener('click', (e) ->
-	e.stopPropagation()
-)
-
-
-body.addEventListener('click', ->
-	searchInput.classList.remove('shown')
-)

@@ -126,47 +126,6 @@ html
 				&:hover
 					color var(--just-gray)
 
-			#search-form
-				display block
-				background var(--very-gray)
-				overflow hidden
-				border-radius 20px
-				padding .25em .5em
-				box-shadow 0 .5vh 1vh var(--shadow-color)
-				min-width min-content
-				justify-self flex-end
-
-				input
-					padding-left .5em
-					border none
-					outline none
-					font-size inherit
-					font-weight inherit
-					color inherit
-					background inherit
-					display inline-block
-
-					@media screen and (max-width 768px)
-						position absolute
-						left 0
-						top 0
-						width 100%
-						box-sizing border-box
-						padding 1em 2em
-						background var(--very-gray)
-						border-radius 0 0 20px 20px
-						transition transform .2s ease-in
-						transform translateY(-100%)
-
-						&.shown
-							transform none
-
-				img
-					height 20px
-					display inline-block
-					vertical-align middle
-					filter brightness(4)
-
 			.button-container
 				display flex
 				flex-flow row wrap
@@ -313,6 +272,30 @@ html
 
 				&:active
 					color var(--pretty-gray)
+
+			#search-form
+				display flex
+				flex-flow row nowrap
+				align-items center
+				background var(--light-gray)
+				border-radius 20px
+				padding 0 1em
+				margin 0 0 1em 0
+				box-shadow 0 .5vh 1vh var(--shadow-color)
+
+				input
+					padding 0 .5em
+					flex 1 1
+					border none
+					outline none
+					font-size inherit
+					font-weight bold
+					color var(--dark)
+					background var(--light-gray)
+					display inline
+
+				img
+					height 20px
 
 			#tab-container
 				display flex

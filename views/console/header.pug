@@ -1,0 +1,13 @@
+h1
+	a(href='/console/') My HR
+
+noscript
+	span JavaScript is disabled in your browser.
+		|  This website will not work.
+
+if user
+	div.button-container
+		a.button.desktop-only(href='/console/desktop/') Launch Desktop
+		a.button(href='/console/settings/') Settings
+		a.button(href='/console/logout/') Sign out
+	script(type='module' src='/js/console/main.js')

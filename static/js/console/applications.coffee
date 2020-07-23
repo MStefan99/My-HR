@@ -1,5 +1,9 @@
 'use strict';
 
+searchForm = document.querySelector('#search-form')
+searchInput = document.querySelector('#search-input')
+searchSubmitButton = document.querySelector('#search-submit')
+
 table = document.querySelector('#applications-table')
 applicationCountElement = document.querySelector('#application-count')
 applicationsHeader = document.querySelector('#applications-header')
@@ -18,7 +22,6 @@ remove = (element) ->
 addApplication = (application) ->
 	tableRow = document.createElement('tr')
 	tableRow.classList.add('clickable', 'application', application.team.toLowerCase())
-	tableRow.tabIndex = 0
 	tableRow.onclick = ->
 		window.location = '/console/application/?id=' + application.id
 	table.appendChild(tableRow)
@@ -119,6 +122,12 @@ updateTabs = (team) ->
 	tab.classList.add('selected')
 
 
+searchSubmitButton.addEventListener('click', ->
+	if searchInput.value
+		searchForm.submit()
+)
+
+
 addEventListener('load', ->
 	params = new URLSearchParams(window.location.search)
 	path = '/console/api/v0.1/applications/?type=' + (params.get('type') || 'all')
@@ -130,7 +139,7 @@ addEventListener('load', ->
 		when 'rejected' then title = 'Rejected applications'
 		when 'pending' then title = 'Pending applications'
 	if params.has('q')
-		title = 'Search results'
+		title = "Search results for '#{params.get('q')}'"
 	applicationsHeader.innerHTML = title
 
 	res = await fetch(path).catch(->

@@ -7,22 +7,22 @@ html(lang='en')
 
 	body
 		header
-			include header-full
+			include header
 
 		main
 			h1 Notes
 			div.section
 				div#note-container
-				div#filter-all.button.pressed(tabindex='0') All notes
-				div#filter-shared.button(tabindex='0') Public notes
-				div#filter-private.button(tabindex='0') Private notes
+				div#filter-all.button.pressed All notes
+				div#filter-shared.button Public notes
+				div#filter-private.button Private notes
 				div#note-editor
 					h3 Add a note
-					div#private-button.button.green.pressed(tabindex='0') Private
-					div#shared-button.button.red(tabindex='0') Public
+					div#private-button.button.green.pressed Private
+					div#shared-button.button.red Public
 					textarea#note-textarea(title='Your note here'
 					placeholder='What would you like to share?')
-					div#note-submit.button.disabled(tabindex='0') Send
+					div#note-submit.button.disabled Send
 		script(async type='module', src='/js/console/notes.js')
 
 		footer

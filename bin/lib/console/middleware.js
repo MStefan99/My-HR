@@ -21,6 +21,7 @@ async function getUser(req, res, next) {
 	} else if (req.cookies.CUID) {
 		req.user = await libUser.getUserByUUID(req.cookies.CUID);
 	}
+	res.locals.user = req.user;
 	next();
 }
 

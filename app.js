@@ -5,7 +5,9 @@ const http = require('http');
 const https = require('https');
 const fs = require('fs');
 const path = require('path');
+const util = require('util');
 
+const readFile = util.promisify(fs.readFile);
 const {applicationRouter} = require('./bin/user');
 const {consoleRouter} = require('./bin/console');
 const {internalRouter} = require('./bin/lib/internal');
@@ -27,6 +29,7 @@ const cacheOptions = {
 app.set('x-powered-by', false);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+
 app.use((req, res, next) => {
 	res.set('Cache-Control', 'no-cache');
 	res.set('Referrer-Policy', 'same-origin');
@@ -35,6 +38,7 @@ app.use((req, res, next) => {
 	res.set('X-Content-Type-Options', 'nosniff');
 	res.set('X-Frame-Options', 'SAMEORIGIN');
 	res.set('X-XSS-Protection', '1');
+	res.set('My-HR-version', app.locals.version);
 	if (!process.env.NO_HTTPS) {
 		res.set('Strict-Transport-Security', 'max-age=31536000'); // 1 year in seconds
 	}
@@ -69,3 +73,8 @@ if (process.env.NO_HTTPS) {
 	}).listen(80);
 	console.log('HTTP redirect enabled, port 80 -> 443');
 }
+
+
+(async () => {
+	app.locals.version = JSON.parse(await readFile('versions.json'))[0].version;
+})();

@@ -7,22 +7,27 @@ html(lang='en')
 
 	body
 		header
-			include header-full
+			include header
 
 		main
 			h1#applications-header Applications
+			form#search-form(action='/console/applications/', method='get')
+				img#search-icon.icon(src='/img/search.svg' alt='Search icon')
+				input#search-input(placeholder='Search' name='q' required)
+				img#search-submit.icon.clickable(src='/img/forward.svg'
+					alt='Search submit icon')
 			div#tab-container
-				div#tab-all.tab.selected(tabindex='0')
+				div#tab-all.tab.selected
 					span All teams
-				div#tab-embedded.tab(tabindex='0')
+				div#tab-embedded.tab
 					span Embedded
-				div#tab-backend.tab(tabindex='0')
+				div#tab-backend.tab
 					span Backend
-				div#tab-frontend.tab(tabindex='0')
+				div#tab-frontend.tab
 					span Frontend
-				div#tab-android.tab(tabindex='0')
+				div#tab-android.tab
 					span Android
-				div#tab-ios.tab(tabindex='0')
+				div#tab-ios.tab
 					span iOS
 			table.paginated
 				thead

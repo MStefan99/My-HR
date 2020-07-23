@@ -222,7 +222,7 @@ router.get('/application', async (req, res) => {
 
 router.get('/settings', (req, res) => {
 	res.set('Cache-Control', privateCache);
-	res.render('console/settings', {user: req.user});
+	res.render('console/settings');
 });
 
 
@@ -311,7 +311,7 @@ router.get('/users', (req, res) => {
 });
 
 
-router.use((req, res, next) => {
+router.all('*', (req, res) => {
 	res.status(404).render('console/404');
 });
 

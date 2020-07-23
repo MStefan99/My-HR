@@ -38,7 +38,6 @@ addUser = (user) ->
 	resetLink = document.createElement('span')
 	resetCell.appendChild(resetLink)
 	resetLink.classList.add('clickable')
-	resetLink.tabIndex = 0
 	resetLink.innerHTML = 'Reset'
 	if user.username isnt 'System'
 		resetLink.addEventListener('click', ->

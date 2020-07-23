@@ -1,9 +1,13 @@
 p Made with ❤ by #[a(href='https://mstefan99.com/') MStefan99]
-p
-	a(href='mailto:mikhail.stefantsev@outlook.com') Contact
-p
-	a(href='/console/versions/') Version history
-p
-	a(href='/console/about/') About
-p
-	a(href='/console/help/') Help
+if user
+	p
+		a(href='mailto:mikhail.stefantsev@outlook.com') Contact
+	p
+		a(href='/console/versions/')= 'Version ' + version
+	p
+		a(href='/console/about/') About
+	p
+		a(href='/console/help/') Help
+else
+	p For internal use only
+	p Unauthorized use prohibited
