@@ -10,7 +10,7 @@ addEventListener('load', ->
 		if await notify.ask('Welcome!'
 			'Hi, it\'s great to meet you!
 			\nWelcome to My HR!
-			\nWould you like to read a message from a developer?')
+			\nWould you like to read a message from the developer?')
 			Storage.setItem('mh_about-read', 'true')
 			window.location.href = '/console/about'
 			return

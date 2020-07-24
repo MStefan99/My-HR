@@ -9,8 +9,10 @@ html(lang='en')
 		header
 			include header
 
+		include flash
+
 		div#login-container
-			h2 Register at My HR
+			h2 Sign up for My HR
 			form(action='/console/register/' method='post')
 				label.required(for='username') Your username
 				input.text#username(type='text' name='username'

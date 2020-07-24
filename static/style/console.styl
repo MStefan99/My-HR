@@ -161,6 +161,44 @@ html
 				&:active
 					filter brightness(.8)
 
+		div#flash-container
+			margin 0 auto
+
+			@media screen and (min-width 425px)
+				width 90vw
+
+			div.flash
+				display flex
+				flex-flow row nowrap
+				justify-content flex-start
+				align-items center
+				color var(--light)
+				border-radius 10px
+				padding .6em .5em
+				margin 1em 0 0
+				box-shadow 0 .2vh 1vh .2vh var(--shadow-color)
+
+				&.ok
+					background var(--just-as-green)
+
+				&.warning
+					background var(--mostly-yellow)
+
+				&.error
+					background var(--simply-red)
+
+				span.separator
+					display inline-block
+					align-self stretch
+					flex 0 0 4px
+					margin 0 1em
+					border-radius 2px
+					background var(--light)
+
+				h2, p
+					display inline
+					margin .4em .5em
+
 		div#login-container
 			width 25vw
 			flex-grow 1
@@ -334,11 +372,8 @@ html
 				.button
 					color var(--dark)
 
-				h2
-					margin .2em 0
-
-				p
-					margin .6em 0
+				h2, p
+					margin .4em 0
 
 			#search-form
 				display flex

@@ -33,15 +33,6 @@ router.use(middleware.getSession);
 router.use(middleware.getUser);
 
 
-router.get('/otp', async (req, res) => {
-	if (req.user === 'NO_USER') {
-		res.status(401).send('NO_USER');
-	} else {
-		res.json(lib2FA.generateSecret(req.user));
-	}
-});
-
-
 router.post('/verify-login', async (req, res) => {
 	req.user = await libUser.getUserByUsername(req.body.username);
 

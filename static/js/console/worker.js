@@ -30,6 +30,7 @@ const resources = [
 	'/js/console/login.js',
 	'/js/console/main.js',
 	'/js/console/notes.js',
+	'/js/console/notifications.js',
 	'/js/console/pages.js',
 	'/js/console/register.js',
 	'/js/console/settings.js',
@@ -47,6 +48,7 @@ const resources = [
 	'/img/desktop.jpg',
 	'/img/desktop.svg',
 	'/img/exit.svg',
+	'/img/forward.svg',
 	'/img/help-application.jpg',
 	'/img/help-applications.jpg',
 	'/img/help-desktop.jpg',
@@ -73,7 +75,7 @@ const resources = [
 ];
 
 
-const currentVersion = 'v0.10.3-beta'
+const currentVersion = 'v0.10.4-beta'
 
 
 async function saveToCache(req, res) {
@@ -89,15 +91,13 @@ function canBeCached(req) {
 	if (req.url.match(/api/)) {  // API requests
 		if (req.method !== 'GET') {  // All non-GET requests
 			return 'NO';
-		} else if (req.url.match(/otp/)) {  // OTP request
-			return 'NO';
 		} else {  // All GET requests
 			return 'MUST_UPDATE';
 		}
 	} else {  // Client requests
 		if (req.method !== 'GET') {  // All non-GET requests
 			return 'NO';
-		} else if (req.url.match(/(logout|exit)\/?$/)) {  // Logout requests
+		} else if (req.url.match(/(otp|logout|exit)\/?$/)) {  // Logout requests
 			return 'NO_WITH_503';
 		} else if (req.url.match(/console(?!.*\.)/)) {  // HTML pages
 			return 'MUST_UPDATE';

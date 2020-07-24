@@ -85,7 +85,7 @@ propose = (status) ->
 					when 1 then application.proposals.accepted = application.proposals.accepted + 1 || 1
 					when -1 then application.proposals.rejected = application.proposals.rejected + 1 || 1
 				application.proposals.my = status
-				notify.tell('Success', 'Proposal saved')
+				notify.tell('Proposal saved', 'Your proposal was saved')
 
 		updateStatus()
 		setBadges()
@@ -263,7 +263,7 @@ addEventListener('load', ->
 		shareButton.classList.add('hidden');
 
 	params = new URLSearchParams(window.location.search)
-	res = await fetch('/console/api/v0.1/applications/' + params.get('id')).catch(->
+	res = await fetch("/console/api/v0.1/applications/#{params.get('id')}/").catch(->
 		notify.tell('Download error'
 			'Could not download application data. Please check your internet connection.'
 			'error')

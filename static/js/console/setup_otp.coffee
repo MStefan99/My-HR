@@ -1,13 +1,11 @@
 'use strict';
 
 formElement = document.querySelector('form')
-qrElement = document.querySelector('#qr')
-secretLabel = document.querySelector('#secret')
+secretInput = document.querySelector('#secret')
 otpElement = document.querySelector('#otp')
 otpLabel = document.querySelector('#otp-label')
 submitButton = document.querySelector('#submit-button')
 
-secret = null
 
 
 validate = ->
@@ -22,26 +20,6 @@ validate = ->
 		otpElement.classList.remove('status-bad')
 
 
-addEventListener('load', ->
-	res = await fetch('/console/api/v0.1/otp/').catch(->
-		alert('Could not download the 2FA code.
-			Please check your internet connection.')
-	)
-	secretObj = await res.json()
-
-	qrElement.setAttribute('src', secretObj.qr)
-	secretLabel.innerHTML = secret = secretObj.secret
-
-	secretInput = document.createElement('input')
-	secretInput.type = 'hidden'
-	secretInput.name = 'secret'
-	secretInput.value = secret
-	formElement.appendChild(secretInput)
-
-	validate()
-)
-
-
 formElement.addEventListener('submit', (e) ->
 	e.preventDefault()
 	res = await fetch('/console/api/v0.1/verify-otp/'
@@ -49,7 +27,7 @@ formElement.addEventListener('submit', (e) ->
 		headers:
 			'Content-Type': 'application/json'
 		body: JSON.stringify(
-			secret: secret
+			secret: secretInput.value
 			token: otpElement.value
 		)
 	).catch(->
@@ -65,5 +43,7 @@ formElement.addEventListener('submit', (e) ->
 )
 
 
-addEventListener('load', validate)
+(->
+	validate()
+)()
 addEventListener('input', validate)
