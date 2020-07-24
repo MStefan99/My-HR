@@ -105,11 +105,6 @@ router.use((req, res, next) => {
 });
 
 
-router.get('/access-level', (req, res) => {
-	res.send(libAuth.getPrivileges(req.user));
-});
-
-
 router.get('/applications', async (req, res) => {
 	let applications;
 	if (req.query.type === 'stars') {

@@ -4,6 +4,7 @@ table = document.querySelector('#feedback-table')
 
 
 import {paginate} from '/js/console/pages.js'
+import * as notify from '/js/console/notifications.js'
 
 
 remove = (element) ->
@@ -12,12 +13,12 @@ remove = (element) ->
 
 addEventListener('load', ->
 	res = await fetch('/console/api/v0.1/feedback/').catch(->
-		alert('Could not download feedback. Please check your internet connection.')
+		notify.tell('Download error'
+			'Could not download feedback. Please check your internet connection.'
+			'error')
 	)
 
-	if res.status is 403
-		alert('You have been signed out. Please sign in again to continue using My HR.')
-	else
+	if res.ok
 		feedbacks = await res.json()
 
 		for feedback in feedbacks

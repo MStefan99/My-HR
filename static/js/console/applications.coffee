@@ -11,6 +11,7 @@ tabElements = document.querySelectorAll('.tab')
 
 
 import {paginate} from '/js/console/pages.js'
+import * as notify from '/js/console/notifications.js'
 
 applications = []
 
@@ -143,12 +144,12 @@ addEventListener('load', ->
 	applicationsHeader.innerHTML = title
 
 	res = await fetch(path).catch(->
-		alert('Could not download application list. Please check your internet connection.')
+		notify.tell('Download error'
+			'Could not download application list. Please check your internet connection.'
+			'error')
 	)
 
-	if res.status is 403
-		alert('You have been signed out. Please sign in again to continue using My HR.')
-	else
+	if res.ok
 		applications = await res.json()
 
 		applicationCountElement.innerHTML = "Total: #{applications.length} applications in all teams"

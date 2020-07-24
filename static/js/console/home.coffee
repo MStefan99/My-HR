@@ -2,17 +2,21 @@
 
 Storage = window.localStorage;
 
+import * as notify from '/js/console/notifications.js'
+
 
 addEventListener('load', ->
 	if Storage.getItem('mh_about-read') isnt 'true'
-		if confirm('Hi, it\'s great to meet you!
-				\nWelcome to My HR!
-				\nWould you like to read a message from a developer?')
+		if await notify.ask('Welcome!'
+			'Hi, it\'s great to meet you!
+			\nWelcome to My HR!
+			\nWould you like to read a message from a developer?')
 			Storage.setItem('mh_about-read', 'true')
 			window.location.href = '/console/about'
 			return
 		else
-			alert('Thank you and have a nice day!')
+			notify.tell('Thank you'
+				'Thank you and have a nice day!')
 )
 
 

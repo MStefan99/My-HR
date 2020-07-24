@@ -28,6 +28,7 @@ Storage = window.localStorage
 
 
 import {saveRequest} from '/js/console/main.js'
+import * as notify from '/js/console/notifications.js'
 
 
 getBasePath = -> '/console/api/v0.1/applications/' + application.id
@@ -38,8 +39,10 @@ remove = (element) ->
 
 
 propose = (status) ->
-	if confirm("Are you sure you want to #{if status is 1 then 'accept' else 'reject'}
-			#{firstNameElement.innerHTML}\'s application?")
+	if await notify.ask('Make a proposal'
+		"Are you sure you want to #{if status is 1 then 'accept' else 'reject'}
+			#{firstNameElement.innerHTML}\'s application?"
+		'warning')
 		init =
 			method: 'post'
 			headers:
@@ -53,16 +56,26 @@ propose = (status) ->
 
 		switch await res.text()
 			when 'NO_APPLICATION'
-				alert('The application was not found. It may have been deleted or the URL is wrong.')
+				notify.tell('Not found'
+					'The application was not found. It may have been deleted or the URL is wrong.'
+					'error')
 			when 'INVALID_STATUS'
-				alert('Your proposal could not be processed due to the internal error.
-					Please contact the support.')
+				notify.tell('Error'
+					'Your proposal could not be processed due to the internal error.
+						Please contact the support.'
+					'error')
 			when 'ALREADY_ACCEPTED'
-				alert('This application was already accepted, you cannot change its status anymore.')
+				notify.tell('Already accepted'
+					'This application was already accepted, you cannot change its status anymore.'
+					'error')
 			when 'ALREADY_REJECTED'
-				alert('This application was already rejected, you cannot change its status anymore.')
+				notify.tell('Already rejected'
+					'This application was already rejected, you cannot change its status anymore.'
+					'error')
 			when 'ALREADY_EXISTS'
-				alert('You have already made a proposal for this application. Please take it back first.')
+				notify.tell('Already proposed'
+					'You have already made a proposal for this application. Please take it back first.'
+					'error')
 			when 'ACCEPTED'
 				application.accepted = 1
 			when 'REJECTED'
@@ -72,13 +85,16 @@ propose = (status) ->
 					when 1 then application.proposals.accepted = application.proposals.accepted + 1 || 1
 					when -1 then application.proposals.rejected = application.proposals.rejected + 1 || 1
 				application.proposals.my = status
+				notify.tell('Success', 'Proposal saved')
 
 		updateStatus()
 		setBadges()
 
 
 deleteProposal = ->
-	if confirm('Are you sure you want to take your proposal back?')
+	if await notify.ask('Cancel proposal'
+		'Are you sure you want to take your proposal back?'
+		'warning')
 		init =
 			method: 'delete'
 			headers:
@@ -89,18 +105,22 @@ deleteProposal = ->
 
 		switch await res.text()
 			when 'ALREADY_ACCEPTED'
-				alert('This application was already accepted, you cannot change its status anymore.')
+				notify.tell('Already accepted'
+					'This application was already accepted, you cannot change its status anymore.'
+					'error')
 			when 'ALREADY_REJECTED'
-				alert('This application was already rejected, you cannot change its status anymore.')
+				notify.tell('Already rejected'
+					'This application was already rejected, you cannot change its status anymore.'
+					'error')
 			when 'OK'
 				switch application.proposals.my
 					when 1 then application.proposals.accepted -= 1
 					when -1 then application.proposals.rejected -= 1
 				application.proposals.my = null
+				notify.tell('Proposal deleted', 'Your proposal was deleted')
 
 		updateStatus()
 		setBadges()
-
 
 
 setBadges = () ->
@@ -113,7 +133,7 @@ setBadges = () ->
 setListeners = () ->
 	desktopButton.addEventListener('click', ->
 		Storage.setItem('desktop_autorun', JSON.stringify(
-			src: window.location.pathname + window.location.search,
+			src: window.location.pathname + window.location.search
 			name: application.firstName + '\'s application'
 			img: '/img/application.svg'
 		))
@@ -121,12 +141,15 @@ setListeners = () ->
 	)
 
 	shareButton.addEventListener('click', ->
-		if 'writeText' in navigator.clipboard
+		if navigator.clipboard?
 			await navigator.clipboard.writeText(window.location.href)
-			alert('Link copied to clipboard!')
+			notify.tell('Copied'
+				'Link copied to clipboard!')
 		else
-			alert('Unfortunately, we can\'t copy the link on your device.
-			Please copy the link from the address bar manually.')
+			notify.tell('Error'
+				'Unfortunately, we can\'t copy the link on your device.
+				Please copy the link from the address bar manually.'
+				'error')
 	)
 
 
@@ -145,13 +168,12 @@ setData = () ->
 		backupPhoneElement.href = 'tel:' + application.backupPhone
 	else
 		backupPhoneElement.innerHTML = '[Not provided]'
-	links = application.links.replace(/(http:\/\/|https:\/\/)?(\S*?\.\S*)/g,
+	links = application.links.replace(/(http:\/\/|https:\/\/)?(\S*?\.\S*)/g
 		'<a href="https://$2" target="_blank">$&</a>')
 	linksElement.innerHTML = links or '[Empty]'
 	freeFormElement.innerHTML = application.freeForm or '[Empty]'
 	fileLinkElement.innerHTML = application.fileName
 	fileLinkElement.href = '/console/file/' + application.filePath
-
 
 
 setupApplication = ->
@@ -219,6 +241,7 @@ star = ->
 	if res.ok
 		application.starred = true
 		updateStar()
+		notify.tell('Starred', 'You can now find this application in the "stars" section')
 
 
 unstar = ->
@@ -232,6 +255,7 @@ unstar = ->
 	if res.ok
 		application.starred = false
 		updateStar()
+		notify.tell('Unstarred', 'Application removed from your stars')
 
 
 addEventListener('load', ->
@@ -240,13 +264,15 @@ addEventListener('load', ->
 
 	params = new URLSearchParams(window.location.search)
 	res = await fetch('/console/api/v0.1/applications/' + params.get('id')).catch(->
-		alert('Could not download application data. Please check your internet connection.')
+		notify.tell('Download error'
+			'Could not download application data. Please check your internet connection.'
+			'error')
 	)
 
-	if res.status is 403
-		alert('You have been signed out. Please sign in again to continue using My HR.')
-	else if res.status is 404
-		alert('Application not found. It may have been deleted or the link may be invalid.')
+	if res.status is 404
+		notify.tell('Not found'
+			'Application not found. It may have been deleted or the link may be invalid.'
+			'error')
 	else
 		application = await res.json()
 

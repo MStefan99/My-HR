@@ -285,18 +285,19 @@ html
 
 			div#notification-container
 				position fixed
+				display flex
+				flex-flow column nowrap
+				justify-content flex-start
+				align-items flex-end
+				max-width 40vw
 				top 10vh
 				right 3vw
-				width max-content
 				color var(--light)
 
 				@media screen and (max-width 425px)
-					width 90vw
-					top 18vh
-					right unset
+					max-width 90vw
 					margin 0 auto
-					padding 1em
-					box-sizing border-box
+					padding 0
 
 				div.notification
 					position relative
@@ -316,7 +317,7 @@ html
 						background var(--simply-red)
 
 					&.inactive
-						transform translateX(120%)
+						transform translateX(140%)
 						pointer-events none
 
 				.icon

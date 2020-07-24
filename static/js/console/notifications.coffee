@@ -9,12 +9,18 @@ if not notificationContainer
 
 
 remove = (element, delay = 0) ->
-	setTimeout(->
-		element.parentNode.removeChild(element)
-	, delay)
+	if element and element.parentNode
+		setTimeout(->
+			element.parentNode.removeChild(element)
+		, delay)
 
 
-export tell = (title, message, type = 'ok') ->
+close = (notificationElement) ->
+	notificationElement.classList.add('inactive')
+	remove(notificationElement, 500)
+
+
+export tell = (title, message, type = 'ok', timeout = 5000) ->
 	if type isnt 'ok' and type isnt 'warning' and type isnt 'error'
 		throw new Error('No such notification type')
 
@@ -40,14 +46,18 @@ export tell = (title, message, type = 'ok') ->
 
 	new Promise((resolve, reject) ->
 		closeElement.addEventListener('click', ->
-			resolve('Notification closed by user')
-			notificationElement.classList.add('inactive')
-			remove(notificationElement, 500)
+			close(notificationElement)
+			resolve()
 		)
+		if timeout > 0
+			setTimeout(->
+				close(notificationElement)
+				resolve()
+			, timeout)
 	)
 
 
-export ask = (title, message, type = 'ok') ->
+export ask = (title, message, type = 'ok', timeout = 10000) ->
 	if type isnt 'ok' and type isnt 'warning' and type isnt 'error'
 		throw new Error('No such notification type')
 
@@ -79,13 +89,18 @@ export ask = (title, message, type = 'ok') ->
 
 	new Promise((resolve, reject) ->
 		confirmElement.addEventListener('click', ->
-			resolve('User confirmation received')
-			notificationElement.classList.add('inactive')
-			remove(notificationElement, 500)
+			resolve(true)
+			close(notificationElement)
 		)
+
 		rejectElement.addEventListener('click', ->
-			reject('User rejected the notification')
-			notificationElement.classList.add('inactive')
-			remove(notificationElement, 500)
+			resolve(false)
+			close(notificationElement)
 		)
+
+		if timeout > 0
+			setTimeout(->
+				close(notificationElement)
+				resolve(false)
+			, timeout)
 	)

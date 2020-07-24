@@ -9,6 +9,7 @@ Storage = window.localStorage;
 
 
 import {saveRequest} from '/js/console/main.js'
+import * as notify from '/js/console/notifications.js'
 
 
 remove = (element) ->
@@ -58,7 +59,9 @@ addSession = (session) ->
 	logoutLink.innerHTML = 'Sign out'
 	logoutCell.appendChild(logoutLink)
 	logoutLink.addEventListener('click', ->
-		if confirm('Are you sure you want to sign out on this device?')
+		if await notify.ask('Sign out'
+			'Are you sure you want to sign out on this device?'
+			'warning')
 			init =
 				method: 'delete'
 				headers:
@@ -72,8 +75,9 @@ addSession = (session) ->
 
 			if res.ok
 				remove(sessionRow)
+				notify.tell('Signed out'
+					'Device was signed out successfully')
 	)
-
 
 
 lightRadio.addEventListener('click', ->
@@ -96,13 +100,13 @@ addEventListener('load', ->
 
 
 	res = await fetch('/console/api/v0.1/sessions/').catch(->
-		alert('Could not download session list.
-			Please check your internet connection.')
+		notify.tell('Download error'
+			'Could not download session list.
+			Please check your internet connection.'
+			'error')
 	)
 
-	if res.status is 403
-		alert('You have been signed out. Please sign in again to continue using My HR.')
-	else
+	if res.ok
 		sessions = await res.json()
 
 		for session in sessions

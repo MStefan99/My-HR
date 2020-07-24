@@ -1,5 +1,11 @@
 [
 	{
+		"version": "v0.10.3-beta",
+		"logs": [
+			"My HR now features custom notifications!"
+		]
+	},
+	{
 		"version": "v0.10.2-beta",
 		"logs": [
 			"You can now search applications!",

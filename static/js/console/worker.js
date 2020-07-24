@@ -73,7 +73,7 @@ const resources = [
 ];
 
 
-const currentVersion = 'v0.10.2-beta'
+const currentVersion = 'v0.10.3-beta'
 
 
 async function saveToCache(req, res) {
@@ -86,20 +86,22 @@ async function saveToCache(req, res) {
 
 
 function canBeCached(req) {
-	if (req.url.match(/api/)) {
-		if (req.method !== 'GET') {
+	if (req.url.match(/api/)) {  // API requests
+		if (req.method !== 'GET') {  // All non-GET requests
 			return 'NO';
-		} else if (req.url.match(/otp/)) {
+		} else if (req.url.match(/otp/)) {  // OTP request
 			return 'NO';
-		} else {
+		} else {  // All GET requests
 			return 'MUST_UPDATE';
 		}
-	} else {
-		if (req.method !== 'GET') {
+	} else {  // Client requests
+		if (req.method !== 'GET') {  // All non-GET requests
 			return 'NO';
-		} else if (req.url.match(/(logout|exit)\/?$/)) {
+		} else if (req.url.match(/(logout|exit)\/?$/)) {  // Logout requests
 			return 'NO_WITH_503';
-		} else {
+		} else if (req.url.match(/console(?!.*\.)/)) {  // HTML pages
+			return 'MUST_UPDATE';
+		} else {  // All other GET requests
 			return 'YES';
 		}
 	}
@@ -135,7 +137,13 @@ async function handleRequest(req) {
 				await saveToCache(req, res.clone());
 				return res;
 			} catch (e) {
-				return cache.match(req);
+				const res = await cache.match(req);
+
+				if (res) {
+					return res;
+				} else {
+					return cache.match('/console/not-connected/');
+				}
 			}
 
 		case 'NO_WITH_503':

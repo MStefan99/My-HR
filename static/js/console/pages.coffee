@@ -7,7 +7,7 @@ remove = (element) ->
 
 insertAfter = (referenceNode, newNode) ->
 	referenceNode.parentNode
-	.insertBefore(newNode, referenceNode.nextSibling)
+		.insertBefore(newNode, referenceNode.nextSibling)
 
 
 openPage = (pageNumber, nodes, pageSize) ->
@@ -69,7 +69,7 @@ setupPagination = (table, options = {}) ->
 
 
 export paginate = (options) ->
-	# Removing old pagination in case table is re-paginated
+# Removing old pagination in case table is re-paginated
 	document.querySelectorAll('.paginator').forEach((paginator) ->
 		remove(paginator)
 	)

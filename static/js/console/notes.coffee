@@ -21,6 +21,7 @@ Months = Object.freeze([
 
 
 import {saveRequest} from '/js/console/main.js'
+import * as notify from '/js/console/notifications.js'
 
 
 getPath = ->
@@ -59,8 +60,10 @@ addNote = (note) ->
 		noteDeleteButton.classList.add('button')
 		noteDeleteButton.innerHTML = 'Delete'
 		noteDeleteButton.addEventListener('click', ->
-			if confirm("Are you sure you want to delete the following note?
-					\n\"#{note.message}\"")
+			if await notify.ask('Deleting note'
+				"Are you sure you want to delete the following note?
+				\n\"#{note.message}\""
+				'warning')
 				init =
 					method: 'delete'
 					headers:
@@ -73,6 +76,8 @@ addNote = (note) ->
 				)
 				if res.ok
 					remove(noteElement)
+					notify.tell('Note deleted'
+						'Your note was successfully deleted')
 		)
 		noteElement.appendChild(noteDeleteButton)
 
@@ -128,12 +133,12 @@ filter = (type = filterType) ->
 
 addEventListener('load', ->
 	res = await fetch(getPath()).catch(->
-		alert('Could not get notes. Please check your internet connection.')
+		notify.tell('Download error'
+			'Could not get notes. Please check your internet connection.'
+			'error')
 	)
 
-	if res.status is 403
-		alert('You have been signed out. Please sign in again to continue using My HR.')
-	else
+	if res.ok
 		notes = await res.json()
 
 		for note in notes
@@ -185,7 +190,9 @@ noteSubmitButton.addEventListener('click', ->
 	filterType = if shared then 'shared' else 'private'
 
 	if not noteTextarea.value
-		alert('Please enter a message')
+		notify.tell('Empty note'
+			'Please enter a message'
+			'error')
 	else
 		init =
 			method: 'post'
@@ -208,4 +215,6 @@ noteSubmitButton.addEventListener('click', ->
 			note = await res.json();
 			addNote(note)
 			filter()
+			notify.tell('Note saved'
+				'Your note was saved')
 )

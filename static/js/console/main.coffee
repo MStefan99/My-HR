@@ -11,20 +11,15 @@ export saveRequest = (path, init) ->
 			db = e.target.result;
 			db.transaction('unfinishedRequests', 'readwrite')
 				.objectStore('unfinishedRequests')
-				.add(
+				.add({
 					path: path
 					init: init
+				}
 			)
 		)
 	else
 		alert('You are not currently connected to internet. Please retry when online.')
 
 
-(->
-	if Storage.getItem('mh_theme') is 'dark'
-		body.classList.add('dark-theme')
-
-	res = await fetch('/console/api/v0.1/access-level/');
-	if not res.ok
-		window.location.href = '/console/login/'
-)()
+if Storage.getItem('mh_theme') is 'dark'
+	body.classList.add('dark-theme')
