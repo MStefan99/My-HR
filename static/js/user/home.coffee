@@ -25,7 +25,7 @@ addEventListener('load', ->
 
 		setTimeout(->
 			welcomeContainer.classList.remove('invisible')
-		1600)
+		, 1600)
 		splashText.classList.remove('hidden')
 		setInterval(->
 			timeLeft = applicationPeriodEnd - Date.now()
@@ -36,5 +36,5 @@ addEventListener('load', ->
 			days = (timeLeft // 1000 // 60 // 60 // 24);
 			splashText.innerHTML = "Application period ends in
 				#{days} days, #{hours} hours, #{minutes} minutes and #{seconds} seconds"
-		1000)
+		, 1000)
 )

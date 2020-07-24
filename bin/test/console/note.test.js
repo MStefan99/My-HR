@@ -119,12 +119,12 @@ describe('With test user, session, application and notes', () => {
 				shared: true,
 				message: 'test note'
 			});
-		
+
 		expect(commonNote.id).toBeDefined();
 		expect(commonSharedNote.id).toBeDefined();
 		expect(applicationNote.id).toBeDefined();
 		expect(applicationSharedNote.id).toBeDefined();
-		
+
 		expect(commonNote.time).toBeDefined();
 		expect(commonSharedNote.time).toBeDefined();
 		expect(applicationNote.time).toBeDefined();

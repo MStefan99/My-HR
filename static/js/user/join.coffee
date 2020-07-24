@@ -24,4 +24,4 @@ setInterval(->
 		expired = false
 		submitButton.disabled = false
 		submitButton.title = 'Send!'
-1000)
+, 1000)

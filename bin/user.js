@@ -134,7 +134,8 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 			application,
 			true,
 			'Application created');
-		res.render('user/status', { title: 'Thank you', info: 'We have received ' +
+		res.render('user/status', {
+			title: 'Thank you', info: 'We have received ' +
 				'your application and will contact you as soon as possible. ' +
 				'In the meantime, would you mind telling us about your ' +
 				'experience on our website <a href="/feedback/">here</a>?'

@@ -26,21 +26,21 @@ class Feedback {
 		});
 		feedback.id = (await db.get(`select last_insert_rowid() as id`)).id;
 		await db.close();
-		
+
 		return feedback;
 	}
-	
-	
+
+
 	static async getAllFeedback() {
 		const feedbacks = [];
-		
+
 		const db = await openDB();
 		const allFeedbackData = await db.all(`select * from feedback`);
 		await db.close();
-		
+
 		for (const feedbackData of allFeedbackData) {
 			const feedback = new Feedback();
-			
+
 			Object.assign(feedback, feedbackData);
 			feedbacks.push(feedback);
 		}

@@ -310,7 +310,7 @@ router.post('/applications/:applicationID/proposals', async (req, res) => {
 					application,
 					true,
 					req.user.username + ' proposed to '
-					+ (req.body.status === 1? 'accept' : 'reject') + ' this application');
+					+ (req.body.status === 1 ? 'accept' : 'reject') + ' this application');
 
 				res.sendStatus(201);
 				break;
@@ -378,7 +378,7 @@ router.delete('/sessions', async (req, res) => {
 
 router.use((req, res, next) => {
 	const privileges = libAuth.getPrivileges(req.user);
-	
+
 	if (privileges !== 'ADMIN') {
 		res.status(403).send('NOT_ENOUGH_PERMISSIONS')
 	} else {

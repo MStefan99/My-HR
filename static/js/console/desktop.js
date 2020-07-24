@@ -388,7 +388,7 @@ function modifyAppStyle(iframe) {
 			new AppWindow(window.location.href,
 				document.title.replace(' - My HR', ''),
 				'/img/application.svg'
-				)
+			)
 		});
 	}
 }
