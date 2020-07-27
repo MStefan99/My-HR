@@ -24,13 +24,14 @@ html(lang='en')
 			div#content-container.hidden
 				h1#register We're happy to see you!
 				h2 Just a few steps first...
-				p We need to make sure you are a Metropolia student.
+				p We need to make sure you have a Metropolia email.
 					|  For this, please fill in this very simple form below and we'll get back to you in a moment!
 				form(action='/register/' method='post')
 					label.required(for='username') Enter your Metropolia email:
-					input#username(type='text' name='username' required)
+					input#username(type='text' name='username'
+						placeholder='john.doe' required)
 					label#metropolia-domain(for='username') @metropolia.fi
-					input(type='submit' value='Send email' title='Send email')
+					input#submit(type='submit' value='Send email' title='Send email')
 					label.label-info.required-info * Required fields
 				a(href='/join') Already registered? Click here!
 				p#splash-text.hidden

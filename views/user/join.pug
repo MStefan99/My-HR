@@ -1,7 +1,7 @@
 -
-	var linksPlaceholder = 'You can include links to your code, ' +
-					'social network pages or anything else here. ' +
-					'Separate links from each other and your comments by at least one whitespace or newline. ' +
+	var linksPlaceholder = 'Here you can include links to your code, ' +
+					'social network pages, projects or something else. ' +
+					'Separate links from each other and your comments by at least one space or newline. ' +
 					'Maximum 5000 characters.'
 
 -
@@ -45,33 +45,36 @@ html(lang='en')
 					label.required(for='phone') Main phone number
 					input#phone(type='tel' name='phone'
 						title='Your phone starting with 0 or +358'
-						placeholder='+358400000000' pattern='(0|\\+358).{9}' required)
+						placeholder='+358400000000' pattern='(0|\\+358)\\d{9}' required)
 					label(for='phone') Secondary phone number
 					input#backup-phone(type='tel' name='backupPhone'
 						title='Your backup phone number in case the main one is unavailable'
-						placeholder='+358400000000' pattern='(0|\\+358).{9}')
+						placeholder='+358400000000' pattern='(0|\\+358)\\d{9}')
 					label.required Select your team
-					br
-					input#team-e(type='radio' value='Embedded' name='team'
-						title=`Here you'll be developing an IoT device itself` required)
-					label.inline(for='team-e') Embedded team
-					br
-					input#team-f(type='radio' value='Frontend' name='team'
-						title=`Here you\'ll be developing a web interface`)
-					label.inline(for='team-f') Frontend team
-					br
-					input#team-b(type='radio' value='Backend' name='team'
-						title=`Here you\'ll be developing a server software connecting other components together`)
-					label.inline(for='team-b') Backend team
-					br
-					input#team-a(type='radio' value='Android' name='team'
-						title=`Here you\'ll be developing an Android client`)
-					label.inline(for='team-a') Android team
-					br
-					input#team-i(type='radio' value='iOS' name='team'
-						title=`Here you\'ll be developing an iOS client`)
-					label.inline(for='team-i') iOS team
-					br
+					div
+						input#team-e(type='radio' value='Embedded' name='team'
+							title=`Here you'll be developing an IoT device itself` required)
+						label.inline(for='team-e') Embedded team
+					div
+						input#team-f(type='radio' value='Frontend' name='team'
+							title=`Here you'll be developing a web interface`)
+						label.inline(for='team-f') Frontend team
+					div
+						input#team-b(type='radio' value='Backend' name='team'
+							title=`Here you'll be developing a server software connecting other components together`)
+						label.inline(for='team-b') Backend team
+					div
+						input#team-a(type='radio' value='Android' name='team'
+							title=`Here you'll be developing an Android client`)
+						label.inline(for='team-a') Android team
+					div
+						input#team-i(type='radio' value='iOS' name='team'
+							title=`Here you'll be developing an iOS client`)
+						label.inline(for='team-i') iOS team
+					div
+						input#team-o(type='radio' value='Other' name='team'
+							title=`Select this if you're not a developer`)
+						label.inline(for='team-o') Other (tell us below)
 					label(for='links') Add useful links (GitHub, LinkedIn, etc.)
 					textarea#links(name='links' placeholder=linksPlaceholder
 						title = 'Add any relevant links here' maxlength=5000)

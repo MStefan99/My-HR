@@ -91,7 +91,14 @@ router.post('/register', async (req, res) => {
 			type: 'error',
 			title: 'No email',
 			info: 'You have submitted an empty email address, ' +
-				'please return and try again.'
+				'please try again.'
+		}).redirect(303, '/');
+	} else if (req.body.username.match('@')) {
+		res.flash({
+			type: 'error',
+			title: 'Invalid email format',
+			info: 'You have submitted an invalid email address, ' +
+				'please try again.'
 		}).redirect(303, '/');
 	} else {
 		const session = await libSession.createSession(req.body.username,
@@ -101,7 +108,7 @@ router.post('/register', async (req, res) => {
 			'Complete your application for Mine Eclipse',
 			'registered.html',
 			{uuid: session.uuid});
-		
+
 		res.flash({
 			title: 'Check your email',
 			info: 'We\'ve sent you an email with your link! ' +

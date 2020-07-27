@@ -6,14 +6,27 @@ textRight = document.querySelector('#text-right')
 splashText = document.querySelector('#splash-text')
 welcomeContainer = document.querySelector('#welcome-container')
 contentContainer = document.querySelector('#content-container')
+usernameInput = document.querySelector('#username')
+submitButton = document.querySelector('#submit')
 
 applicationPeriodEnd = 1603054800000
+
+
+validate = ->
+	submitButton.disabled = false
+
+	if not usernameInput.value.match(/[A-Za-z.]+/)
+		usernameInput.classList.add('status-bad')
+		submitButton.disabled = true
+	else
+		usernameInput.classList.remove('status-bad')
 
 
 addEventListener('load', ->
 	[logo, textLeft, textRight].forEach((e) ->
 		e.classList.remove('inactive')
 	)
+	validate()
 
 	if Date.now() > applicationPeriodEnd
 		welcomeContainer.classList.add('hidden')
@@ -40,3 +53,5 @@ addEventListener('load', ->
 		, 1000)
 )
 
+
+usernameInput.addEventListener('input', validate)

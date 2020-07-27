@@ -52,7 +52,7 @@ formElement.addEventListener('submit', (e) ->
 		switch await res.text()
 			when 'NO_USER'
 				usernameLabel.innerHTML = 'No such user'
-				passwordElement.classList.add('status-bad')
+				usernameElement.classList.add('status-bad')
 				submitButton.disabled = true
 			when 'WRONG_PASSWORD'
 				passwordLabel.innerHTML = 'Wrong password'

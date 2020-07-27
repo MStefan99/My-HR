@@ -71,7 +71,8 @@ tabElements.forEach((e) ->
 filterTeam = (team) ->
 	updateTabs(team)
 	if team isnt 'all' and team isnt 'embedded' and team isnt 'backend' \
-		and team isnt 'frontend' and team isnt 'android' and team isnt 'ios'
+		and team isnt 'frontend' and team isnt 'android' and team isnt 'ios'\
+		and team isnt 'other'
 		throw new Error('No such team')
 
 	path = new URLSearchParams(window.location.search)
