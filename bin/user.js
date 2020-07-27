@@ -72,7 +72,7 @@ if (process.env.USER_AUTH) {
 	router.use((req, res, next) => {
 		if (!req.cookies.CSID) {
 			res.flash({
-				type: 'error',
+				type: 'warning',
 				title: 'Beta mode',
 				info: 'This website is now in closed beta so you have to sign in ' +
 					'to continue using the website. If you do not know how to do it, ' +

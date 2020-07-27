@@ -12,10 +12,14 @@ submitButton = document.querySelector('#submit')
 applicationPeriodEnd = 1603054800000
 
 
+remove = (element) ->
+	element.parentNode.removeChild(element)
+
+
 validate = ->
 	submitButton.disabled = false
 
-	if not usernameInput.value.match(/[A-Za-z.]+/)
+	if not usernameInput.value.match(/^[A-Za-z\.]+$/)
 		usernameInput.classList.add('status-bad')
 		submitButton.disabled = true
 	else
@@ -29,18 +33,14 @@ addEventListener('load', ->
 	validate()
 
 	if Date.now() > applicationPeriodEnd
-		welcomeContainer.classList.add('hidden')
-		splashText.innerHTML = 'Unfortunately, application period is over.
+		contentContainer.classList.add('hidden')
+		document.querySelector('#welcome-container h1')
+			.innerText = 'Application period is over'
+		document.querySelector('#welcome-container h2')
+			.innerText = 'Unfortunately, application period is over.
 			Thank you for your interest in Mine Eclipse!'
-
-		splashText.classList.remove('hidden')
+		remove(document.querySelector('#welcome-container a'))
 	else
-		contentContainer.classList.remove('hidden')
-
-		setTimeout(->
-			welcomeContainer.classList.remove('inactive')
-		, 1600)
-		splashText.classList.remove('hidden')
 		setInterval(->
 			timeLeft = applicationPeriodEnd - Date.now()
 
@@ -49,8 +49,12 @@ addEventListener('load', ->
 			hours = (timeLeft // 1000 // 60 // 60) % 24;
 			days = (timeLeft // 1000 // 60 // 60 // 24);
 			splashText.innerHTML = "Application period ends in
-				#{days} days, #{hours} hours, #{minutes} minutes and #{seconds} seconds"
+			#{days} days, #{hours} hours, #{minutes} minutes and #{seconds} seconds"
 		, 1000)
+
+	setTimeout(->
+		welcomeContainer.classList.remove('inactive')
+	, 1600)
 )
 
 

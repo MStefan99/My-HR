@@ -24,25 +24,23 @@ async function getSession(req, res, next) {
 
 
 function redirectIfNotAuthorized(req, res, next) {
-	const ip = req.ip;
-
-	switch (libAuth.checkAuthStatus(req.session, ip)) {
+	switch (libAuth.checkAuthStatus(req.session, req.ip)) {
 		case 'NO_SESSION':
 			res.flash({
-				type: 'error',
+				type: 'warning',
 				title: 'Not registered',
-				info: 'You need to have a verified email address to continue to the page requested. ' +
-					'Please sign up with your email first. We apologize for the inconvenience.'
+				info: 'You need to have a verified email address to continue. ' +
+					'Please sign up on the home page first.'
 			}).redirect(303, '/');
 			break;
 		case 'WRONG_IP':
 			res.flash({
-				type: 'error',
+				type: 'warning',
 				title: 'Wrong address',
-				info: 'To ensure our data stays safe we\'ve limited who can access this page. ' +
-					'As a result, you can only view it from the same address as when you had while ' +
-					'getting your link on the home page. Open the link from that address or create a new link by ' +
-					'returning to the home page. We apologize for the inconvenience.'
+				info: 'Your IP address has changed since you were getting your link ' +
+					'so we could not prove it\'s you. ' +
+					'Please open the link from the old address ' +
+					'or create a new link on the home page.'
 			}).redirect(303, '/');
 			break;
 		case 'OK':
@@ -56,10 +54,10 @@ function redirectIfExpired(req, res, next) {
 	switch (libAuth.checkExpirationStatus(req.session, userCookieOptions.maxAge)) {
 		case 'EXPIRED':
 			res.flash({
-				type: 'error',
+				type: 'warning',
 				title: 'Link expired',
-				info: 'Your link has now expired, meaning you need to return to the home page ' +
-					'and get the new link to continue using the website. We apologize for the inconvenience.'
+				info: 'Your link has expired, meaning you need to ' +
+					'get the new link on the home page to continue using the website.'
 			}).redirect(303, '/');
 			break;
 		case 'OK':
