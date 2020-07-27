@@ -12,7 +12,8 @@ applicationPeriodEnd = 1603054800000
 
 addEventListener('load', ->
 	[logo, textLeft, textRight].forEach((e) ->
-		e.classList.remove('invisible'))
+		e.classList.remove('inactive')
+	)
 
 	if Date.now() > applicationPeriodEnd
 		welcomeContainer.classList.add('hidden')
@@ -24,7 +25,7 @@ addEventListener('load', ->
 		contentContainer.classList.remove('hidden')
 
 		setTimeout(->
-			welcomeContainer.classList.remove('invisible')
+			welcomeContainer.classList.remove('inactive')
 		, 1600)
 		splashText.classList.remove('hidden')
 		setInterval(->
@@ -38,3 +39,4 @@ addEventListener('load', ->
 				#{days} days, #{hours} hours, #{minutes} minutes and #{seconds} seconds"
 		, 1000)
 )
+

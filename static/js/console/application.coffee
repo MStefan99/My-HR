@@ -215,7 +215,7 @@ updateStatus = ->
 				acceptButton.title = 'Take back your proposal'
 				rejectButton.title = 'You have already proposed to accept this application'
 				acceptButton.onclick = deleteProposal
-			when -1
+			when -1, -2
 				acceptButton.classList.add('disabled')
 				rejectButton.classList.add('pressed')
 				acceptButton.title = 'You have already proposed to reject this application'

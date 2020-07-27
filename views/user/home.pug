@@ -9,13 +9,15 @@ html(lang='en')
 		header
 			include header
 
+		include flash
+
 		main
 			div#splash-container
 				div#splash
-					span#text-left.logo-text.invisible Mine e
-					img#logo.invisible(src='/img/me-logo.svg' alt='Mine Eclipse logo')
-					span#text-right.logo-text.invisible lipse
-				div#welcome-container.invisible
+					span#text-left.logo-text.inactive Mine e
+					img#logo.inactive(src='/img/me-logo.svg' alt='Mine Eclipse logo')
+					span#text-right.logo-text.inactive lipse
+				div#welcome-container.inactive
 					h1 Apply now!
 					h2 Start your journey with Mine Eclipse today!
 					a(href='#register') Click here to get started

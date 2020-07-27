@@ -34,7 +34,7 @@ addApplication = (application) ->
 	switch application.accepted
 		when 0 then tableIcon.src = '/img/progress.svg'
 		when 1 then tableIcon.src = '/img/checkmark.svg'
-		when -1 then tableIcon.src = '/img/cross.svg'
+		when -1, -2 then tableIcon.src = '/img/cross.svg'
 	tableRow.appendChild(statusCell)
 
 	firstNameCell = document.createElement('td')

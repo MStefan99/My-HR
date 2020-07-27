@@ -12,9 +12,10 @@ const libSetup = require('./lib/user/setup');
 const libFeedback = require('./lib/feedback');
 const libSession = require('./lib/user/session');
 const libApplication = require('./lib/application');
-
 const libUser = require('./lib/console/user');
 const libNote = require('./lib/console/note');
+
+const flash = require('./lib/flash');
 
 
 const router = express.Router();
@@ -27,19 +28,7 @@ const privateCache = process.env.NO_CACHE ?
 
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(cookieParser());
-if (process.env.USER_AUTH) {
-	router.use((req, res, next) => {
-		if (!req.cookies.CSID) {
-			res.status(403).render('user/status', {
-				title: 'Beta mode', info: 'This website is now in closed beta so you have to sign in ' +
-					'to continue using the website. If you do not know how to do it, ' +
-					'please return back later, when beta testing is over.'
-			});
-		} else {
-			next();
-		}
-	});
-}
+router.use(flash());
 
 
 libSetup.init();
@@ -58,31 +47,52 @@ router.get('/feedback', (req, res) => {
 
 router.post('/feedback', async (req, res) => {
 	if (!req.body.message) {
-		res.status(400).render('user/status', {
-			title: 'No message', info: 'You have submitted a feedback without a ' +
+		res.flash({
+			type: 'error',
+			title: 'No message',
+			info: 'You have submitted a feedback without a ' +
 				'message. Please return and try again.'
-		});
+		}).redirect(303, '/feedback/');
 	} else {
 		await libFeedback.createFeedback(req.body.name,
 			req.body.email,
 			req.body.message);
-		res.render('user/status', {
-			title: 'Thank you', info: 'Thank you for your feedback! We will carefully ' +
+
+		res.flash({
+			title: 'Thank you',
+			info: 'Thank you for your feedback! We will carefully ' +
 				'study it and improve our website in the future!'
-		});
+		}).redirect(303, '/');
 	}
 });
 
 
 router.use(middleware.redirectIfApplicationPeriodEnded);
+if (process.env.USER_AUTH) {
+	router.use((req, res, next) => {
+		if (!req.cookies.CSID) {
+			res.flash({
+				type: 'error',
+				title: 'Beta mode',
+				info: 'This website is now in closed beta so you have to sign in ' +
+					'to continue using the website. If you do not know how to do it, ' +
+					'please return back later, when beta testing is over.'
+			}).redirect(303, '/');
+		} else {
+			next();
+		}
+	});
+}
 
 
 router.post('/register', async (req, res) => {
 	if (!req.body.username) {
-		res.status(400).render('user/status', {
-			title: 'No email', info: 'You have submitted an empty email address, ' +
+		res.flash({
+			type: 'error',
+			title: 'No email',
+			info: 'You have submitted an empty email address, ' +
 				'please return and try again.'
-		});
+		}).redirect(303, '/');
 	} else {
 		const session = await libSession.createSession(req.body.username,
 			req.ip);
@@ -91,10 +101,12 @@ router.post('/register', async (req, res) => {
 			'Complete your application for Mine Eclipse',
 			'registered.html',
 			{uuid: session.uuid});
-		res.render('user/status', {
-			title: 'Check your email', info: 'We\'ve sent you an email with your link! ' +
+		
+		res.flash({
+			title: 'Check your email',
+			info: 'We\'ve sent you an email with your link! ' +
 				'Please follow it to complete your application.'
-		});
+		}).redirect(303, '/')
 	}
 });
 
@@ -112,10 +124,12 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 		!req.body.phone ||
 		!req.body.team ||
 		!req.file) {
-		res.status(400).render('user/status', {
-			title: 'Missing information', info: 'Some required fields in your ' +
-				'form are missing, please return and try again.'
-		});
+		res.flash({
+			type: 'error',
+			title: 'Missing information',
+			info: 'Some required fields in your ' +
+				'form were missing, please try again.'
+		}).redirect(303, '/join/');
 	} else {
 		const application = await libApplication
 			.createApplication(req.session, {
@@ -134,12 +148,13 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 			application,
 			true,
 			'Application created');
-		res.render('user/status', {
+
+		res.flash({
 			title: 'Thank you', info: 'We have received ' +
 				'your application and will contact you as soon as possible. ' +
 				'In the meantime, would you mind telling us about your ' +
-				'experience on our website <a href="/feedback/">here</a>?'
-		});
+				'experience on our website?'
+		}).redirect(303, '/feedback/');
 	}
 });
 
@@ -152,25 +167,29 @@ router.get('/manage', (req, res) => {
 
 router.get('/applications', async (req, res) => {
 	const applications = await libApplication.getApplicationsBySession(req.session);
+
 	res.json(applications);
 });
 
 
 router.get('/download/:path', async (req, res) => {
-	res.set('Cache-Control', publicCache);
 	const application = await libApplication.getApplicationByFilePath(req.params.path);
 
 	if (application === 'NO_APPLICATION') {
-		res.status(404).render('user/status', {
-			title: 'No such file', info: 'The file requested was not found in the system. ' +
+		res.flash({
+			type: 'error',
+			title: 'No such file',
+			info: 'The file requested was not found in the system. ' +
 				'Please check the address and try again.'
-		});
+		}).redirect('back');
 	} else if (req.session.email !== application.email) {
-		res.status(403).render('user/status', {
-			title: 'Not allowed', info: 'The file requested was submitted by another user ' +
+		res.flash({
+			type: 'error',
+			title: 'Not allowed',
+			info: 'The file requested was submitted by another user ' +
 				'and you are not allowed to view or download it. If you think this is a ' +
 				'mistake, please check whether the address you\'ve entered is correct'
-		});
+		}).redirect('back');
 	} else {
 		res.download(path.join(__dirname, '..', '/uploads/', req.params.path), application.fileName);
 	}

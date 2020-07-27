@@ -1,6 +1,6 @@
 'use strict';
 
-const {consoleCookieOptions} = require('../cookie');
+const {dataCookieOptions} = require('./cookie');
 
 
 function flash(flashOptions = {}) {
@@ -8,13 +8,15 @@ function flash(flashOptions = {}) {
 		flashOptions.type = 'ok';
 	}
 
-	if (!this.locals.flashes) {
-		this.locals.flashes = [];
+	if (!this.nextFlashes) {
+		this.nextFlashes = [];
 	}
 
-	this.locals.flashes.push(flashOptions);
+	this.nextFlashes.push(flashOptions);
 	this.cookie('FC',
-		JSON.stringify(this.locals.flashes), consoleCookieOptions);
+		JSON.stringify(this.nextFlashes), dataCookieOptions);
+
+	return this;
 }
 
 
@@ -27,7 +29,7 @@ module.exports = () => {
 		if (req.cookies.FC) {
 			res.locals.flashes = JSON.parse(req.cookies.FC);
 		}
-		res.clearCookie('FC', consoleCookieOptions);
+		res.clearCookie('FC', dataCookieOptions);
 
 		res.flash = flash;
 		next();

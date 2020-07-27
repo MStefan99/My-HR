@@ -2,6 +2,5 @@ if flashes
 	div#flash-container
 		each flash in flashes
 			div(class='flash ' + flash.type)
-				h2= flash.title
-				span.separator
-				p= flash.info
+				b= flash.title
+				span= flash.info
