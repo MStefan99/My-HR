@@ -150,7 +150,12 @@ addEventListener('load', ->
 			'error')
 	)
 
-	if res.ok
+	if res.status is 429
+		notify.tell('Please wait'
+			'You have submitted too many requests and
+				need to wait to continue'
+			'error')
+	else if res.ok
 		applications = await res.json()
 
 		applicationCountElement.innerHTML = "Total: #{applications.length} applications in all teams"

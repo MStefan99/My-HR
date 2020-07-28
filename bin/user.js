@@ -8,6 +8,8 @@ const multer = require('multer');
 
 const sendMail = require('./lib/mail');
 const middleware = require('./lib/user/middleware');
+const flash = require('./lib/flash');
+const rateLimiter = require('./lib/rate_limiter');
 const libSetup = require('./lib/user/setup');
 const libFeedback = require('./lib/feedback');
 const libSession = require('./lib/user/session');
@@ -15,15 +17,9 @@ const libApplication = require('./lib/application');
 const libUser = require('./lib/console/user');
 const libNote = require('./lib/console/note');
 
-const flash = require('./lib/flash');
-
 
 const router = express.Router();
 const upload = multer({dest: 'uploads/'});
-const publicCache = process.env.NO_CACHE ?
-	'no-cache' : 'public, max-age=86400';  // 1 day in seconds
-const privateCache = process.env.NO_CACHE ?
-	'no-cache' : 'private, max-age=86400';  // 1 day in seconds
 
 
 router.use(bodyParser.urlencoded({extended: true}));
@@ -35,12 +31,11 @@ libSetup.init();
 
 
 router.get('/', (req, res) => {
-	res.set('Cache-Control', publicCache);
 	res.render('user/home');
 });
 
+
 router.get('/feedback', (req, res) => {
-	res.set('Cache-Control', publicCache);
 	res.render('user/feedback');
 });
 
@@ -67,7 +62,7 @@ router.post('/feedback', async (req, res) => {
 });
 
 
-router.use(middleware.redirectIfApplicationPeriodEnded);
+router.use(middleware.redirectIfApplicationPeriodEnded());
 if (process.env.USER_AUTH) {
 	router.use((req, res, next) => {
 		if (!req.cookies.CSID) {
@@ -85,7 +80,20 @@ if (process.env.USER_AUTH) {
 }
 
 
-router.post('/register', async (req, res) => {
+router.post('/register', rateLimiter({
+	scheme: 'body.username',
+	tag: 'email',
+	price: 30,
+	rate: 1,
+	initial: 60,
+	redirect: true,
+	action: (req, res) => res.flash({
+		type: 'warning',
+		title: 'Too many attempts',
+		info: 'This email has been used too many times. Please wait before ' +
+			'you continue.'
+	})
+}), async (req, res) => {
 	if (!req.body.username) {
 		res.flash({
 			type: 'error',
@@ -118,12 +126,30 @@ router.post('/register', async (req, res) => {
 });
 
 
-router.use(middleware.getSession);
-router.use(middleware.redirectIfNotAuthorized);
-router.use(middleware.redirectIfExpired);
+router.use(middleware.getSession());
+router.use(middleware.redirectIfNotAuthorized());
+router.use(middleware.redirectIfExpired());
 
 
-router.post('/join', upload.single('cv'), async (req, res) => {
+router.get('/join', (req, res) => {
+	res.render('user/join', {email: req.session.email});
+});
+
+
+router.post('/join', upload.single('cv'), rateLimiter({
+	scheme: 'session.id',
+	tag: 'application',
+	price: 10,
+	rate: 1,
+	max: 10,
+	redirect: true,
+	action: (req, res) => res.flash({
+		type: 'warning',
+		title: 'Too many attempts',
+		info: 'You can only create one application each 10 minutes. ' +
+			'Please wait before you continue.'
+	})
+}), async (req, res) => {
 	if (!req.body.firstName ||
 		!req.body.lastName ||
 		!req.body.email ||
@@ -167,15 +193,7 @@ router.post('/join', upload.single('cv'), async (req, res) => {
 
 
 router.get('/manage', (req, res) => {
-	res.set('Cache-Control', publicCache);
 	res.render('user/manage');
-});
-
-
-router.get('/applications', async (req, res) => {
-	const applications = await libApplication.getApplicationsBySession(req.session);
-
-	res.json(applications);
 });
 
 
@@ -203,6 +221,13 @@ router.get('/download/:path', async (req, res) => {
 });
 
 
+router.get('/applications', async (req, res) => {
+	const applications = await libApplication.getApplicationsBySession(req.session);
+
+	res.json(applications);
+});
+
+
 router.delete('/applications/:id', async (req, res) => {
 	const application = await libApplication.getApplicationByID(req.params.id);
 
@@ -220,12 +245,6 @@ router.delete('/applications/:id', async (req, res) => {
 				break;
 		}
 	}
-});
-
-
-router.get('/join', (req, res) => {
-	res.set('Cache-Control', privateCache);
-	res.render('user/join', {email: req.session.email});
 });
 
 

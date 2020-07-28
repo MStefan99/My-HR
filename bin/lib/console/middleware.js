@@ -21,6 +21,8 @@ async function getUser(req, res, next) {
 		res.locals.user = req.user;
 	} else if (req.cookies.CUID) {
 		req.user = await libUser.getUserByUUID(req.cookies.CUID);
+	} else if (req.body.username) {
+		req.user = await libUser.getUserByUsername(req.body.username);
 	}
 	next();
 }
@@ -85,7 +87,7 @@ async function redirectIfNotAdmin(req, res, next) {
 				info: 'You do not have enough permissions ' +
 					'to view the page requested'
 			});
-			res.redirect(303, '/console/');
+			res.redirect(303, 'back');
 			break;
 		case 'ADMIN':
 			next();
@@ -95,8 +97,8 @@ async function redirectIfNotAdmin(req, res, next) {
 
 
 module.exports = {
-	getSession: getSession,
-	getUser: getUser,
-	redirectIfNotAuthorized: redirectIfNotAuthorized,
-	redirectIfNotAdmin: redirectIfNotAdmin
+	getSession: () => getSession,
+	getUser: () => getUser,
+	redirectIfNotAuthorized: () => redirectIfNotAuthorized,
+	redirectIfNotAdmin: () => redirectIfNotAdmin
 };

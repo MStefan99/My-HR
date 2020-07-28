@@ -75,7 +75,7 @@ const resources = [
 ];
 
 
-const currentVersion = 'v0.10.4-beta'
+const currentVersion = 'v0.11.0-beta'
 
 
 async function saveToCache(req, res) {

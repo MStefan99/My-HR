@@ -48,7 +48,15 @@ formElement.addEventListener('submit', (e) ->
 		alert('Could not log you in. Please check your internet connection.')
 	)
 
-	if not res.ok
+	if res.status is 429
+		value = submitButton.value
+		submitButton.disabled = true
+		submitButton.value = 'Too many attempts'
+		setTimeout(->
+			submitButton.disabled = false
+			submitButton.value = value
+		, 10000)
+	else if not res.ok
 		switch await res.text()
 			when 'NO_USER'
 				usernameLabel.innerHTML = 'No such user'

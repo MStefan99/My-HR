@@ -7,10 +7,10 @@ const path = require('path');
 
 const middleware = require('./lib/console/middleware');
 const flash = require('./lib/flash');
+const rateLimiter = require('./lib/rate_limiter');
 const libSetup = require('./lib/console/setup');
 const libApplication = require('./lib/application');
 const libSession = require('./lib/console/session');
-const libUser = require('./lib/console/user');
 const lib2FA = require('./lib/console/2fa');
 
 const {consoleCookieOptions} = require('./lib/cookie');
@@ -39,14 +39,15 @@ router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 router.use(cookieParser());
 router.use(flash());
-router.use(middleware.getSession);
-router.use(middleware.getUser);
+router.use(middleware.getSession());
+router.use(middleware.getUser());
 
 
 libSetup.init();
 
 
 router.get('/login', (req, res) => {
+	res.clearCookie('CUID', consoleCookieOptions);
 	res.render('console/login');
 });
 
@@ -72,8 +73,19 @@ router.get('/not-connected', (req, res) => {
 });
 
 
-router.post('/login', async (req, res) => {
-	req.user = await libUser.getUserByUsername(req.body.username);
+router.post('/login', rateLimiter({
+	scheme: 'user.id',
+	tag: 'auth',
+	price: 5,
+	redirect: true,
+	action: (req, res) => res.flash({
+		type: 'warning',
+		title: 'Too many attempts',
+		info: 'We have detected too many sign in attempts for your account. ' +
+			'Please try again after some time.'
+	})
+}), async (req, res) => {
+	// User is retrieved by username
 
 	if (req.user === 'NO_USER') {
 		res.flash({
@@ -125,7 +137,18 @@ router.post('/login', async (req, res) => {
 });
 
 
-router.post('/register/', async (req, res) => {
+router.post('/register/', rateLimiter({
+	scheme: 'user.id',
+	tag: 'auth',
+	price: 5,
+	redirect: true,
+	action: (req, res) => res.flash({
+		type: 'warning',
+		title: 'Too many attempts',
+		info: 'We have detected too many attempts for your account. ' +
+			'Please try again after some time.'
+	})
+}), async (req, res) => {
 	// User is retrieved using CUID cookie
 
 	if (req.user === 'NO_USER') {
@@ -180,7 +203,18 @@ router.post('/register/', async (req, res) => {
 });
 
 
-router.post('/setup-otp/', async (req, res) => {
+router.post('/setup-otp/', rateLimiter({
+	scheme: 'user.id',
+	tag: 'auth',
+	price: 5,
+	redirect: true,
+	action: (req, res) => res.flash({
+		type: 'warning',
+		title: 'Too many attempts',
+		info: 'We have detected too many attempts for your account. ' +
+			'Please try again after some time.'
+	})
+}),  async (req, res) => {
 	// User is retrieved using CUID cookie
 
 	if (req.user === 'NO_USER') {
@@ -203,7 +237,7 @@ router.post('/setup-otp/', async (req, res) => {
 });
 
 
-router.use(middleware.redirectIfNotAuthorized);
+router.use(middleware.redirectIfNotAuthorized());
 
 
 router.get('/logout', async (req, res) => {
@@ -278,7 +312,18 @@ router.get('/help', (req, res) => {
 });
 
 
-router.post('/settings', async (req, res) => {
+router.post('/settings',  rateLimiter({
+	scheme: 'user.id',
+	tag: 'auth',
+	price: 10,
+	redirect: true,
+	action: (req, res) => res.flash({
+		type: 'warning',
+		title: 'Too many attempts',
+		info: 'We have detected too many attempts for your account. ' +
+			'Please try again after some time.'
+	})
+}),  async (req, res) => {
 	if (req.body.password !== req.body.passwordRepeat) {
 		res.flash({
 			type: 'error',
@@ -328,7 +373,7 @@ router.get('/file/:path', async (req, res) => {
 });
 
 
-router.use(middleware.redirectIfNotAdmin);
+router.use(middleware.redirectIfNotAdmin());
 
 
 router.get('/users', (req, res) => {

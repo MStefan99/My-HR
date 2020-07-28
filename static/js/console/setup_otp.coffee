@@ -7,7 +7,6 @@ otpLabel = document.querySelector('#otp-label')
 submitButton = document.querySelector('#submit-button')
 
 
-
 validate = ->
 	submitButton.disabled = false
 
@@ -34,10 +33,20 @@ formElement.addEventListener('submit', (e) ->
 		alert('Could not check your code. Please check your internet connection.')
 	)
 
-	if not await res.ok
-		otpLabel.innerHTML = 'Wrong code'
-		otpElement.classList.add('status-bad')
+	if res.status is 429
+		value = submitButton.value
 		submitButton.disabled = true
+		submitButton.value = 'Too many attempts'
+		setTimeout(->
+			submitButton.disabled = false
+			submitButton.value = value
+		, 10000)
+	else if not res.ok
+		switch await res.text()
+			when 'WRONG_CODE'
+				otpLabel.innerHTML = 'Wrong code'
+				otpElement.classList.add('status-bad')
+				submitButton.disabled = true
 	else
 		formElement.submit()
 )

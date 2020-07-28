@@ -54,41 +54,45 @@ propose = (status) ->
 			saveRequest(getBasePath() + '/proposals/', init)
 		)
 
-		switch await res.text()
-			when 'NO_APPLICATION'
-				notify.tell('Not found'
-					'The application was not found. It may have been deleted or the URL is wrong.'
-					'error')
-			when 'INVALID_STATUS'
-				notify.tell('Error'
-					'Your proposal could not be processed due to the internal error.
-						Please contact the support.'
-					'error')
-			when 'ALREADY_ACCEPTED'
-				notify.tell('Already accepted'
-					'This application was already accepted, you cannot change its status anymore.'
-					'error')
-			when 'ALREADY_REJECTED'
-				notify.tell('Already rejected'
-					'This application was already rejected, you cannot change its status anymore.'
-					'error')
-			when 'ALREADY_EXISTS'
-				notify.tell('Already proposed'
-					'You have already made a proposal for this application. Please take it back first.'
-					'error')
-			when 'ACCEPTED'
-				application.accepted = 1
-			when 'REJECTED'
-				application.accepted = -1
-			when 'Created'
-				switch status
-					when 1 then application.proposals.accepted = application.proposals.accepted + 1 || 1
-					when -1 then application.proposals.rejected = application.proposals.rejected + 1 || 1
-				application.proposals.my = status
-				notify.tell('Proposal saved', 'Your proposal was saved')
-
-		updateStatus()
-		setBadges()
+		if res.status is 429
+			notify.tell('Please wait'
+				'You need to wait before submitting another proposal'
+				'error')
+		else if res.ok
+			switch await res.text()
+				when 'NO_APPLICATION'
+					notify.tell('Not found'
+						'The application was not found. It may have been deleted or the URL is wrong.'
+						'error')
+				when 'INVALID_STATUS'
+					notify.tell('Error'
+						'Your proposal could not be processed due to the internal error.
+							Please contact the support.'
+						'error')
+				when 'ALREADY_ACCEPTED'
+					notify.tell('Already accepted'
+						'This application was already accepted, you cannot change its status anymore.'
+						'error')
+				when 'ALREADY_REJECTED'
+					notify.tell('Already rejected'
+						'This application was already rejected, you cannot change its status anymore.'
+						'error')
+				when 'ALREADY_EXISTS'
+					notify.tell('Already proposed'
+						'You have already made a proposal for this application. Please take it back first.'
+						'error')
+				when 'ACCEPTED'
+					application.accepted = 1
+				when 'REJECTED'
+					application.accepted = -1
+				when 'Created'
+					switch status
+						when 1 then application.proposals.accepted = application.proposals.accepted + 1 || 1
+						when -1 then application.proposals.rejected = application.proposals.rejected + 1 || 1
+					application.proposals.my = status
+					notify.tell('Proposal saved', 'Your proposal was saved')
+					updateStatus()
+					setBadges()
 
 
 deleteProposal = ->
@@ -103,24 +107,28 @@ deleteProposal = ->
 			saveRequest(getBasePath() + '/proposals/', init)
 		)
 
-		switch await res.text()
-			when 'ALREADY_ACCEPTED'
-				notify.tell('Already accepted'
-					'This application was already accepted, you cannot change its status anymore.'
-					'error')
-			when 'ALREADY_REJECTED'
-				notify.tell('Already rejected'
-					'This application was already rejected, you cannot change its status anymore.'
-					'error')
-			when 'OK'
-				switch application.proposals.my
-					when 1 then application.proposals.accepted -= 1
-					when -1 then application.proposals.rejected -= 1
-				application.proposals.my = null
-				notify.tell('Proposal deleted', 'Your proposal was deleted')
-
-		updateStatus()
-		setBadges()
+		if res.status is 429
+			notify.tell('Please wait'
+				'You need to wait before removing your proposal'
+				'error')
+		else if res.ok
+			switch await res.text()
+				when 'ALREADY_ACCEPTED'
+					notify.tell('Already accepted'
+						'This application was already accepted, you cannot change its status anymore.'
+						'error')
+				when 'ALREADY_REJECTED'
+					notify.tell('Already rejected'
+						'This application was already rejected, you cannot change its status anymore.'
+						'error')
+				when 'OK'
+					switch application.proposals.my
+						when 1 then application.proposals.accepted -= 1
+						when -1 then application.proposals.rejected -= 1
+					application.proposals.my = null
+					notify.tell('Proposal deleted', 'Your proposal was deleted')
+					updateStatus()
+					setBadges()
 
 
 setBadges = () ->
@@ -238,10 +246,17 @@ star = ->
 	res = await fetch(getBasePath() + '/stars/', init).catch(->
 		saveRequest(getBasePath() + '/stars/', init)
 	)
-	if res.ok
+
+	if res.status is 429
+		notify.tell('Please wait'
+			'You have submitted too many requests and
+				need to wait to continue'
+			'error')
+	else if res.ok
 		application.starred = true
 		updateStar()
-		notify.tell('Starred', 'You can now find this application in the "stars" section')
+		notify.tell('Starred',
+			'You can now find this application in the "stars" section')
 
 
 unstar = ->
@@ -252,10 +267,18 @@ unstar = ->
 	res = await fetch(getBasePath() + '/stars/', init).catch(->
 		saveRequest(getBasePath() + '/stars/', init)
 	)
-	if res.ok
+
+	if res.status is 429
+		notify.tell('Please wait'
+			'You have submitted too many requests and
+				need to wait to continue'
+			'error')
+
+	else if res.ok
 		application.starred = false
 		updateStar()
-		notify.tell('Unstarred', 'Application removed from your stars')
+		notify.tell('Unstarred',
+			'Application removed from your stars')
 
 
 addEventListener('load', ->

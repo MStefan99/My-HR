@@ -7,7 +7,10 @@ const path = require('path');
 const fs = require('fs');
 const util = require('util');
 
+const sendMail = require('../lib/mail');
 const middleware = require('../lib/console/middleware');
+const rateLimiter = require('../lib/rate_limiter');
+const readFile = util.promisify(fs.readFile);
 const libAuth = require('../lib/console/auth');
 const libFeedback = require('../lib/feedback');
 const libApplication = require('../lib/application');
@@ -17,10 +20,7 @@ const libNote = require('../lib/console/note');
 const libProposal = require('../lib/console/proposal');
 const lib2FA = require('../lib/console/2fa');
 
-const sendMail = require('../lib/mail');
 const {consoleCookieOptions} = require('../lib/cookie');
-
-const readFile = util.promisify(fs.readFile);
 
 
 const router = express.Router();
@@ -29,12 +29,15 @@ const router = express.Router();
 router.use(bodyParser.urlencoded({extended: true}));
 router.use(bodyParser.json());
 router.use(cookieParser());
-router.use(middleware.getSession);
-router.use(middleware.getUser);
+router.use(middleware.getSession());
+router.use(middleware.getUser());
 
 
-router.post('/verify-login', async (req, res) => {
-	req.user = await libUser.getUserByUsername(req.body.username);
+router.post('/verify-login', rateLimiter({
+	tag: 'auth',
+	price: 5
+}), async (req, res) => {
+	// User is retrieved by username
 
 	if (req.user === 'NO_USER') {
 		res.status(400).send('NO_USER');
@@ -52,7 +55,11 @@ router.post('/verify-login', async (req, res) => {
 });
 
 
-router.post('/verify-setup-code', async (req, res) => {
+router.post('/verify-setup-code', rateLimiter({
+	scheme: 'user.id',
+	tag: 'auth',
+	price: 5,
+}), async (req, res) => {
 	// User is retrieved using CUID cookie
 
 	if (req.user === 'NO_USER') {
@@ -67,7 +74,11 @@ router.post('/verify-setup-code', async (req, res) => {
 });
 
 
-router.post('/verify-otp', (req, res) => {
+router.post('/verify-otp', rateLimiter({
+	scheme: 'user.id',
+	tag: 'auth',
+	price: 5
+}), (req, res) => {
 	if (!req.body.secret) {
 		res.status(400).send('NO_SECRET');
 	} else if (!req.body.token) {
@@ -94,6 +105,12 @@ router.use((req, res, next) => {
 		next();
 	}
 });
+router.use(rateLimiter({
+	scheme: 'user.id',
+	rate: 60,
+	max: 60,
+	min: -30
+}));
 
 
 router.get('/applications', async (req, res) => {
@@ -250,7 +267,13 @@ router.delete('/notes', async (req, res) => {
 });
 
 
-router.post('/applications/:applicationID/proposals', async (req, res) => {
+router.post('/applications/:applicationID/proposals', rateLimiter({
+	scheme: 'user.id',
+	tag: 'proposal',
+	rate: 1,
+	initial: 1,
+	max: 1
+}), async (req, res) => {
 	const application = await libApplication.getApplicationByID(req.params.applicationID);
 	const proposal = await libProposal.createProposal(req.user, application, req.body.status);
 
@@ -310,7 +333,13 @@ router.post('/applications/:applicationID/proposals', async (req, res) => {
 });
 
 
-router.delete('/applications/:applicationID/proposals', async (req, res) => {
+router.delete('/applications/:applicationID/proposals', rateLimiter({
+	scheme: 'user.id',
+	tag: 'proposal',
+	rate: 1,
+	initial: 1,
+	max: 1
+}), async (req, res) => {
 	const application = await libApplication.getApplicationByID(req.params.applicationID);
 	const proposal = await libProposal.getProposal(req.user, application);
 

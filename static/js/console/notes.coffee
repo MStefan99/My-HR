@@ -74,7 +74,12 @@ addNote = (note) ->
 				res = await fetch('/console/api/v0.1/notes/', init).catch(->
 					saveRequest('/console/api/v0.1/notes', init)
 				)
-				if res.ok
+				if res.status is 429
+					notify.tell('Please wait'
+						'You have submitted too many requests and
+							need to wait to continue'
+						'error')
+				else if res.ok
 					remove(noteElement)
 					notify.tell('Note deleted'
 						'Your note was successfully deleted')
@@ -138,7 +143,12 @@ addEventListener('load', ->
 			'error')
 	)
 
-	if res.ok
+	if res.status is 429
+		notify.tell('Please wait'
+			'You have submitted too many requests and
+				need to wait to continue'
+			'error')
+	else if res.ok
 		notes = await res.json()
 
 		for note in notes
@@ -209,7 +219,12 @@ noteSubmitButton.addEventListener('click', ->
 			noteSubmitButton.classList.add('disabled')
 		)
 
-		if res.ok
+		if res.status is 429
+			notify.tell('Please wait'
+				'You have submitted too many requests and
+					need to wait to continue'
+				'error')
+		else if res.ok
 			noteTextarea.value = ''
 			noteSubmitButton.classList.add('disabled')
 			note = await res.json();

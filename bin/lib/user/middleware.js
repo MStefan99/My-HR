@@ -82,8 +82,8 @@ function redirectIfApplicationPeriodEnded(req, res, next) {
 
 
 module.exports = {
-	getSession: getSession,
-	redirectIfExpired: redirectIfExpired,
-	redirectIfNotAuthorized: redirectIfNotAuthorized,
-	redirectIfApplicationPeriodEnded: redirectIfApplicationPeriodEnded
+	getSession: () => getSession,
+	redirectIfExpired: () => redirectIfExpired,
+	redirectIfNotAuthorized: () => redirectIfNotAuthorized,
+	redirectIfApplicationPeriodEnded: () => redirectIfApplicationPeriodEnded
 };

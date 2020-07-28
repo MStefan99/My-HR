@@ -29,7 +29,12 @@ addEventListener('load', ->
 			'error')
 	)
 
-	if res.ok
+	if res.status is 429
+		notify.tell('Please wait'
+			'You have submitted too many requests and
+				need to wait to continue'
+			'error')
+	else if res.ok
 		versions = await res.json()
 
 		for version in versions

@@ -61,13 +61,17 @@ addUser = (user) ->
 				res = await fetch('/console/api/v0.1/users/', init).catch(->
 					saveRequest('/console/api/v0.1/users/', init)
 				)
-				if not res.ok
-					if await res.text() is 'CANNOT_RESET_SYSTEM'
-						notify.tell('System account'
-							'You cannot reset this user account
-							since it is required for proper system operation'
-							'error')
-				else
+				if res.status is 429
+					notify.tell('Please wait'
+						'You have submitted too many requests and
+							need to wait to continue'
+						'error')
+				else if await res.text() is 'CANNOT_RESET_SYSTEM'
+					notify.tell('System account'
+						'You cannot reset this user account
+						since it is required for proper system operation'
+						'error')
+				else if res.ok
 					updatedUser = await res.json()
 					registeredCell.innerHTML = updatedUser.setupCode
 					if resetOTP
@@ -99,13 +103,17 @@ addUser = (user) ->
 				res = await fetch('/console/api/v0.1/users/', init).catch(->
 					saveRequest('/console/api/v0.1/users/', init)
 				)
-				if not res.ok
-					if await res.text() is 'CANNOT_DELETE_ADMIN'
-						notify.tell('System account'
-							'You cannot delete this user account
-							since it is required for proper system operation'
-							'error')
-				else
+				if res.status is 429
+					notify.tell('Please wait'
+						'You have submitted too many requests and
+							need to wait to continue'
+						'error')
+				else if await res.text() is 'CANNOT_DELETE_ADMIN'
+					notify.tell('System account'
+						'You cannot delete this user account
+						since it is required for proper system operation'
+						'error')
+				else if res.ok
 					remove(tableRow)
 					notify.tell('User deleted'
 						'User was successfully deleted')
@@ -120,7 +128,12 @@ addEventListener('load', ->
 			'error')
 	)
 
-	if res.ok
+	if res.status is 429
+		notify.tell('Please wait'
+			'You have submitted too many requests and
+				need to wait to continue'
+			'error')
+	else if res.ok
 		users = await res.json()
 
 		for user in users
@@ -144,14 +157,17 @@ formElement.addEventListener('submit', (e) ->
 	res = await fetch('/console/api/v0.1/users/', init).catch(->
 		saveRequest('/console/api/v0.1/users/', init)
 	)
-
-	if not res.ok
-		if await res.text() is 'DUPLICATE_USERNAME'
-			notify.tell('Duplicate username'
-				'User with such username already exists
-				please choose another or delete that user.'
-				'error')
-	else
+	if res.status is 429
+		notify.tell('Please wait'
+			'You have submitted too many requests and
+				need to wait to continue'
+			'error')
+	else if await res.text() is 'DUPLICATE_USERNAME'
+		notify.tell('Duplicate username'
+			'User with such username already exists
+			please choose another or delete that user.'
+			'error')
+	else if res.ok
 		addUser(await res.json())
 		notify.tell('User added'
 			'User was successfully added')

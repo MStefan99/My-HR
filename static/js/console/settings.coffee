@@ -26,7 +26,9 @@ addSession = (session) ->
 
 	osCell = document.createElement('td')
 	res = session.ua.match(/.*? \((.*?); (.*?)(;|\)).*/)
-	if res[1] is 'Linux'
+	if not res
+		os = session.ua
+	else if res[1] is 'Linux'
 		os = res[2]
 	else if res[2] is 'Win64'
 		os = res[1].replace('NT ', '').replace('.0', '')
@@ -73,7 +75,12 @@ addSession = (session) ->
 				saveRequest('/console/api/v0.1/sessions', init)
 			)
 
-			if res.ok
+			if res.status is 429
+				notify.tell('Please wait'
+					'You have submitted too many requests and
+						need to wait to continue'
+					'error')
+			else if res.ok
 				remove(sessionRow)
 				notify.tell('Signed out'
 					'Device was signed out successfully')
@@ -106,7 +113,12 @@ addEventListener('load', ->
 			'error')
 	)
 
-	if res.ok
+	if res.status is 429
+		notify.tell('Please wait'
+			'You have submitted too many requests and
+				need to wait to continue'
+			'error')
+	else if res.ok
 		sessions = await res.json()
 
 		for session in sessions
