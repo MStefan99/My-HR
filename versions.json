@@ -1,5 +1,11 @@
 [
 	{
+		"version": "v0.11.1-beta",
+		"logs": [
+			"All applications are now available in offline mode!"
+		]
+	},
+	{
 		"version": "v0.11.0-beta",
 		"logs": [
 			"My HR now features rate-limiting to avoid password brute-forcing and email spamming"

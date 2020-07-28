@@ -109,7 +109,7 @@ router.use(rateLimiter({
 	scheme: 'user.id',
 	rate: 60,
 	max: 60,
-	min: -30
+	min: 0
 }));
 
 
