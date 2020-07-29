@@ -77,7 +77,7 @@ if (process.env.NO_HTTPS) {
 	https.createServer(serverOptions, app).listen(443);
 	console.log('Listening on HTTPS, port 443');
 	http.createServer((req, res) => {
-		res.writeHead(301, {"Location": "https://" + req.headers['host'] + req.url});
+		res.writeHead(301, {'Location': 'https://' + req.headers['host'] + req.url});
 		res.end();
 	}).listen(80);
 	console.log('HTTP redirect enabled, port 80 -> 443');
@@ -85,5 +85,6 @@ if (process.env.NO_HTTPS) {
 
 
 (async () => {
-	app.locals.version = JSON.parse(await readFile('versions.json'))[0].version;
+	app.locals.version = JSON.parse(await readFile('versions.json',
+		'utf-8'))[0].version;
 })();

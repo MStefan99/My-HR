@@ -66,12 +66,14 @@ addUser = (user) ->
 						'You have submitted too many requests and
 							need to wait to continue'
 						'error')
-				else if await res.text() is 'CANNOT_RESET_SYSTEM'
-					notify.tell('System account'
-						'You cannot reset this user account
-						since it is required for proper system operation'
-						'error')
-				else if res.ok
+				else if not res.ok
+					switch await res.text()
+						when'CANNOT_RESET_SYSTEM'
+							notify.tell('System account'
+								'You cannot reset this user account
+								since it is required for proper system operation'
+								'error')
+				else
 					updatedUser = await res.json()
 					registeredCell.innerHTML = updatedUser.setupCode
 					if resetOTP
@@ -108,12 +110,14 @@ addUser = (user) ->
 						'You have submitted too many requests and
 							need to wait to continue'
 						'error')
-				else if await res.text() is 'CANNOT_DELETE_ADMIN'
-					notify.tell('System account'
-						'You cannot delete this user account
-						since it is required for proper system operation'
-						'error')
-				else if res.ok
+				else if not res.ok
+					switch await res.text()
+						when 'CANNOT_DELETE_ADMIN'
+							notify.tell('System account'
+								'You cannot delete this user account
+								since it is required for proper system operation'
+								'error')
+				else
 					remove(tableRow)
 					notify.tell('User deleted'
 						'User was successfully deleted')
@@ -162,12 +166,14 @@ formElement.addEventListener('submit', (e) ->
 			'You have submitted too many requests and
 				need to wait to continue'
 			'error')
-	else if await res.text() is 'DUPLICATE_USERNAME'
-		notify.tell('Duplicate username'
-			'User with such username already exists
-			please choose another or delete that user.'
-			'error')
-	else if res.ok
+	else if not res.ok
+		switch await res.text()
+			when'DUPLICATE_USERNAME'
+				notify.tell('Duplicate username'
+					'User with such username already exists
+					please choose another or delete that user.'
+					'error')
+	else
 		addUser(await res.json())
 		notify.tell('User added'
 			'User was successfully added')

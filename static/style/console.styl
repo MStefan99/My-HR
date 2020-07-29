@@ -463,8 +463,17 @@ html
 						tr
 							white-space nowrap
 
-				tbody tr
-					border-bottom 1px solid var(--just-gray)
+				tbody
+					&#version-table
+						p:before
+							content: '» '
+
+						@media screen and (max-width 768px)
+							tr td:first-child
+								display block
+
+					tr
+						border-bottom 1px solid var(--just-gray)
 
 					@media screen and (min-width 768px)
 						td:not(:last-child)
@@ -481,17 +490,6 @@ html
 							display inline-block
 
 						tr
-							display block
-
-				&#version-table
-					h3:before
-						content: '» '
-
-					p:before
-						content: '› '
-
-					@media screen and (max-width 768px)
-						tbody tr td:first-child
 							display block
 
 			#note-container

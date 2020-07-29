@@ -181,7 +181,7 @@ async function handleRequest(req) {
 		}
 	} else {
 		try {
-			res = fetch(req);
+			res = await fetch(req);
 		} catch (e) {
 			if (options.return503) {
 				return cache.match('/console/not-connected/');
