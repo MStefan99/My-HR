@@ -1,0 +1,19 @@
+doctype html
+
+head
+	include user/head
+
+body
+	header
+		include user/header
+
+	main
+		div#content-container
+			h1 An error occurred
+			h2= error.status
+			pre= error.stack
+			p An error occurred while processing your request.
+				|  If the issue persists, please contact support.
+
+	footer
+		include user/footer

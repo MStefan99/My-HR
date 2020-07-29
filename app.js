@@ -44,14 +44,23 @@ app.use((req, res, next) => {
 	}
 	next();
 });
+
 app.use('/style', express.static(path.join(__dirname, 'static', 'style'), cacheOptions));
 app.use('/js', express.static(path.join(__dirname, 'static', 'js'), cacheOptions));
 app.use('/img', express.static(path.join(__dirname, 'static', 'img'), cacheOptions));
 app.use('/favicon.ico', express.static(path.join(__dirname, 'static', 'img', 'me-logo.svg'), cacheOptions));
+
 app.use('/int', internalRouter);
 app.use('/console/api/v0.1', apiRouter0_1);
 app.use('/console', consoleRouter);
 app.use(applicationRouter);
+
+app.use(function (err, req, res, next) {
+	console.error(err);
+
+	res.locals.error = req.app.get('env') === 'development' ? err : {};
+	res.status(500).render('error');
+});
 
 
 if (process.env.NO_HTTPS) {

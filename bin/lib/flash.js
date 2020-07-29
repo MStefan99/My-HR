@@ -22,7 +22,7 @@ function flash(flashOptions = {}) {
 
 module.exports = () => {
 	return (req, res, next) => {
-		if (!req.cookies) {
+		if (req.cookies === undefined) {
 			throw new Error('Flash requires cookie-parser')
 		}
 
