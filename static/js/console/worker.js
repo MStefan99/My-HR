@@ -75,7 +75,7 @@ const resources = [
 ];
 
 
-const currentVersion = 'v0.11.1-beta';
+const currentVersion = 'v0.11.2-beta';
 const defaultOptions = {
 	cache: false,
 	revalidate: false,
@@ -89,7 +89,7 @@ const defaultOptions = {
 async function saveToCache(req, res) {
 	const cache = await caches.open(currentVersion);
 
-	if (!([303, 400, 401, 403, 429, 500].includes(res.status))) {
+	if (!([303, 308, 400, 401, 403, 429, 500].includes(res.status))) {
 		await cache.put(req, res);
 	}
 }
@@ -148,15 +148,20 @@ async function handleRequest(req) {
 		headers = req.headers;
 	}
 	if (options.preserveBody) {
-		body = req.body;
+		if (req.method === 'GET' || req.method === 'HEAD') {
+			body = undefined;
+		} else {
+			body = await req.arrayBuffer();
+		}
 	}
 
 	const workerRequest = new Request(url, {
 		headers: headers,
-		body: body,
+		body: req.method !== 'GET' ? body : undefined,
 		method: req.method,
 		cache: req.cache,
-		referrer: req.referrer
+		referrer: req.referrer,
+		redirect: 'manual'
 	});
 
 	if (options.cache) {
@@ -164,7 +169,7 @@ async function handleRequest(req) {
 
 		if (!res) {
 			try {
-				res = await fetch(url);
+				res = await fetch(workerRequest);
 				await saveToCache(workerRequest, res.clone());
 			} catch (e) {
 				if (options.return503) {
@@ -173,7 +178,7 @@ async function handleRequest(req) {
 			}
 		} else if (options.revalidate) {
 			try {
-				res = await fetch(url);
+				res = await fetch(workerRequest);
 				await saveToCache(workerRequest, res.clone());
 			} catch (e) {
 				console.warn('Failed to update resource');
@@ -181,7 +186,7 @@ async function handleRequest(req) {
 		}
 	} else {
 		try {
-			res = await fetch(req);
+			res = await fetch(workerRequest);
 		} catch (e) {
 			if (options.return503) {
 				return cache.match('/console/not-connected/');

@@ -1,5 +1,11 @@
 [
 	{
+		"version": "v0.11.2-beta",
+		"logs": [
+			"Fixed a bug which sometimes resulted in the service being unavailable"
+		]
+	},
+	{
 		"version": "v0.11.1-beta",
 		"logs": [
 			"All applications are now available in offline mode!"

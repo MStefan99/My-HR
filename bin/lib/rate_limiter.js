@@ -80,7 +80,5 @@ module.exports = (options) => {
 				res.sendStatus(429);
 			}
 		}
-
-		console.log(bucket.tokens)
 	}
 }
