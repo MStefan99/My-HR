@@ -26,30 +26,33 @@ html(lang='en')
 		main
 			div#content-container
 				h1 Welcome to Mine Eclipse!
-				//- Include video here
-				//- Video will be here
 				h2 Join us today by filling the form below!
 				form(action='/join/' method='post' enctype='multipart/form-data')
 					label.required(for='first-name') First name
 					input#first-name(type='text' name='firstName' placeholder='John'
-						title='Your first name' maxlength=100 required)
+						title='Your first name' maxlength=100
+						autocomplete='given-name' required)
 					label.required(for='last-name') Last name
 					input#last-name(type='text' name='lastName' placeholder='Doe'
-						title='Your last name' maxlength=100 required)
+						title='Your last name' maxlength=100
+						autocomplete='family-name' required)
 					label.required(for='email') Your Metropolia email
 					input#email(type='email' name='email' value=email
 						title='Your Metropolia email, filled in automatically' readonly)
 					label.required(for='backup-email') Secondary email
 					input#backup-email(type='email' name='backupEmail' placeholder='john.doe@example.com'
-						title='Your non-Metropolia email' maxlength=100 required)
+						title='Your non-Metropolia email' maxlength=100
+						autocomplete='email' required)
 					label.required(for='phone') Main phone number
 					input#phone(type='tel' name='phone'
 						title='Your phone starting with 0 or +358'
-						placeholder='+358400000000' pattern='(0|\\+358)\\d{9}' required)
+						placeholder='+358400000000' pattern='(0|\\+358)\\d{9}'
+						autocomplete='tel' required)
 					label(for='phone') Secondary phone number
 					input#backup-phone(type='tel' name='backupPhone'
 						title='Your backup phone number in case the main one is unavailable'
-						placeholder='+358400000000' pattern='(0|\\+358)\\d{9}')
+						placeholder='+358400000000' pattern='(0|\\+358)\\d{9}'
+						autocomplete='tel')
 					label.required Select your team
 					div
 						input#team-e(type='radio' value='Embedded' name='team'

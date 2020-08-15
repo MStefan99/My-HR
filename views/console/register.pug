@@ -23,11 +23,11 @@ html(lang='en')
 				label.label-status#sc-label
 				label.required(for='password') Your password
 				input.text#password(type='password' name='password'
-					title='Your password' required)
+					title='Your password' autocomplete='new-password' required)
 				label.label-status#pwd-label
 				label.required(for='password') Repeat your password
 				input.text#password-repeat(type='password' name='passwordRepeat'
-					title='Repeat your password' required)
+					title='Repeat your password' autocomplete='new-password' required)
 				label.label-status#pwdr-label
 				input#submit-button(type='submit' value='Sign up')
 				label.label-info.required-info * Required fields

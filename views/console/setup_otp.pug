@@ -27,7 +27,7 @@ html(lang='en')
 				label.required(for='otp') Authenticator code
 				input.text#otp(type='text' name='token'
 					title='Your 6-digit authenticator code'
-					autocomplete='off' required autofocus)
+					autocomplete='one-time-code' required autofocus)
 				label.label-status#otp-label
 				input#secret(type='hidden' value=secret.secret name='secret')
 				input#submit-button(type='submit' value='Finish setup')

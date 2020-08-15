@@ -35,9 +35,12 @@ html(lang='en')
 					p= 'Your username is ' + user.username + '.'
 					form(action='/console/settings/' method='post')
 						label(for='password') New password
-						input#password(type='password' name='password' required)
+						input#password(type='password' name='password'
+							autocomplete='new-password' placeholder='New password' required)
 						label(for='password-repeat') Repeat new password
-						input#password-repeat(type='password' name='passwordRepeat' required)
+						input#password-repeat(type='password' name='passwordRepeat'
+							autocomplete='new-password' placeholder='Repeat new password'
+							required)
 						input(type='submit' value='Update password')
 						label Be careful when selecting your password! We do not store your email
 							|  which means there is no way to restore lost or forgotten password.

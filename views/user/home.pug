@@ -29,7 +29,7 @@ html(lang='en')
 				form(action='/register/' method='post')
 					label.required(for='username') Enter your Metropolia email:
 					input#username(type='text' name='username'
-						placeholder='john.doe' required)
+						placeholder='john.doe' autocomplete='username' required)
 					label#metropolia-domain(for='username') @metropolia.fi
 					input#submit(type='submit' value='Send email' title='Send email')
 					label.label-info.required-info * Required fields

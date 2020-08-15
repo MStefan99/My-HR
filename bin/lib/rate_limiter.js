@@ -63,14 +63,14 @@ module.exports = (options) => {
 		bucket.tokens += Math.floor((Date.now() - bucket.modified)
 			/ 1000 / 60 * options.rate);
 		bucket.modified = Date.now();
+		const tokens = bucket.tokens;
+		bucket.tokens = clamp(bucket.tokens - options.price,
+			options.min, options.max);
 
-		res.set('RL-Tokens', clamp(bucket.tokens - options.price,
-			options.min, options.max));
-		res.set('RL-Rate', options.rate);
-		res.set('RL-Request-Price', options.price);
-		if (bucket.tokens >= options.price) {
+		if (tokens >= options.price) {
 			next();
 		} else {
+			res.set('Retry-After', Math.ceil((options.price - bucket.tokens / options.rate) * 60))
 			if (options.action) {
 				options.action(req, res);
 			}
@@ -81,7 +81,6 @@ module.exports = (options) => {
 			}
 		}
 
-		bucket.tokens = clamp(bucket.tokens - options.price,
-			options.min, options.max);
+		console.log(bucket.tokens)
 	}
 }

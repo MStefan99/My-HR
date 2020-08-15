@@ -21,10 +21,12 @@ html(lang='en')
 				form(action='/feedback/' method='post')
 					label(for='name') Your name
 					input#name(type='text' name='name'
-						title='Your name' placeholder='John Doe')
+						title='Your name' placeholder='John Doe'
+						autocomplete='name')
 					label(for='email') Your email (in case you would like us to contact you)
 					input#email(type='email' name='email'
-						title='Your email' placeholder='john.doe@example.com')
+						title='Your email' placeholder='john.doe@example.com'
+						autocomplete='email')
 					label.required(for='message') Your message to us
 					textarea#message(name='message' title='Your message to us' required
 					placeholder='I enjoyed using this site because ... but ... could be improved.')
