@@ -12,7 +12,10 @@ function flash(flashOptions = {}) {
 		this.nextFlashes = [];
 	}
 
-	this.nextFlashes.push(flashOptions);
+	const flashData = JSON.stringify(flashOptions);
+	this.nextFlashes.push(Buffer
+		.from(flashData)
+		.toString('base64'));
 	this.cookie('FC',
 		JSON.stringify(this.nextFlashes), dataCookieOptions);
 
@@ -27,7 +30,15 @@ module.exports = () => {
 		}
 
 		if (req.cookies.FC) {
-			res.locals.flashes = JSON.parse(req.cookies.FC);
+			const flashes = JSON.parse(req.cookies.FC);
+			res.locals.flashes = [];
+
+			flashes.forEach(flashData => {
+				res.locals.flashes.push(JSON.parse(
+					Buffer
+						.from(flashData, 'base64')
+						.toString()));
+			});
 		}
 		res.clearCookie('FC', dataCookieOptions);
 
