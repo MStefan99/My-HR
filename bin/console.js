@@ -12,6 +12,7 @@ const libSetup = require('./lib/console/setup');
 const libApplication = require('./lib/application');
 const libSession = require('./lib/console/session');
 const lib2FA = require('./lib/console/2fa');
+const QRCode = require('qrcode');
 
 const {consoleCookieOptions} = require('./lib/cookie');
 
@@ -57,12 +58,16 @@ router.get('/register', (req, res) => {
 });
 
 
-router.get('/setup-otp', (req, res) => {
+router.get('/setup-otp', async (req, res) => {
 	if (req.user === 'NO_USER') {
 		res.redirect(303, '/console/login/');
 	} else {
+		const secret = lib2FA.generateSecret(req.user);
+
 		res.render('console/setup_otp', {
-			secret: lib2FA.generateSecret(req.user)
+			secret: secret,
+			qrData: await QRCode.toDataURL(
+				decodeURIComponent(secret.uri))
 		});
 	}
 });
@@ -81,7 +86,7 @@ router.post('/login', rateLimiter({
 	action: (req, res) => res.flash({
 		type: 'warning',
 		title: 'Too many attempts',
-		info: 'We have detected too many sign in attempts for your account. ' +
+		info: 'We have detected too many sign in attempts for your IP. ' +
 			'Please try again after some time.'
 	})
 }), async (req, res) => {
@@ -137,18 +142,7 @@ router.post('/login', rateLimiter({
 });
 
 
-router.post('/register/', rateLimiter({
-	scheme: 'user.id',
-	tag: 'auth',
-	price: 5,
-	redirect: true,
-	action: (req, res) => res.flash({
-		type: 'warning',
-		title: 'Too many attempts',
-		info: 'We have detected too many attempts for your account. ' +
-			'Please try again after some time.'
-	})
-}), async (req, res) => {
+router.post('/register/', async (req, res) => {
 	// User is retrieved using CUID cookie
 
 	if (req.user === 'NO_USER') {
@@ -203,18 +197,7 @@ router.post('/register/', rateLimiter({
 });
 
 
-router.post('/setup-otp/', rateLimiter({
-	scheme: 'user.id',
-	tag: 'auth',
-	price: 5,
-	redirect: true,
-	action: (req, res) => res.flash({
-		type: 'warning',
-		title: 'Too many attempts',
-		info: 'We have detected too many attempts for your account. ' +
-			'Please try again after some time.'
-	})
-}),  async (req, res) => {
+router.post('/setup-otp/', async (req, res) => {
 	// User is retrieved using CUID cookie
 
 	if (req.user === 'NO_USER') {
@@ -314,7 +297,7 @@ router.get('/help', (req, res) => {
 
 router.post('/settings',  rateLimiter({
 	scheme: 'user.id',
-	tag: 'auth',
+	tag: 'api-auth',
 	price: 10,
 	redirect: true,
 	action: (req, res) => res.flash({

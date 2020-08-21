@@ -34,7 +34,7 @@ app.use((req, res, next) => {
 	res.set('Cache-Control', 'no-cache');
 	res.set('Referrer-Policy', 'same-origin');
 	res.set('Service-Worker-Allowed', '/');
-	res.set('Content-Security-Policy', 'default-src \'self\'; img-src \'self\' https://*.googleapis.com');
+	res.set('Content-Security-Policy', 'default-src \'self\'; img-src \'self\' data:');
 	res.set('X-Content-Type-Options', 'nosniff');
 	res.set('X-Frame-Options', 'SAMEORIGIN');
 	res.set('X-XSS-Protection', '1');
@@ -45,9 +45,7 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use('/style', express.static(path.join(__dirname, 'static', 'style'), cacheOptions));
-app.use('/js', express.static(path.join(__dirname, 'static', 'js'), cacheOptions));
-app.use('/img', express.static(path.join(__dirname, 'static', 'img'), cacheOptions));
+app.use(express.static(path.join(__dirname, 'static'), cacheOptions));
 app.use('/favicon.ico', express.static(path.join(__dirname, 'static', 'img', 'me-logo.svg'), cacheOptions));
 
 app.use('/int', internalRouter);

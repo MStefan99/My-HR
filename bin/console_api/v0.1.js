@@ -34,7 +34,7 @@ router.use(middleware.getUser());
 
 
 router.post('/verify-login', rateLimiter({
-	tag: 'auth',
+	tag: 'api-auth',
 	price: 5
 }), async (req, res) => {
 	// User is retrieved by username
@@ -55,11 +55,7 @@ router.post('/verify-login', rateLimiter({
 });
 
 
-router.post('/verify-setup-code', rateLimiter({
-	scheme: 'user.id',
-	tag: 'auth',
-	price: 5,
-}), async (req, res) => {
+router.post('/verify-setup-code', async (req, res) => {
 	// User is retrieved using CUID cookie
 
 	if (req.user === 'NO_USER') {
@@ -74,11 +70,7 @@ router.post('/verify-setup-code', rateLimiter({
 });
 
 
-router.post('/verify-otp', rateLimiter({
-	scheme: 'user.id',
-	tag: 'auth',
-	price: 5
-}), (req, res) => {
+router.post('/verify-otp', (req, res) => {
 	if (!req.body.secret) {
 		res.status(400).send('NO_SECRET');
 	} else if (!req.body.token) {

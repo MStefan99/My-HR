@@ -13,7 +13,6 @@ const resources = [
 	'/console/versions/',
 	'/console/about/',
 	'/console/help/',
-	'/console/users/',
 	'/console/not-connected/',
 	'/console/404/',
 	// Stylesheets
@@ -110,7 +109,8 @@ function canBeCached(req) {
 	} else {  // Client requests
 		if (req.method !== 'GET') {  // All non-GET requests
 			return {
-				cache: false
+				cache: false,
+				return503: true
 			};
 		} else if (req.url.match(/(otp|logout|exit)\/?$/)) {  // Logout requests
 			return {
@@ -122,6 +122,11 @@ function canBeCached(req) {
 				cache: true,
 				revalidate: true,
 				ignoreQuery: true,
+				return503: true
+			};
+		} else if (req.url.match('file')) {  // Downloads
+			return {
+				cache: false,
 				return503: true
 			};
 		} else {  // All other GET requests
@@ -157,7 +162,7 @@ async function handleRequest(req) {
 
 	const workerRequest = new Request(url, {
 		headers: headers,
-		body: req.method !== 'GET' ? body : undefined,
+		body: body,
 		method: req.method,
 		cache: req.cache,
 		referrer: req.referrer,

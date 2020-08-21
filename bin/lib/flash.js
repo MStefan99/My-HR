@@ -14,8 +14,8 @@ function flash(flashOptions = {}) {
 
 	const flashData = JSON.stringify(flashOptions);
 	this.nextFlashes.push(Buffer
-		.from(flashData)
-		.toString('base64'));
+	.from(flashData)
+	.toString('base64'));
 	this.cookie('FC',
 		JSON.stringify(this.nextFlashes), dataCookieOptions);
 
@@ -36,11 +36,11 @@ module.exports = () => {
 			flashes.forEach(flashData => {
 				res.locals.flashes.push(JSON.parse(
 					Buffer
-						.from(flashData, 'base64')
-						.toString()));
+					.from(flashData, 'base64')
+					.toString()));
 			});
+			res.clearCookie('FC', dataCookieOptions);
 		}
-		res.clearCookie('FC', dataCookieOptions);
 
 		res.flash = flash;
 		next();

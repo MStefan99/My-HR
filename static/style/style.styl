@@ -38,16 +38,13 @@ html
 			top 0
 			left 0
 			right 0
-			background var(--panel-color)
+			background none
 			display flex
 			flex-flow row wrap
 			align-items center
 			justify-content space-between
 			z-index 10
 			transition background-color .2s linear
-
-			@media screen and (min-width 768px)
-				background none
 
 			a
 				display inherit
@@ -201,7 +198,8 @@ html
 
 					input, textarea
 						width 100%
-						margin-top .2em
+						margin .5em 0 .2em 0
+						padding .25em 0
 						display block
 						box-sizing border-box
 						border none
@@ -230,7 +228,7 @@ html
 							color white
 							border-bottom-color white
 							font-weight bold
-							padding .2em .5em
+							padding .5em .75em
 							cursor pointer
 							width max-content
 
