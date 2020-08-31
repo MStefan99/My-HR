@@ -34,15 +34,6 @@ function redirectIfNotAuthorized(req, res, next) {
 			}).redirect(303, '/');
 			break;
 		case 'WRONG_IP':
-			res.flash({
-				type: 'warning',
-				title: 'Wrong address',
-				info: 'Your IP address has changed since you were getting your link ' +
-					'so we could not prove it\'s you. ' +
-					'Please open the link from the old address ' +
-					'or create a new link on the home page.'
-			}).redirect(303, '/');
-			break;
 		case 'OK':
 			next();
 			break;

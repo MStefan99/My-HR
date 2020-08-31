@@ -3,7 +3,7 @@ module.exports = {
 		sameSite: 'strict',
 		path: '/',
 		secure: !!process.env.HTTPS,
-		maxAge: 30 * 60 * 1000  // 30-min sessions
+		maxAge: 2 * 60 * 60 * 1000  // 2-hour sessions
 	},
 	consoleCookieOptions: {
 		httpOnly: true,
@@ -11,12 +11,5 @@ module.exports = {
 		sameSite: 'strict',
 		secure: !!process.env.HTTPS,
 		maxAge: 12 * 60 * 60 * 1000,  // 12-hour sessions
-	},
-	dataCookieOptions: {
-		httpOnly: true,
-		path: '/',
-		sameSite: 'strict',
-		secure: !!process.env.HTTPS,
-		maxAge: 7 * 24 * 60 * 60 * 1000,  // 1-week timeout
 	}
 };

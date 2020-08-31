@@ -66,8 +66,6 @@ if (process.env.NO_HTTPS) {
 	console.log('Listening on HTTP, port 80');
 } else {
 	const serverOptions = {
-		hostname: 'apply.mineeclipse.com',
-		path: '/',
 		key: fs.readFileSync(process.env.KEYFILE),
 		cert: fs.readFileSync(process.env.CERTFILE)
 	};

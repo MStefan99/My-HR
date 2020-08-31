@@ -1,6 +1,11 @@
 'use strict';
 
-const {dataCookieOptions} = require('./cookie');
+const dataCookieOptions = {
+	httpOnly: true,
+	maxAge: 60 * 60 * 24 * 7,
+	secure: !process.env.NO_HTTPS,
+	sameSite: 'strict',
+};
 
 
 function flash(flashOptions = {}) {
@@ -45,4 +50,4 @@ module.exports = () => {
 		res.flash = flash;
 		next();
 	}
-}
+};
