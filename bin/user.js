@@ -40,6 +40,11 @@ router.get('/feedback', (req, res) => {
 });
 
 
+router.get('/privacy', (req, res) => {
+	res.render('user/privacy');
+});
+
+
 router.post('/feedback', async (req, res) => {
 	if (!req.body.message) {
 		res.flash({
@@ -163,7 +168,11 @@ router.post('/join', upload.single('cv'), rateLimiter({
 			info: 'Some required fields in your ' +
 				'form were missing, please try again.'
 		}).redirect(303, '/join/');
-	} else {
+	} else {await sendMail(req.body.email,
+		'Your application has been received',
+		'received.html',
+		{name: req.body.firstName});
+
 		const application = await libApplication
 			.createApplication(req.session, {
 				firstName: req.body.firstName,

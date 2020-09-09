@@ -26,6 +26,19 @@ html(lang='en')
 		main
 			div#content-container
 				h1 Welcome to Mine Eclipse!
+				h3 What is Mine Eclipse?
+				p.
+					Mine Eclipse is a project started by Metropolia students aiming to design
+					and build a new kind of IoT devices. Join us to learn more!
+				h3 Why should you join?
+				h4 Study credits
+				p Join the development and get credits, regardless of your major!
+				h4 Innovation project
+				p At Mine Eclipse we will offer you plenty of topics to choose from for your innovation project.
+				h4 Experienced teams
+				p.
+					At Mine Eclipse you will work in a professional team and learn
+					best tools and practices used in the companies around the world.
 				h2 Join us today by filling the form below!
 				form(action='/join/' method='post' enctype='multipart/form-data')
 					label.required(for='first-name') First name
@@ -86,6 +99,9 @@ html(lang='en')
 						title='Add anything about yourself here' maxlength=5000)
 					label.required(for='cv') Please attach your cv
 					input#cv(type='file' name='cv' required)
+					input#privacy(type='checkbox' required)
+					label.inline(for='privacy') I agree to the
+					|  #[a(href='/privacy/') Privacy Policy]
 					input#submit(type='submit' value='Join!' title='Send')
 					label.label-info.required-info * Required fields
 					script(async type='text/javascript' src='/js/user/join.js')
