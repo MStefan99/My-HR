@@ -29,12 +29,12 @@ const cacheOptions = {
 app.set('x-powered-by', false);
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
+app.locals.env = process.env.NODE_ENV;
 
 app.use((req, res, next) => {
 	res.set('Cache-Control', 'no-cache');
 	res.set('Referrer-Policy', 'same-origin');
 	res.set('Service-Worker-Allowed', '/');
-	res.set('Content-Security-Policy', 'default-src \'self\'; img-src \'self\' data:');
 	res.set('X-Content-Type-Options', 'nosniff');
 	res.set('X-Frame-Options', 'SAMEORIGIN');
 	res.set('X-XSS-Protection', '1');
