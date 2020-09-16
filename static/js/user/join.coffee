@@ -53,13 +53,13 @@ validate = ->
 	else
 		backupEmailInput.classList.remove('status-bad')
 
-	if not phoneInput.value.match(/^(0|\+358)\d{9}$/)
+	if not phoneInput.value.match(/^(0|\+\d{1,3})\d{8,11}$/)
 		phoneInput.classList.add('status-bad')
 		submitButton.disabled = true
 	else
 		phoneInput.classList.remove('status-bad')
 
-	if not backupPhoneInput.value.match(/^(|((0|\+358)\d{9}))$/)
+	if not backupPhoneInput.value.match(/^(|((0|\+\d{1,3})\d{8,11}))$/)
 		backupPhoneInput.classList.add('status-bad')
 		submitButton.disabled = true
 	else

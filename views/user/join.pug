@@ -68,12 +68,12 @@ html(lang='en')
 					label.required(for='phone') Main phone number
 					input#phone(type='tel' name='phone'
 						title='Your phone starting with 0 or +358'
-						placeholder='+358400000000' pattern='(0|\\+358)\\d{9}'
+						placeholder='+358400000000' pattern='^(0|\\+\\d{1,3})\\d{8,11}$'
 						autocomplete='tel' required)
 					label(for='phone') Secondary phone number
 					input#backup-phone(type='tel' name='backupPhone'
 						title='Your backup phone number in case the main one is unavailable'
-						placeholder='+358400000000' pattern='(0|\\+358)\\d{9}'
+						placeholder='+358400000000' pattern='^(0|\\+\\d{1,3})\\d{8,11}$'
 						autocomplete='tel')
 					label.required Select your team
 					div
