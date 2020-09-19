@@ -21,7 +21,8 @@ phoneElement = document.querySelector('#phone')
 backupPhoneElement = document.querySelector('#backup-phone')
 linksElement = document.querySelector('#links')
 freeFormElement = document.querySelector('#free-form')
-fileLinkElement = document.querySelector('#file-link')
+fileDownloadLink = document.querySelector('#cv-download')
+fileViewLink = document.querySelector('#cv-view')
 
 application = {}
 Storage = window.localStorage
@@ -180,8 +181,8 @@ setData = () ->
 		'<a href="https://$2" target="_blank">$&</a>')
 	linksElement.innerHTML = links or '[Empty]'
 	freeFormElement.innerHTML = application.freeForm or '[Empty]'
-	fileLinkElement.innerHTML = application.fileName
-	fileLinkElement.href = '/console/file/' + application.filePath
+	fileDownloadLink.href = '/console/file/' + application.filePath
+	fileViewLink.href = '/console/view_file/' + application.filePath
 
 
 setupApplication = ->

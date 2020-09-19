@@ -19,7 +19,7 @@ remove = (element) ->
 validate = ->
 	submitButton.disabled = false
 
-	if not usernameInput.value.match(/^[A-Za-z\.]+$/)
+	if not usernameInput.value.match(/^[\w\.]+$/)
 		usernameInput.classList.add('status-bad')
 		submitButton.disabled = true
 	else

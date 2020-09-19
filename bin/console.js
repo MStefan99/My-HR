@@ -356,6 +356,19 @@ router.get('/file/:path', async (req, res) => {
 });
 
 
+
+router.get('/view_file/:path', async (req, res) => {
+	const application = await libApplication.getApplicationByFilePath(req.params.path);
+
+	if (application === 'NO_APPLICATION') {
+		res.status(404).send('NO_APPLICATION');
+	} else {
+		res.type(application.fileName.replace(/.*\./, ''));
+		res.sendFile(path.join(__dirname, '..', '/uploads/', req.params.path));
+	}
+});
+
+
 router.use(middleware.redirectIfNotAdmin());
 
 

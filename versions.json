@@ -1,5 +1,11 @@
 [
 	{
+		"version": "v1.0.0",
+		"logs": [
+			"Applications can now be viewed in browser"
+		]
+	},
+	{
 		"version": "v0.11.2-beta",
 		"logs": [
 			"Fixed a bug which sometimes resulted in the service being unavailable"
