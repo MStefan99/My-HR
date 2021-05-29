@@ -22,5 +22,8 @@
 	},
 	"jest": {
 		"testRunner": "jest-circus/runner"
+	},
+	"devDependencies": {
+		"jest": "^27.0.1"
 	}
 }
