@@ -9,7 +9,7 @@ const util = require('util');
 
 const sendMail = require('../lib/mail');
 const middleware = require('../lib/console/middleware');
-const rateLimiter = require('../lib/rate_limiter');
+const rateLimiter = require('rate-limiter');
 const readFile = util.promisify(fs.readFile);
 const libAuth = require('../lib/console/auth');
 const libFeedback = require('../lib/feedback');
@@ -262,7 +262,7 @@ router.delete('/notes', async (req, res) => {
 router.post('/applications/:applicationID/proposals', rateLimiter({
 	scheme: 'user.id',
 	tag: 'proposal',
-	rate: 1,
+	rate: 20,
 	initial: 1,
 	max: 1
 }), async (req, res) => {
@@ -294,7 +294,10 @@ router.post('/applications/:applicationID/proposals', rateLimiter({
 				await sendMail(application.email,
 					'Welcome to Mine Eclipse!',
 					'accepted.html',
-					{name: application.firstName});
+					{
+						name: application.firstName,
+						id: application.id
+					});
 
 				res.status(201).send('ACCEPTED');
 				break;
@@ -316,7 +319,7 @@ router.post('/applications/:applicationID/proposals', rateLimiter({
 					application,
 					true,
 					req.user.username + ' proposed to '
-					+ (req.body.status === 1 ? 'accept' : 'reject') + ' this application');
+					+ (req.body.status === 1? 'accept' : 'reject') + ' this application');
 
 				res.sendStatus(201);
 				break;
@@ -328,7 +331,7 @@ router.post('/applications/:applicationID/proposals', rateLimiter({
 router.delete('/applications/:applicationID/proposals', rateLimiter({
 	scheme: 'user.id',
 	tag: 'proposal',
-	rate: 1,
+	rate: 20,
 	initial: 1,
 	max: 1
 }), async (req, res) => {

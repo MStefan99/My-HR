@@ -9,7 +9,7 @@ contentContainer = document.querySelector('#content-container')
 usernameInput = document.querySelector('#username')
 submitButton = document.querySelector('#submit')
 
-applicationPeriodEnd = 1603054800000
+applicationPeriodEnd = 1602450000000
 
 
 remove = (element) ->

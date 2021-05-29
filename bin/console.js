@@ -6,8 +6,8 @@ const bodyParser = require('body-parser');
 const path = require('path');
 
 const middleware = require('./lib/console/middleware');
-const flash = require('./lib/flash');
-const rateLimiter = require('./lib/rate_limiter');
+const flash = require('flash-http');
+const rateLimiter = require('rate-limiter');
 const libSetup = require('./lib/console/setup');
 const libApplication = require('./lib/application');
 const libSession = require('./lib/console/session');
