@@ -8,7 +8,7 @@
 		"body-parser": "^1.19.0",
 		"cookie-parser": "^1.4.5",
 		"express": "^4.17.1",
-		"flash-http": "^1.0.0",
+		"express-flash": "^1.0.0",
 		"multer": "^1.4.2",
 		"node-2fa": "^1.1.2",
 		"nodemailer": "^6.4.6",

@@ -8,7 +8,7 @@ const multer = require('multer');
 
 const sendMail = require('./lib/mail');
 const middleware = require('./lib/user/middleware');
-const flash = require('flash-http');
+const flash = require('express-flash');
 const rateLimiter = require('rate-limiter');
 const libSetup = require('./lib/user/setup');
 const libFeedback = require('./lib/feedback');
