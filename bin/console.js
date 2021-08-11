@@ -7,7 +7,7 @@ const path = require('path');
 
 const middleware = require('./lib/console/middleware');
 const flash = require('@mstefan99/express-flash');
-const rateLimiter = require('@mstefan99/@mstefan99/rate-limiter');
+const rateLimiter = require('@mstefan99/rate-limiter');
 const libSetup = require('./lib/console/setup');
 const libApplication = require('./lib/application');
 const libSession = require('./lib/console/session');

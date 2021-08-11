@@ -62,8 +62,8 @@ app.use(function (err, req, res, next) {
 
 
 if (process.env.NO_HTTPS) {
-	http.createServer(app).listen(80);
-	console.log('Listening on HTTP, port 80');
+	http.createServer(app).listen(3003);
+	console.log('Listening on HTTP, port 3003');
 } else {
 	const serverOptions = {
 		key: fs.readFileSync(process.env.KEYFILE),
