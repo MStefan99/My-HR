@@ -1,0 +1,340 @@
+html {
+  color: #fff;
+  font-size: 12pt;
+  font-family: sans-serif;
+  scroll-behavior: smooth;
+}
+html body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  margin: 0;
+  overflow-x: hidden;
+  background: var(--background-color);
+  --theme-color: #ffc14b;
+  --healthy-red: #bd0000;
+  --kinda-gray: #888;
+  --background-color: #28282f;
+  --panel-color: rgba(0,0,0,0.533);
+}
+html body ::selection {
+  background: var(--theme-color);
+  color: #fff;
+}
+html body .hidden {
+  display: none !important;
+}
+html body a {
+  font-weight: bold;
+  color: #fff;
+}
+html body a:hover {
+  color: var(--kinda-gray);
+}
+html body header {
+  height: 10vh;
+  padding: 0 5vw;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: none;
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  transition: background-color 0.2s linear;
+}
+html body header a {
+  display: inherit;
+  align-items: inherit;
+}
+html body header a span {
+  margin-left: 0.5em;
+}
+html body header img {
+  height: 5vh;
+}
+html body #flash-container {
+  width: 90vw;
+  margin: 0 auto;
+}
+html body #flash-container .flash {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  margin: 1em 0;
+  border-radius: 10px;
+  padding: 1em 2em;
+  color: #fff;
+}
+html body #flash-container .flash.ok {
+  background: #35532a;
+}
+html body #flash-container .flash.warning {
+  background: #634b08;
+}
+html body #flash-container .flash.error {
+  background: #680519;
+}
+html body #flash-container b {
+  margin-right: 1em;
+}
+html body main {
+  margin-bottom: 10vh;
+  flex: 1 0;
+}
+html body main .section {
+  margin: 0 1em;
+}
+html body main .center {
+  margin: 0 auto;
+}
+html body main .splash-icon {
+  display: inline-block;
+  max-height: 15vh;
+  max-width: 15vh;
+  margin: 0 1em;
+}
+html body main .row {
+  display: flex;
+}
+html body main #splash-container {
+  min-height: 100vh;
+  width: 80vw;
+  margin: 15vh auto 0 auto;
+  text-align: center;
+}
+html body main #splash-container .inactive {
+  opacity: 0;
+}
+html body main #splash-container #splash {
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: flex-end;
+}
+html body main #splash-container #splash #logo {
+  display: inline-block;
+  height: 4em;
+  top: 1em;
+  z-index: 1;
+  filter: var(--drop-shadow(0 0 5em theme-color));
+  transition: transform cubic-bezier(0, 0, 0, 1) 1.5s, opacity linear 0.5s 0.5s;
+}
+html body main #splash-container #splash #logo.inactive {
+  transform: translateX(400%) rotate(270deg);
+}
+html body main #splash-container #splash .logo-text {
+  white-space: nowrap;
+  font-size: 2em;
+  display: inline-block;
+  transition: transform cubic-bezier(0, 0, 0, 1) 1.7s 0.8s, opacity linear 0.5s 1.2s;
+}
+html body main #splash-container #splash .logo-text.inactive#text-left {
+  transform: translateX(100%);
+}
+html body main #splash-container #splash .logo-text.inactive#text-right {
+  transform: translateX(-100%);
+}
+@media screen and (min-width: 425px) {
+  html body main #splash-container #splash .logo-text {
+    font-size: 3em;
+  }
+  html body main #splash-container #splash #logo {
+    height: 6em;
+  }
+}
+@media screen and (min-width: 768px) {
+  html body main #splash-container #splash .logo-text {
+    font-size: 4em;
+  }
+  html body main #splash-container #splash #logo {
+    height: 8em;
+  }
+}
+@media screen and (min-width: 1024px) {
+  html body main #splash-container #splash .logo-text {
+    font-size: 6em;
+  }
+  html body main #splash-container #splash #logo {
+    height: 12em;
+  }
+}
+html body main #splash-container #welcome-container {
+  transition: opacity linear 0.5s;
+}
+html body main #splash-container #welcome-container h1,
+html body main #splash-container #welcome-container h2,
+html body main #splash-container #welcome-container a {
+  text-align: center;
+}
+html body main #splash-container #welcome-container a {
+  display: block;
+}
+html body main #content-container {
+  margin: 0 auto;
+  width: 90vw;
+}
+@media screen and (min-width: 768px) {
+  html body main #content-container {
+    width: 60vw;
+  }
+}
+@media screen and (min-width: 1024px) {
+  html body main #content-container {
+    width: 40vw;
+  }
+}
+html body main #content-container h1 {
+  font-size: 3em;
+}
+html body main #content-container form {
+  margin-top: 5vh;
+  margin-bottom: 5vh;
+}
+html body main #content-container form label {
+  width: 100%;
+  display: inline-block;
+  margin-top: 0.8em;
+}
+html body main #content-container form label.inline {
+  display: inline;
+}
+html body main #content-container form label.label-info.required-info {
+  color: var(--healthy-red);
+}
+html body main #content-container form label.required:after {
+  content: "*";
+  color: var(--healthy-red);
+}
+html body main #content-container form input,
+html body main #content-container form textarea {
+  width: 100%;
+  margin: 0.5em 0 0.2em 0;
+  padding: 0.25em 0;
+  display: block;
+  box-sizing: border-box;
+  border: none;
+  outline: none;
+  background: none;
+  border-bottom: 2px solid var(--kinda-gray);
+  border-radius: 0;
+  color: #fff;
+  transition: var(--border-bottom-color) 0.2s linear;
+}
+html body main #content-container form input:hover,
+html body main #content-container form textarea:hover {
+  border-bottom-color: #fff;
+}
+html body main #content-container form input:focus,
+html body main #content-container form textarea:focus {
+  border-bottom-color: var(--theme-color);
+}
+html body main #content-container form input[type='radio'],
+html body main #content-container form textarea[type='radio'],
+html body main #content-container form input[type='checkbox'],
+html body main #content-container form textarea[type='checkbox'] {
+  display: inline-block;
+  width: max-content;
+  margin: 0.5em;
+  margin-left: 0;
+  cursor: pointer;
+}
+html body main #content-container form input[type='submit'],
+html body main #content-container form textarea[type='submit'] {
+  background: none;
+  color: #fff;
+  border-bottom-color: #fff;
+  font-weight: bold;
+  padding: 0.5em 0.75em;
+  cursor: pointer;
+  width: max-content;
+}
+html body main #content-container form input[type='submit']:hover:not([disabled]),
+html body main #content-container form textarea[type='submit']:hover:not([disabled]) {
+  background: #fff;
+  color: #000;
+}
+html body main #content-container form input[type='file'],
+html body main #content-container form textarea[type='file'] {
+  color: #fff;
+  border-bottom: none;
+  cursor: pointer;
+}
+html body main #content-container form input[disabled],
+html body main #content-container form textarea[disabled] {
+  cursor: not-allowed;
+  color: var(--kinda-gray);
+  border-color: var(--kinda-gray);
+}
+html body main #content-container form input[disabled]:active,
+html body main #content-container form textarea[disabled]:active {
+  pointer-events: none;
+}
+html body main #content-container form input.status-bad,
+html body main #content-container form textarea.status-bad {
+  color: #f00;
+  border-bottom-color: #f00;
+}
+html body main #content-container form #username {
+  text-align: right;
+  font-size: 1em;
+}
+html body main #content-container form textarea {
+  font-family: sans-serif;
+  resize: vertical;
+  height: 10em;
+  min-height: 5em;
+  max-height: 60vh;
+}
+html body main #content-container form i {
+  display: inline-block;
+  margin: 0.5em 0;
+}
+html body main #content-container form #username,
+html body main #content-container form #metropolia-domain {
+  max-width: 50%;
+  width: max-content;
+  display: inline;
+}
+html body main #content-container table {
+  border-collapse: collapse;
+}
+html body main #content-container table td {
+  padding: 0.5em;
+}
+html body main #content-container table td .clickable {
+  text-decoration: underline;
+  cursor: pointer;
+}
+html body main #content-container table td .clickable:hover {
+  color: var(--kinda-gray);
+}
+html body main #content-container table thead tr {
+  background: var(--panel-color);
+}
+@media screen and (max-width: 768px) {
+  html body main #content-container table td,
+  html body main #content-container table tr,
+  html body main #content-container table th {
+    display: block;
+  }
+}
+html body main #content-container pre {
+  word-break: break-word;
+  white-space: pre-wrap;
+}
+html body footer {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  background: var(--background-color-dark);
+  padding: 0.5em 0;
+}
+html body footer p {
+  margin: 0.5em 2em;
+}

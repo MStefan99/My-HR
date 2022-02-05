@@ -1,0 +1,356 @@
+html {
+	font-family: sans-serif;
+	font-size: 14pt;
+}
+
+html body {
+	margin: 0;
+	height: 100%;
+	overflow: hidden;
+	background: url("/img/desktop.jpg") no-repeat center;
+	background-size: cover;
+	--window-color: rgba(255, 255, 255, 0.667);
+	--icon-color: rgba(255, 255, 255, 0.533);
+	--pane-color: rgba(255, 255, 255, 0.267);
+	--shadow-color: rgba(0, 0, 0, 0.133);
+	--light: #fff;
+	--dark: #000;
+}
+
+html body.dark-theme {
+	background: url("/img/desktop-dark.jpg") no-repeat center;
+	background-size: cover;
+	--window-color: rgba(0, 0, 0, 0.8);
+	--icon-color: rgba(204, 204, 204, 0.533);
+	--pane-color: rgba(0, 0, 0, 0.4);
+	--shadow-color: rgba(0, 0, 0, 0.133);
+	--light: #000;
+	--dark: #fff;
+}
+
+html body.dark-theme #settings-panel img,
+html body.dark-theme .app-window .header img {
+	filter: invert();
+}
+
+html body.dark-theme .app-window .header .icon {
+	filter: brightness(0.8);
+}
+
+html body.dark-theme #dock .dock-shortcut img {
+	filter: saturate(0.8) drop-shadow(0 0.3vh 0.2vh var(--shadow-color));
+}
+
+html body noscript {
+	color: #c00 !important;
+	font-weight: bold !important;
+}
+
+html body header {
+	position: absolute;
+	left: 0;
+	right: 0;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.2em 0.5em;
+	backdrop-filter: blur(8px);
+	color: #fff;
+	font-weight: bold;
+	user-select: none;
+	border-radius: 0 0 5px 5px;
+	background: var(--pane-color);
+	z-index: 10;
+	box-shadow: 0 0.2vh 1vh var(--shadow-color);
+	transition: transform 0.2s 1s cubic-bezier(0, 0.6, 0.4, 1);
+}
+
+html body header.hidden,
+html body header.auto-hide {
+	transform: translateY(-90%);
+}
+
+html body header.hidden:hover,
+html body header.auto-hide:hover {
+	transition: transform 0.2s cubic-bezier(0, 0.6, 0.4, 1);
+	transform: none;
+}
+
+html body header .icon {
+	color: var(--light);
+	text-decoration: none;
+	cursor: pointer;
+}
+
+html body header .icon img {
+	height: 18px;
+	margin: 0 0.5em;
+}
+
+html body header .icon img#settings-icon {
+	filter: brightness(10);
+}
+
+html body #settings-panel {
+	position: absolute;
+	top: 40px;
+	right: 0;
+	padding: 1em;
+	margin: 1em;
+	width: max-content;
+	height: min-content;
+	z-index: 10;
+	color: var(--dark);
+	background: var(--window-color);
+	border-radius: 10px;
+	user-select: none;
+	backdrop-filter: blur(8px);
+	box-shadow: 0 0.2vh 1vh var(--shadow-color);
+	transition: opacity 0.2s cubic-bezier(0, 0.6, 0.4, 1), transform 0.2s cubic-bezier(0, 0.6, 0.4, 1);
+}
+
+html body #settings-panel.hidden {
+	pointer-events: none;
+	opacity: 0;
+	transform: translateY(-50%);
+}
+
+html body #settings-panel .icon-group {
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-around;
+	margin-bottom: 0.5em;
+}
+
+html body #settings-panel .icon-group .button {
+	margin: 0 0.5em;
+	display: block;
+	cursor: pointer;
+	color: var(--dark);
+}
+
+html body #settings-panel .icon-group .button img {
+	height: 2em;
+	margin: 0 0.5em;
+}
+
+html body #settings-panel label {
+	margin: 0.2em 0;
+	display: inline-block;
+}
+
+html body main {
+	height: 100vh;
+	padding: 50px 40px 90px;
+	box-sizing: border-box;
+}
+
+html body main #desktop {
+	display: flex;
+	flex-flow: column wrap;
+	align-items: flex-start;
+	width: min-content;
+	max-height: 100%;
+	max-width: 100%;
+}
+
+html body main .app-window {
+	position: absolute;
+	left: 50px;
+	top: 50px;
+	width: 780px;
+	height: 500px;
+	min-width: 300px;
+	min-height: 100px;
+	border-radius: 15px;
+	background: var(--window-color);
+	overflow: hidden;
+	user-select: none;
+	resize: both;
+	display: flex;
+	flex-flow: column nowrap;
+	backdrop-filter: blur(8px);
+	box-shadow: 0 0.5vh 3vh 1vh var(--shadow-color);
+	transition: opacity 0.2s cubic-bezier(0, 0.6, 0.4, 1), transform 0.3s cubic-bezier(0, 0.6, 0.4, 1);
+}
+
+html body main .app-window.maximized {
+	left: 0 !important;
+	top: 0 !important;
+	width: 100vw !important;
+	height: 100vh !important;
+	resize: none;
+}
+
+html body main .app-window.minimized {
+	pointer-events: none;
+	opacity: 0;
+	transform: scale(0.8) translateY(30%);
+}
+
+html body main .app-window.animated {
+	transition: opacity 0.2s cubic-bezier(0, 0.6, 0.4, 1), transform 0.3s cubic-bezier(0, 0.6, 0.4, 1), left 0.3s cubic-bezier(0, 0.6, 0.4, 1), top 0.3s cubic-bezier(0, 0.6, 0.4, 1), width 0.3s cubic-bezier(0, 0.6, 0.4, 1), height 0.3s cubic-bezier(0, 0.6, 0.4, 1);
+}
+
+html body main .app-window.hidden {
+	pointer-events: none;
+	opacity: 0;
+	transform: scale(0.9);
+}
+
+html body main .app-window::-webkit-resizer {
+	display: none;
+}
+
+html body main .app-window .header {
+	width: 100%;
+	height: 25px;
+	padding: 0 1em;
+	flex-shrink: 0;
+	box-sizing: border-box;
+	background: var(--window-color);
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+}
+
+html body main .app-window .header .title {
+	font-size: 80%;
+	font-weight: bold;
+	color: var(--dark);
+}
+
+html body main .app-window .header .icon-group {
+	width: 40px;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: space-between;
+	align-items: center;
+}
+
+html body main .app-window .header .icon-group .icon-img {
+	width: 15px;
+	height: 15px;
+	cursor: pointer;
+}
+
+html body main .app-window .header .icon-group .icon {
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+html body main .app-window .header .icon-group .icon.minimize-icon {
+	background: #ee0;
+}
+
+html body main .app-window .header .icon-group .icon.maximize-icon {
+	background: #0c0;
+}
+
+html body main .app-window .header .icon-group .icon.close-icon {
+	background: #c00;
+}
+
+html body main .app-window .content {
+	flex: 1;
+}
+
+html body main .app-window .content iframe {
+	width: 100%;
+	height: 100%;
+	border: none;
+	user-select: auto;
+}
+
+html body .shortcut {
+	width: 64px;
+	height: 64px;
+	margin: 10px 10px;
+	flex-shrink: 0;
+	background: var(--icon-color);
+	border-radius: 30%;
+	cursor: pointer;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	backdrop-filter: blur(8px);
+	box-shadow: 0 0.2vh 0.5vh var(--shadow-color);
+	transition: filter 0.1s cubic-bezier(0, 0.6, 0.4, 1), background-color 0.1s cubic-bezier(0, 0.6, 0.4, 1), transform 0.4s cubic-bezier(0, 0.5, 0.5, 1.5);
+}
+
+html body .shortcut:hover {
+	filter: opacity(0.8) brightness(0.8);
+}
+
+html body .shortcut:active {
+	transform: scale(0.9);
+}
+
+html body .shortcut.hidden {
+	transform: translateY(120%);
+}
+
+html body .shortcut img {
+	width: 38px;
+	filter: drop-shadow(0 0.3vh 0.2vh var(--shadow-color));
+}
+
+html body footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 10;
+	user-select: none;
+	pointer-events: none;
+}
+
+html body footer #dock {
+	max-width: max-content;
+	margin: 0 auto;
+	padding: 0 30px;
+	display: flex;
+	flex-flow: row nowrap;
+	justify-content: center;
+	align-items: center;
+	backdrop-filter: blur(8px);
+	pointer-events: all;
+	background: var(--pane-color);
+	border-radius: 1em 1em 0 0;
+	box-sizing: border-box;
+	overflow-y: hidden;
+	transition: transform 0.2s 1s cubic-bezier(0, 0.6, 0.4, 1);
+}
+
+html body footer #dock.auto-hide {
+	transform: translateY(80%);
+}
+
+html body footer #dock.hidden {
+	transform: translateY(100%);
+	transition: transform 0.2s cubic-bezier(0, 0.6, 0.4, 1);
+}
+
+html body footer #dock:hover {
+	transform: none;
+	transition: transform 0.2s cubic-bezier(0, 0.6, 0.4, 1);
+}
+
+html body footer #dock .dock-container {
+	display: flex;
+	flex-flow: row nowrap;
+}
+
+html body footer #dock #dock-separator {
+	width: 5px;
+	height: 64px;
+	margin: 10px 20px;
+	flex-shrink: 0;
+	background: var(--icon-color);
+	border-radius: 2px;
+	box-shadow: 0 0.2vh 0.5vh var(--shadow-color);
+}

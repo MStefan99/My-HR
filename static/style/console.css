@@ -1,0 +1,671 @@
+html {
+  font-family: sans-serif;
+}
+html body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-height: 100vh;
+  color: var(--dark);
+  background: var(--light);
+  overflow-x: hidden;
+  --primary-color: #3795e2;
+  --secondary-color: #21dea9;
+  --background-color: #fff;
+  --simply-red: #c60832;
+  --mostly-yellow: #b85300;
+  --just-as-green: #00780c;
+  --boring-red: #ff8080;
+  --not-very-green: #99ec74;
+  --light: #fff;
+  --dark: #000;
+  --light-gray: #eee;
+  --just-gray: #ddd;
+  --pretty-gray: #999;
+  --very-gray: #555;
+  --shadow-color: rgba(0,0,0,0.133);
+}
+html body::-webkit-scrollbar {
+  background-color: var(--light);
+  border-radius: 10px;
+  width: 8px;
+}
+html body::-webkit-scrollbar-thumb {
+  background-color: var(--pretty-gray);
+  border-radius: 10px;
+}
+html body ::selection {
+  background: var(--simply-red);
+  color: var(--light);
+}
+html body.dark-theme {
+  --primary-color: #532000;
+  --secondary-color: #40000d;
+  --background-color: #1c1c1d;
+  --simply-red: #530000;
+  --mostly-yellow: #613e01;
+  --just-as-green: #094c00;
+  --boring-red: #793f3f;
+  --not-very-green: #35532a;
+  --light: #0a0a0a;
+  --dark: #aca491;
+  --light-gray: #262524;
+  --just-gray: #3b3937;
+  --pretty-gray: #807971;
+  --very-gray: #101010;
+}
+html body.dark-theme header,
+html body.dark-theme footer {
+  color: var(--dark);
+}
+html body.dark-theme header a:hover {
+  color: var(--pretty-gray);
+}
+html body.dark-theme main table thead {
+  color: var(--dark);
+  background: var(--light-gray);
+}
+html body.dark-theme main #notification-container {
+  color: var(--dark);
+}
+html body.dark-theme main #notification-container .close-icon {
+  filter: brightness(3) !important;
+}
+html body.dark-theme main #tab-container .tab.selected {
+  border: 1px solid var(--dark);
+}
+html body.dark-theme main a:hover {
+  color: var(--pretty-gray);
+}
+html body.dark-theme main a:active {
+  color: var(--just-gray);
+}
+html body.dark-theme img:not(.icon) {
+  filter: opacity(0.4) !important;
+}
+html body a {
+  color: inherit;
+}
+html body [class*=hidden] {
+  display: none !important;
+}
+html body .clickable {
+  cursor: pointer;
+  user-select: none;
+}
+html body .clickable:hover {
+  color: var(--pretty-gray);
+}
+@media screen and (max-width: 1024px) {
+  html body .desktop-only {
+    display: none !important;
+  }
+}
+html body noscript {
+  color: #c00 !important;
+  font-weight: bold !important;
+}
+html body header {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5em 2em;
+  color: var(--light);
+  background: linear-gradient(90deg, var(--primary-color) 10%, var(--secondary-color) 90%);
+  box-shadow: 0 0.5vh 2vh var(--shadow-color);
+  border-radius: 0 0 20px 20px;
+}
+@media screen and (max-width: 425px) {
+  html body header {
+    padding: 0.5em 1em;
+  }
+}
+html body header h1 {
+  font-size: 2rem;
+  margin: 0;
+  text-shadow: 0 0.5vh 1.5vh var(--shadow-color);
+}
+@media screen and (min-width: 425px) {
+  html body header h1 {
+    font-size: 3rem;
+  }
+}
+html body header a {
+  text-decoration: none;
+}
+html body header a:hover {
+  color: var(--just-gray);
+}
+html body header .button-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+}
+html body header .button {
+  margin: 0.5vh 0.5vw;
+  padding: 0.5em 1em;
+  display: inline-block;
+  font-weight: bold;
+  background: var(--very-gray);
+  text-align: center;
+  cursor: pointer;
+  border-radius: 0.5em;
+  white-space: nowrap;
+  box-shadow: 0 0.5vh 1vh var(--shadow-color);
+  transition: filter 0.1s cubic-bezier(0, 0.6, 0.4, 1);
+  user-select: none;
+}
+html body header .button:hover {
+  filter: brightness(0.9);
+}
+html body header .button:active {
+  filter: brightness(0.8);
+}
+html body div#flash-container {
+  margin: 0 auto;
+}
+@media screen and (min-width: 425px) {
+  html body div#flash-container {
+    width: 90vw;
+  }
+}
+html body div#flash-container div.flash {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-start;
+  align-items: center;
+  color: var(--light);
+  border-radius: 10px;
+  padding: 0.6em 0.5em;
+  margin: 1em 0 0;
+  box-shadow: 0 0.2vh 1vh 0.2vh var(--shadow-color);
+}
+html body div#flash-container div.flash.ok {
+  background: var(--just-as-green);
+}
+html body div#flash-container div.flash.warning {
+  background: var(--mostly-yellow);
+}
+html body div#flash-container div.flash.error {
+  background: var(--simply-red);
+}
+html body div#flash-container div.flash span.separator {
+  display: inline-block;
+  align-self: stretch;
+  flex: 0 0 4px;
+  margin: 0 1em;
+  border-radius: 2px;
+  background: var(--light);
+}
+html body div#flash-container div.flash h2,
+html body div#flash-container div.flash p {
+  display: inline;
+  margin: 0.4em 0.5em;
+}
+html body div#login-container {
+  width: 25vw;
+  flex-grow: 1;
+  padding: 3em;
+  margin: 10vh auto;
+  background: var(--light);
+  box-shadow: 0 0.5vh 2vh var(--shadow-color);
+  border-radius: 10px;
+}
+@media screen and (max-width: 1024px) {
+  html body div#login-container {
+    width: 50vw;
+  }
+}
+@media screen and (max-width: 425px) {
+  html body div#login-container {
+    width: 90vw;
+    padding: 1em;
+    box-sizing: border-box;
+    font-size: 1.1em;
+  }
+}
+html body div#login-container h2 {
+  text-align: center;
+}
+html body div#login-container form label,
+html body div#login-container form input {
+  display: block;
+  width: 100%;
+  margin: 1vh 0;
+  text-align: center;
+  font-weight: bold;
+}
+html body div#login-container form input {
+  border: none;
+  padding: 0.2em;
+  border-radius: 8px;
+  box-sizing: border-box;
+  outline: none;
+  border-bottom: 4px solid var(--just-gray);
+  transition: border-bottom-color 0.2s cubic-bezier(0, 0.6, 0.4, 1), background-color 0.2s cubic-bezier(0, 0.6, 0.4, 1), box-shadow 0.2s cubic-bezier(0, 0.6, 0.4, 1), color 0.2s cubic-bezier(0, 0.6, 0.4, 1);
+}
+html body div#login-container form input:hover {
+  border-bottom-color: var(--primary-color);
+}
+html body div#login-container form input:focus {
+  border-bottom-color: var(--secondary-color);
+  box-shadow: 0 0 1vh -0.1vh var(--shadow-color);
+}
+@media screen and (max-width: 425px) {
+  html body div#login-container form input {
+    padding: 0.5em;
+  }
+}
+html body div#login-container form .status-bad {
+  color: var(--simply-red);
+  border-bottom-color: var(--simply-red);
+  background: var(--just-gray);
+}
+html body div#login-container form .label-status {
+  color: var(--simply-red);
+}
+html body div#login-container form input[type='submit'] {
+  padding: 0.5em 0;
+  color: var(--light);
+  cursor: pointer;
+  background: var(--primary-color);
+  border-bottom-color: var(--primary-color);
+  box-shadow: 0 0.5vh 1vh var(--shadow-color);
+}
+html body div#login-container form input[type='submit'][disabled] {
+  color: var(--dark);
+  background: var(--just-gray);
+  border-bottom-color: var(--just-gray);
+  cursor: not-allowed;
+}
+html body div#login-container form input[type='submit']:hover {
+  color: var(--dark);
+  background: var(--just-gray);
+  box-shadow: none;
+}
+html body div#login-container form input[type='submit']:focus {
+  color: var(--light);
+  border-bottom-color: var(--secondary-color);
+  background: var(--secondary-color);
+  box-shadow: inset 0 0.5vh 1vh -0.5vh var(--shadow-color);
+}
+html body div#login-container form #qr {
+  display: block;
+  width: 50%;
+  margin: 0 auto 1vh auto;
+}
+html body div#login-container form label.required:after {
+  content: "*";
+  color: var(--simply-red);
+}
+html body div#login-container form .label-info#secret {
+  word-break: break-all;
+}
+html body div#login-container form .label-info.required-info {
+  color: var(--simply-red);
+}
+html body main {
+  flex-grow: 1;
+  margin: 5vh 0;
+  padding: 3vh 3vw;
+  background: var(--background-color);
+  box-shadow: 0 0.5vh 2vh var(--shadow-color);
+  border-radius: 20px;
+}
+@media screen and (min-width: 425px) {
+  html body main {
+    margin: 5vh 5vw;
+  }
+}
+html body main .inline-icon {
+  margin-left: 0.5em;
+  vertical-align: baseline;
+}
+html body main a:hover {
+  color: var(--very-gray);
+}
+html body main a:active {
+  color: var(--pretty-gray);
+}
+html body main div#notification-container {
+  position: fixed;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: flex-start;
+  align-items: flex-end;
+  max-width: 40vw;
+  top: 10vh;
+  right: 3vw;
+  color: var(--light);
+}
+@media screen and (max-width: 425px) {
+  html body main div#notification-container {
+    max-width: 90vw;
+    margin: 0 auto;
+    padding: 0;
+  }
+}
+html body main div#notification-container div.notification {
+  position: relative;
+  border-radius: 20px;
+  margin-bottom: 2em;
+  padding: 1em 2em 1em 1em;
+  box-shadow: 0 0.5vh 2vh 0.5vh var(--shadow-color);
+  transition: transform 0.4s cubic-bezier(0.6, 0, 0.4, 1);
+}
+html body main div#notification-container div.notification.ok {
+  background: var(--just-as-green);
+}
+html body main div#notification-container div.notification.warning {
+  background: var(--mostly-yellow);
+}
+html body main div#notification-container div.notification.error {
+  background: var(--simply-red);
+}
+html body main div#notification-container div.notification.inactive {
+  transform: translateX(140%);
+  pointer-events: none;
+}
+html body main div#notification-container .icon {
+  height: 15px;
+  width: 15px;
+}
+html body main div#notification-container .close-icon {
+  background: url("/img/close.svg");
+  filter: brightness(6);
+  position: absolute;
+  right: 10px;
+  top: 8px;
+}
+html body main div#notification-container .button {
+  color: var(--dark);
+}
+html body main div#notification-container h2,
+html body main div#notification-container p {
+  margin: 0.4em 0;
+}
+html body main #search-form {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  background: var(--light-gray);
+  border-radius: 20px;
+  padding: 0 1em;
+  margin: 0 0 1em 0;
+  box-shadow: 0 0.5vh 1vh var(--shadow-color);
+}
+html body main #search-form input {
+  padding: 0 0.5em;
+  flex: 1 1;
+  border: none;
+  outline: none;
+  font-size: inherit;
+  font-weight: bold;
+  color: var(--dark);
+  background: var(--light-gray);
+  display: inline;
+}
+html body main #search-form img {
+  height: 20px;
+}
+html body main #tab-container {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin-bottom: 1em;
+}
+html body main #tab-container .tab {
+  flex-grow: 1;
+  padding: 1em 0.5em;
+  background: var(--background-color);
+  white-space: nowrap;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  border-top: 1px solid var(--dark);
+  transition: box-shadow 0.1s cubic-bezier(0, 0.6, 0.4, 1);
+}
+html body main #tab-container .tab.selected {
+  z-index: 1;
+  box-shadow: 0 0.5vh 1vh 0.1vh var(--shadow-color);
+}
+html body main .icon {
+  width: 20px;
+}
+html body main .center {
+  display: block;
+  margin: 0 auto;
+}
+html body main form label,
+html body main form input[type="checkbox"] {
+  display: inline;
+  margin-right: 0.5em;
+}
+html body main form input {
+  display: block;
+}
+html body main form label,
+html body main form input {
+  margin: 0.5em 0;
+}
+html body main table {
+  width: 100%;
+  margin: 1vh 0;
+  border-radius: 10px;
+  overflow: hidden;
+  border-collapse: collapse;
+  box-shadow: 0 0.2vh 1vh 0.2vh var(--shadow-color);
+}
+html body main table th,
+html body main table td {
+  padding: 1vh 1vw;
+  text-align: left;
+}
+html body main table th .button,
+html body main table td .button {
+  text-decoration: underline;
+  cursor: pointer;
+}
+html body main table thead {
+  font-weight: bold;
+  background: var(--pretty-gray);
+  color: var(--light);
+}
+@media screen and (min-width: 425px) {
+  html body main table thead tr {
+    white-space: nowrap;
+  }
+}
+html body main table tbody#version-table p:before {
+  content: '» ';
+}
+@media screen and (max-width: 768px) {
+  html body main table tbody#version-table tr td:first-child {
+    display: block;
+  }
+}
+html body main table tbody tr {
+  border-bottom: 1px solid var(--just-gray);
+}
+@media screen and (min-width: 768px) {
+  html body main table tbody td:not(:last-child) {
+    border-right: 1px solid var(--dark);
+  }
+}
+@media screen and (max-width: 768px) {
+  html body main table thead tr {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+  }
+  html body main table tbody td {
+    display: inline-block;
+  }
+  html body main table tbody tr {
+    display: block;
+  }
+}
+html body main #note-container {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: flex-start;
+}
+html body main .note {
+  display: block;
+  margin: 1em 0;
+  padding: 0.5em;
+  width: max-content;
+  background: var(--light);
+  border-radius: 10px;
+  border: 1px solid var(--just-gray);
+  box-shadow: 0 0.5vh 1vh -0.2vh var(--shadow-color);
+  max-width: 80%;
+}
+html body main .note.my {
+  align-self: flex-end;
+}
+html body main .note .sender {
+  color: var(--pretty-gray);
+}
+html body main .note .access-mode {
+  color: var(--pretty-gray);
+  font-style: italic;
+}
+html body main #note-editor {
+  display: block;
+  margin: 1em 0;
+  padding: 0.5em;
+  background: var(--light);
+  border-radius: 10px;
+  border: 1px solid var(--just-gray);
+  box-shadow: 0 0.5vh 1vh -0.2vh var(--shadow-color);
+}
+html body main #note-editor h3 {
+  margin: 1rem 0;
+}
+html body main #note-editor span,
+html body main #note-editor input {
+  margin: 0.5em 1em 0.5em 0;
+}
+html body main #note-editor textarea {
+  display: block;
+  width: 100%;
+  color: var(--dark);
+  background: var(--light);
+  height: 3em;
+  resize: vertical;
+  font-family: sans-serif;
+}
+html body main input {
+  border: 1px solid var(--dark);
+  border-radius: 5px;
+  padding: 0.25em;
+  color: var(--dark);
+  background: var(--light);
+}
+html body main .button {
+  display: inline-block;
+  padding: 0.25em 0.5em;
+  margin: 0.5em 1em 0.5em 0;
+  position: relative;
+  width: fit-content;
+  text-decoration: none;
+  background: var(--light-gray);
+  cursor: pointer;
+  user-select: none;
+  border-radius: 0.25em;
+  border: 1px solid var(--just-gray);
+  box-shadow: 0 0.5vh 1vh -0.2vh var(--shadow-color);
+  transition: box-shadow 0.2s cubic-bezier(0, 0.6, 0.4, 1), filter 0.2s cubic-bezier(0, 0.6, 0.4, 1), border-color 0.2s cubic-bezier(0, 0.6, 0.4, 1);
+}
+html body main .button .badge {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(50%, -50%);
+  font-size: 0.8em;
+  padding: 2px;
+  font-weight: bold;
+  border-radius: 50%;
+  color: var(--light);
+}
+html body main .button .badge#accepted-badge {
+  background: var(--just-as-green);
+}
+html body main .button .badge#rejected-badge {
+  background: var(--simply-red);
+}
+html body main .button:hover {
+  filter: brightness(0.95);
+}
+html body main .button:active,
+html body main .button.pressed {
+  filter: brightness(0.9);
+  box-shadow: inset 0 0.5vh 1vh -0.2vh var(--shadow-color);
+}
+html body main .button.disabled {
+  background: var(--pretty-gray);
+  border-color: var(--pretty-gray);
+  filter: grayscale();
+  cursor: not-allowed;
+  box-shadow: none;
+}
+html body main .button.disabled:active {
+  pointer-events: none;
+}
+html body main .button.green {
+  background: var(--not-very-green);
+}
+html body main .button.red {
+  background: var(--boring-red);
+}
+html body main .button .text {
+  margin: 0 0.25em;
+  font-weight: bold;
+}
+html body main .button .icon {
+  margin: 0 0.25em;
+  vertical-align: text-bottom;
+}
+html body main .section {
+  margin: 1vh 0.5vw;
+}
+html body main .section #links,
+html body main .section #free-form {
+  white-space: pre-line;
+}
+@media screen and (min-width: 425px) {
+  html body main .section {
+    margin: 1vh 2vw;
+  }
+}
+html body main .section span {
+  display: inline-block;
+}
+html body main .section span.label {
+  font-weight: bold;
+  margin: 0.3em 0;
+  margin-right: 0.2em;
+}
+@media screen and (min-width: 425px) {
+  html body main .section span.label {
+    margin-right: 0.5em;
+  }
+}
+html body footer {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  color: var(--light);
+  background: var(--very-gray);
+  padding: 0.5em 0;
+  border-radius: 10px 10px 0 0;
+  box-shadow: inset 0 0 3vh var(--shadow-color);
+}
+html body footer p {
+  margin: 0.5em 2em;
+}
+html body footer a:hover {
+  color: var(--just-gray);
+}

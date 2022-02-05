@@ -199,13 +199,16 @@ fabric.properties
 # End of https://www.gitignore.io/api/node,webstorm
 
 
+# Custom rules
+# General
 database/**/*.sqlite
-static/style/**/*.css
-static/js/**/*.js
 static/js/**/*.map
 uploads
 cert
 
+# Generated files
+#static/style/**/*.css
+#static/js/**/*.js
 
 # Exceptions
 !static/js/console/desktop.js
