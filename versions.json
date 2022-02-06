@@ -1,8 +1,14 @@
 [
 	{
+		"version": "v1.0.1",
+		"logs": [
+			"Fixed 2FA setup issue"
+		]
+	},
+	{
 		"version": "v1.0.0",
 		"logs": [
-			"Applications can now be viewed in browser"
+			"Attachments can now be viewed in browser"
 		]
 	},
 	{

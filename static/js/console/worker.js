@@ -74,7 +74,7 @@ const resources = [
 ];
 
 
-const currentVersion = 'v1.0.0';
+const currentVersion = 'v1.0.1';
 const defaultOptions = {
 	cache: false,
 	revalidate: false,
