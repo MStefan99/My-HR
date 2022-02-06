@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="Stylus" pattern="file[my_hr]:static/style/*styl" />
+</component>

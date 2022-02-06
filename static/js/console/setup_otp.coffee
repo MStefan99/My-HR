@@ -43,7 +43,7 @@ formElement.addEventListener('submit', (e) ->
 		, 10000)
 	else if not res.ok
 		switch await res.text()
-			when 'WRONG_CODE'
+			when 'WRONG_TOKEN'
 				otpLabel.innerHTML = 'Wrong code'
 				otpElement.classList.add('status-bad')
 				submitButton.disabled = true
