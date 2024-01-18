@@ -9,7 +9,7 @@ const util = require('util');
 
 const sendMail = require('../lib/mail');
 const middleware = require('../lib/console/middleware');
-const rateLimiter = require('@mstefan99/rate-limiter');
+const rateLimiter = require('../lib/rate-limiter');
 const readFile = util.promisify(fs.readFile);
 const libAuth = require('../lib/console/auth');
 const libFeedback = require('../lib/feedback');
